@@ -2,17 +2,21 @@ class DogsController < ApplicationController
   include ActiveStorage::SetCurrent
   before_action :set_dog, only: %i[show update destroy]
 
+  def uri_adder(dog)
+    dog.as_json.merge({ main_image: url_for(dog.main_image) })
+  end
+
   # GET /dogs
   def index
     @dogs = Dog.all
-    @dogs = @dogs.map {|dog| dog.as_json.merge({ main_image: url_for(dog.main_image) })}
+    @dogs = @dogs.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
 
   # GET /dogs/1
   def show
-    @dog = @dog.as_json.merge({ main_image: url_for(@dog.main_image) })
+    @dog = uri_adder(@dog)
     render json: @dog
   end
 
