@@ -1,17 +1,17 @@
 class DogsController < ApplicationController
-  include ActiveStorage::SetCurrent
+#  include ActiveStorage::SetCurrent
   before_action :set_dog, only: %i[show update destroy]
 
   # GET /dogs
   def index
     @dogs = Dog.all
 
-    render json: @dogs, include: [main_image: { methods: :service_url }]
+    render json: @dogs#, include: [main_image: { methods: :service_url }]
   end
 
   # GET /dogs/1
   def show
-    render json: @dog, include: [main_image: { methods: :service_url }]
+    render json: @dog#, include: [main_image: { methods: :service_url }]
   end
 
   # POST /dogs
