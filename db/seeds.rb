@@ -6,8 +6,11 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
+puts "Starting seeding..."
 
 if Dog.count == 0
+
+    puts "No dogs found in DB: Creating 10 dogs..."
 
   Dog.create(callname: 'Fido', realname: 'Fidolimus III', dob: rand(1900).days.ago, sex: 1, owner: 'Owner 1',
              breeder: 'Larry Breeder')
@@ -30,10 +33,18 @@ if Dog.count == 0
   Dog.create(callname: 'Blue', realname: "Children's Show Blue", dob: rand(1900).days.ago, sex: 1, owner: 'ABC Kids',
              breeder: 'Animator Man')
 
+puts "Dogs created!"
+
+puts "Attaching placeholder main_image to each of the dogs (locally stored)..."
     @dogs = Dog.all
 
     @dogs.each do | dog |
         dog.main_image.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
-        filename: 'dogplaceholder.png', content_type: 'image/png') 
+        filename: 'dogplaceholder.png', content_type: 'image/png')
     end
+
+puts "Images attached to dogs!"
+
 end
+
+puts "Database seeded for your pleasure!"
