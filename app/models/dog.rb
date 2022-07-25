@@ -7,5 +7,4 @@ class Dog < ApplicationRecord
     scope :males, -> { where(sex: "1")}
     scope :females, -> { where(sex: "2")}
 
-
 end
