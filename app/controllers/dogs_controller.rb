@@ -17,6 +17,7 @@ class DogsController < ApplicationController
   # GET /dogs/1
   def show
     @dog = uri_adder(@dog)
+    
     render json: @dog
   end
 
