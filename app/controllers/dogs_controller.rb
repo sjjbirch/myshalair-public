@@ -1,16 +1,17 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: %i[ show update destroy ]
+  include ActiveStorage::SetCurrent
+  before_action :set_dog, only: %i[show update destroy]
 
   # GET /dogs
   def index
     @dogs = Dog.all
 
-    render json: @dogs
+    render json: @dogs, include: [main_image: { methods: :service_url }]
   end
 
   # GET /dogs/1
   def show
-    render json: @dog
+    render json: @dog, include: [main_image: { methods: :service_url }]
   end
 
   # POST /dogs
@@ -39,13 +40,14 @@ class DogsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_dog
-      @dog = Dog.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def dog_params
-      params.require(:dog).permit(:callname, :realname, :dob, :sex, :owner, :breeder, :main_image)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_dog
+    @dog = Dog.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def dog_params
+    params.require(:dog).permit(:callname, :realname, :dob, :sex, :owner, :breeder, :main_image)
+  end
 end
