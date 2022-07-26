@@ -1,5 +1,4 @@
 class DogsController < ApplicationController
-  include ActiveStorage::SetCurrent
   before_action :set_dog, only: [:show, :update, :destroy]
 
   def uri_adder(dog)
