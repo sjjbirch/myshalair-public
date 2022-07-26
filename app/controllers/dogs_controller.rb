@@ -7,30 +7,26 @@ class DogsController < ApplicationController
   end
 
   def boys
-    @dogs = Dog.males
-    @dogs = @dogs.map { |dog| uri_adder(dog) }
+    @dogs = Dog.males.map { |dog| uri_adder(dog) }
   
     render json: @dogs
   end  
   
   def girls
-    @dogs = Dog.females
-    @dogs = @dogs.map { |dog| uri_adder(dog) }
+    @dogs = Dog.females.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
 
   def puppies
-    @dogs = Dog.puppers
-    @dogs = @dogs.map { |dog| uri_adder(dog) }
+    @dogs = Dog.puppers.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
 
   # GET /dogs
   def index
-    @dogs = Dog.all
-    @dogs = @dogs.map { |dog| uri_adder(dog) }
+    @dogs = Dog.all.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
