@@ -22,11 +22,6 @@ class UsersController < ApplicationController
         end
     end
 
-    def isadmin?(currentuser)
-        if current_user.admin
-            true
-    end
-
     private
     def user_params
         params.permit(  :username, :email, :password, :password_confirmation,
