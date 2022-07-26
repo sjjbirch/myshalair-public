@@ -12,26 +12,26 @@ if Dog.count == 0
 
   puts "No dogs found in DB: Creating 10 dogs..."
 
-  Dog.create(callname: 'Fido', realname: 'Fidolimus III', dob: rand(1900).days.ago, sex: 1, owner: 'Owner 1',
-             breeder: 'Larry Breeder')
-  Dog.create(callname: 'Lassie', realname: 'Lassietudinal IV', dob: rand(1900).days.ago, sex: 2, owner: 'Owner 2',
-             breeder: 'Bob Breeder')
-  Dog.create(callname: 'Redditor', realname: 'Cringelord I', dob: rand(1900).days.ago, sex: 1, owner: 'Hilaire Yeates',
-             breeder: 'Hilaire Yeates')
-  Dog.create(callname: 'Barker', realname: 'Barks-at-2-am', dob: rand(1900).days.ago, sex: 1, owner: 'Hilaire Yeates',
-             breeder: 'The Dude')
-  Dog.create(callname: 'Mog', realname: 'Mogdog', dob: rand(1900).days.ago, sex: 2, owner: 'Solomon Birch',
-             breeder: 'Some Farmer')
+  Dog.create(callname: 'Fido', realname: 'Fidolimus III', dob: rand(1900).days.ago, sex: 1, ownername: 'Owner 1',
+            breedername: 'Larry Breeder')
+  Dog.create(callname: 'Lassie', realname: 'Lassietudinal IV', dob: rand(1900).days.ago, sex: 2, ownername: 'Owner 2',
+            breedername: 'Bob Breeder')
+  Dog.create(callname: 'Redditor', realname: 'Cringelord I', dob: rand(1900).days.ago, sex: 1, ownername: 'Hilaire Yeates',
+            breedername: 'Hilaire Yeates')
+  Dog.create(callname: 'Barker', realname: 'Barks-at-2-am', dob: rand(1900).days.ago, sex: 1, ownername: 'Hilaire Yeates',
+            breedername: 'The Dude')
+  Dog.create(callname: 'Mog', realname: 'Mogdog', dob: rand(1900).days.ago, sex: 2, ownername: 'Solomon Birch',
+            breedername: 'Some Farmer')
   Dog.create(callname: 'Princes Leia', realname: 'Kisses her brother', dob: rand(1900).days.ago, sex: 2,
-             owner: 'Han Solo', breeder: 'Darth Vader')
+            ownername: 'Han Solo', breedername: 'Darth Vader')
   Dog.create(callname: 'Sandman', realname: 'Even The Younglings', dob: rand(1900).days.ago, sex: 1,
-             owner: 'George Lucas', breeder: 'Luke Skinwalker')
-  Dog.create(callname: 'Pluto', realname: 'Pluto The Pup', dob: rand(1900).days.ago, sex: 1, owner: 'Walt Disney',
-             breeder: 'Marv the Martian')
+            ownername: 'George Lucas', breedername: 'Luke Skinwalker')
+  Dog.create(callname: 'Pluto', realname: 'Pluto The Pup', dob: rand(1900).days.ago, sex: 1, ownername: 'Walt Disney',
+            breedername: 'Marv the Martian')
   Dog.create(callname: 'Red', realname: 'Red The Kelpie', dob: rand(1900).days.ago, 
-            sex: 1, owner: 'Some Seppo', breeder: 'Mongrel Man')
-  Dog.create(callname: 'Blue', realname: "Children's Show Blue", dob: rand(1900).days.ago, sex: 1, owner: 'ABC Kids',
-             breeder: 'Animator Man')
+            sex: 1, ownername: 'Some Seppo', breedername: 'Mongrel Man')
+  Dog.create(callname: 'Blue', realname: "Children's Show Blue", dob: rand(1900).days.ago, sex: 1, ownername: 'ABC Kids',
+            breedername: 'Animator Man')
 
 puts "Dogs created!"
 
