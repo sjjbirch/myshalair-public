@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :contacts
   # dog pages
   resources :dogs
   

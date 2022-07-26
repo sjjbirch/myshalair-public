@@ -5,7 +5,7 @@ class UsersController < ApplicationController
 
         if @user.save
             auth_token = Knock::AuthToken.new payload: {sub: @user.id}
-            render json: { username: @user.username, jwt: auth_token.token } status: :created
+            render json: { username: @user.username, jwt: auth_token.token }, status: :created
         else
             render json: @user.errors, status: :unprocessable_entity
         end
@@ -16,10 +16,15 @@ class UsersController < ApplicationController
 
         if @user && @user.authenticate(params[:password])
             auth_token = Knock::AuthToken.new payload: {sub: @user.id}
-            render json: { username: @user.username, jwt: auth_token.token } status: 200
+            render json: { username: @user.username, jwt: auth_token.token }, status: 200
         else
             render json: {error:  "Invalid email or password"}
         end
+    end
+
+    def isadmin?(currentuser)
+        if current_user.admin
+            true
     end
 
     private

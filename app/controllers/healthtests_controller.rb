@@ -37,7 +37,7 @@ class HealthtestsController < ApplicationController
         else
           # send something to the front end
         end
-     end
+    end
 
     def checkpedigree
     # this is where it will check which tests don't need to be done

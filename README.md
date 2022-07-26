@@ -23,4 +23,6 @@
 * create and checkpedigree methods in healthtest controller
 
 ### Outstanding
-* Function to validate address fields if user has entered some address info
+* user controller missing function to validate address fields if user has entered some address info in signup
+* dogs currently missing owner and breeder fields to link them to users
+
