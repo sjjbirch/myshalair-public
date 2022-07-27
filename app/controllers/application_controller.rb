@@ -2,7 +2,7 @@ require "application_responder"
 
 class ApplicationController < ActionController::API
   self.responder = ApplicationResponder
-  respond_to :html
+# respond_to :html # I think this will break it so I commented it out - it was added by the responder install
 
 
     include ActionController::MimeResponds
