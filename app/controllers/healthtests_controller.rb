@@ -18,7 +18,6 @@ class HealthtestsController < ApplicationController
         end
     end
 
-
     def new
         @dog = Dog.find(params[:dog_id])
         #  getting a dog instance from params so we can instantiate our new ad

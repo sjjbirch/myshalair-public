@@ -83,4 +83,7 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  #PLACEHOLDER: REMOVE WHEN PUSH TO LIVE
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3001 } 
 end

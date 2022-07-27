@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-    has_secure_password
+    # has_secure_password
     validates :email, uniqueness: { case_sensitive: false }, presence: true
     validates :username, uniqueness: { case_sensitive: false }, presence: true
     validates :postcode, comparison: { greater_than: 999, less_than: 10000 }
