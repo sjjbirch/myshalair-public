@@ -1,16 +1,14 @@
 Rails.application.routes.draw do
   resources :contacts
+
   # dog pages
   resources :dogs
-  
   get '/boys', to: 'dogs#boys'
   get '/girls', to: 'dogs#girls'
   get '/puppies', to: 'dogs#puppies'
 
-  scope 'auth' do
-    post '/signup', to: 'users#create'
-    post '/signin', to: 'users#sign_in'
-  end
+
+  devise_for :users, defaults: { format: :json }
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
