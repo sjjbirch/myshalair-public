@@ -33,9 +33,9 @@ if Dog.count == 0
   Dog.create(callname: 'Blue', realname: "Children's Show Blue", dob: rand(1900).days.ago, sex: 1, ownername: 'ABC Kids',
             breedername: 'Animator Man')
 
-puts "Dogs created!"
+  puts "Dogs created!"
 
-puts "Attaching placeholder main_image to each of the dogs (locally stored)..."
+  puts "Attaching placeholder main_image to each of the dogs (locally stored)..."
 
   @dogs = Dog.all
 
@@ -44,7 +44,11 @@ puts "Attaching placeholder main_image to each of the dogs (locally stored)..."
     filename: 'dogplaceholder.png', content_type: 'image/png')
   end
 
-puts "Images attached to dogs!"
+  puts "Images attached to dogs!"
+
+else
+
+  puts "dogs already in database, skipping dog creation"
 
 end
 
