@@ -24,7 +24,7 @@ module Myshalair
     config.app_generators.scaffold_controller :responders_controller
 
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0 and config.autoloader = :classic
+    config.load_defaults 7.0
 
     # Configuration for the application, engines, and railties goes here.
     #
