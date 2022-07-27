@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  resources :contacts
+
+  # user pages
+  devise_for :users, defaults: { format: :json }
 
   # dog pages
   resources :dogs
@@ -7,12 +9,8 @@ Rails.application.routes.draw do
   get '/girls', to: 'dogs#girls'
   get '/puppies', to: 'dogs#puppies'
 
-
-  devise_for :users, defaults: { format: :json }
+  # contact form pages
+  # need to overwrite /contacts for unsigned post to /contact
+  resources :contacts
   
-
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
 end
