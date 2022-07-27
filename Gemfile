@@ -50,4 +50,4 @@ end
 
 gem "rspec-rails", "~> 5.1"
 gem "database_cleaner", "~> 2.0"
-gem "knock"
+# gem "knock"

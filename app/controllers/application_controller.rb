@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::API
-    include Knock::Authenticable
 
     def admin_check
+        puts "WARNING: CALLED ADMIN CHECK FUNCTION - SHOULD NOT HAPPEN"
         unless current_user.admin?
             render json: { error: "You cannot view this page" }, status: 403
         end

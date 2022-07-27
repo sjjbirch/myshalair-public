@@ -1,5 +1,5 @@
 class ContactsController < ApplicationController
-  before_action :admin_check, only: [ :index, :show, :update, :destroy ]
+  # before_action :admin_check, only: [ :index, :show, :update, :destroy ]
   before_action :set_contact, only: %i[ show update destroy ]
 
   # GET /contacts
