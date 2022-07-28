@@ -54,7 +54,7 @@ end
 
 puts "Creating a user"
 
-user = User.new(username: "asd", password: "qwerty", postcode:"2000", email: "qwerter@qweerty.com")
+user = User.new(username: "asd", password: "qwerty", postcode:"2000", email: "qwerter@qweerty.com", admin: true)
 user.skip_confirmation!
 user.save!
 
