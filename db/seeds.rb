@@ -52,4 +52,10 @@ else
 
 end
 
+puts "Creating a user"
+
+user = User.new(username: "asd", password: "qwerty", postcode:"2000", email: "qwerter@qweerty.com")
+user.skip_confirmation!
+user.save!
+
 puts "Database seeded for your pleasure!"

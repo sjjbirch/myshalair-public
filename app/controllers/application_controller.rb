@@ -4,8 +4,9 @@ class ApplicationController < ActionController::API
   self.responder = ApplicationResponder
 # respond_to :html # I think this will break it so I commented it out - it was added by the responder install
 
+before_action :configure_permitted_parameters, if: :devise_controller?
 
-    include ActionController::MimeResponds
+    # include ActionController::MimeResponds
     respond_to :json    # both added per: 
                         # https://github.com/waiting-for-dev/devise-jwt/wiki/Configuring-devise-for-APIs
                         # for devise compatibility
@@ -17,4 +18,10 @@ class ApplicationController < ActionController::API
         end
     end
 
+    protected
+
+    def configure_permitted_parameters
+      devise_parameter_sanitizer.permit(:sign_up, keys: [:username, :postcode])
+    end
+    
 end

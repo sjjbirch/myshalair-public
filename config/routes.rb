@@ -13,4 +13,6 @@ Rails.application.routes.draw do
   # need to overwrite /contacts for unsigned post to /contact
   resources :contacts
   
+  root to: 'dogs#index'
+
 end
