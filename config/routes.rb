@@ -2,7 +2,7 @@ Rails.application.routes.draw do
 
   # user pages
   devise_for :users, defaults: { format: :json }
-  resources :users
+  resources :users, defaults: { format: :json }
 
   # dog pages
   resources :dogs
