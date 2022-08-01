@@ -1,5 +1,5 @@
 class Litter < ApplicationRecord
-  belongs_to :breeder
-  belongs_to :sire
-  belongs_to :bitch
+  belongs_to :breeder, class_name: 'User'
+  belongs_to :sire, class_name: 'Dog'
+  belongs_to :bitch, class_name: 'Dog'
 end
