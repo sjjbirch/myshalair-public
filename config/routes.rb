@@ -17,4 +17,7 @@ Rails.application.routes.draw do
   
   root to: 'dogs#index'
 
+  #admin
+  get '/userlist', to: 'admin#list_all_users'
+
 end

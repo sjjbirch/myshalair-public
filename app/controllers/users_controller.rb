@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-    responders :my_application
+    # responders :my_application
+
 
 
 end

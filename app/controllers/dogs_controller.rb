@@ -32,6 +32,18 @@ class DogsController < ApplicationController
 
   # GET /dogs/1
   def show
+
+    if @dog.sex == 1
+      puts "it's a boy"
+      #@dog = @dog.add each of its sired litters
+    else
+      puts "it's a girl"
+      #@dog = @dog.add its bitched_litters
+    end
+
+    # puts @dog.litter
+    # puts @dog.litter.breeder
+
     @dog = uri_adder(@dog)
 
     render json: @dog

@@ -8,40 +8,91 @@
 
 puts "Starting seeding..."
 
+puts "Creating three users"
+
+user = User.new(username: "User1", password: "qwerty", postcode:"2000", email: "1@qwerty.com", admin: true)
+user.skip_confirmation!
+user.save!
+
+user = User.new(username: "User2", password: "qwerty", postcode:"2000", email: "2@qwerty.com", admin: false)
+user.skip_confirmation!
+user.save!
+
+user = User.new(username: "User3", password: "qwerty", postcode:"2000", email: "3@qwerty.com", admin: false)
+user.skip_confirmation!
+user.save!
+
 if Dog.count == 0
 
-  puts "No dogs found in DB: Creating 10 dogs..."
+  puts "No dogs found in DB"
+  
+  puts "Creating an Adamdog and an Evedog to have litters"
 
-  Dog.create(callname: 'Fido', realname: 'Fidolimus III', dob: rand(1900).days.ago, sex: 1, ownername: 'Owner 1',
-            breedername: 'Larry Breeder')
-  Dog.create(callname: 'Lassie', realname: 'Lassietudinal IV', dob: rand(1900).days.ago, sex: 2, ownername: 'Owner 2',
-            breedername: 'Bob Breeder')
-  Dog.create(callname: 'Redditor', realname: 'Cringelord I', dob: rand(1900).days.ago, sex: 1, ownername: 'Hilaire Yeates',
-            breedername: 'Hilaire Yeates')
-  Dog.create(callname: 'Barker', realname: 'Barks-at-2-am', dob: rand(1900).days.ago, sex: 1, ownername: 'Hilaire Yeates',
-            breedername: 'The Dude')
-  Dog.create(callname: 'Mog', realname: 'Mogdog', dob: rand(1900).days.ago, sex: 2, ownername: 'Solomon Birch',
-            breedername: 'Some Farmer')
-  Dog.create(callname: 'Princes Leia', realname: 'Kisses her brother', dob: rand(1900).days.ago, sex: 2,
-            ownername: 'Han Solo', breedername: 'Darth Vader')
-  Dog.create(callname: 'Sandman', realname: 'Even The Younglings', dob: rand(1900).days.ago, sex: 1,
-            ownername: 'George Lucas', breedername: 'Luke Skinwalker')
-  Dog.create(callname: 'Pluto', realname: 'Pluto The Pup', dob: rand(1900).days.ago, sex: 1, ownername: 'Walt Disney',
-            breedername: 'Marv the Martian')
-  Dog.create(callname: 'Red', realname: 'Red The Kelpie', dob: rand(1900).days.ago, 
-            sex: 1, ownername: 'Some Seppo', breedername: 'Mongrel Man')
-  Dog.create(callname: 'Blue', realname: "Children's Show Blue", dob: rand(1900).days.ago, sex: 1, ownername: 'ABC Kids',
-            breedername: 'Animator Man')
+  Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1')
+
+  Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1')
+  
+  puts "Creating a litter"
+
+  Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+                pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
+                adate: rand(1900).days.ago)
+
+  thebigdate = Litter.first.adate
+
+  puts "A wonderful litter of 5 dogs was born on: " + thebigdate.to_s
+
+  doglist = [
+            [ 'Fido', 'Fidolimus III', 1, 'Owner 1', 'Larry Breeder' ],
+            [ 'Lassie', 'Lassietudinal IV', 2, 'Owner 2', 'Larry Breeder' ],
+            [ 'Redditor', 'Cringelord I', 1, 'Hilaire Yeates', 'Hilaire Yeates' ],
+            [ 'Barker', 'Barks-at-2-am', 1, 'Hilaire Yeates', 'Hilaire Yeates' ],
+            [ 'Mog', 'Mogdog', 2, 'Solomon Birch', 'Some Farmer']
+            ]
+
+  doglist.each do | cname, rname, sex, ownername, breedername |
+    dog = Dog.new( #litter_id: 1, 
+                  callname: cname, realname: rname, dob: thebigdate,
+                  sex: sex, ownername: ownername, breedername: breedername )
+    dog.save!
+    puts cname + " was born!"
+  end
+
+  puts "But then there was a miracle and they had another litter 6 months later, with another 5 puppies!"
+
+  thebigdate = thebigdate+130.days
+
+  Litter.create(lname: "SecondLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+  pdate: thebigdate+50.days, edate: thebigdate+51.days,
+  adate: thebigdate+52.days)
+
+  doglist = [
+            [ 'Princes Leia', 'Kisses her brother', 2, 'Han Solo', 'Darth Vader' ],
+            [ 'Sandman', 'Even The Younglings', 1, 'George Lucas', 'Luke Skinwalker' ],
+            [ 'Pluto', 'Pluto The Pup', 1, 'Walt Disney', 'Marv the Martian' ],
+            [ 'Red', 'Red The Kelpie', 1, 'Some Seppo', 'Mongrel Man' ],
+            [ 'Blue', "Children's Show Blue", 1, 'ABC Kids', 'Animator Man']
+            ]
+
+  doglist.each do | cname, rname, sex, ownername, breedername |
+    dog = Dog.new( #litter_id: 2, 
+                  callname: cname, realname: rname, dob: thebigdate+52.days,
+                  sex: sex, ownername: ownername, breedername: breedername )
+    dog.save!
+    puts dog.id
+    puts cname + " was born!"
+  end
 
   puts "Dogs created!"
 
-  puts "Attaching placeholder main_image to each of the dogs (locally stored)..."
+  puts "Attaching locally stored placeholder main_image to each of the dogs..."
 
   @dogs = Dog.all
 
   @dogs.each do | dog |
     dog.main_image.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
     filename: 'dogplaceholder.png', content_type: 'image/png')
+    puts "Attached a picture to " + dog.callname
   end
 
   puts "Images attached to dogs!"
@@ -51,11 +102,5 @@ else
   puts "dogs already in database, skipping dog creation"
 
 end
-
-puts "Creating a user"
-
-user = User.new(username: "asd", password: "qwerty", postcode:"2000", email: "qwerter@qweerty.com", admin: true)
-user.skip_confirmation!
-user.save!
 
 puts "Database seeded for your pleasure!"

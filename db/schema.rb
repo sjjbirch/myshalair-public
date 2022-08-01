@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_01_054618) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_01_053112) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -60,8 +60,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_01_054618) do
     t.string "breedername"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "litter_id"
-    t.index ["litter_id"], name: "index_dogs_on_litter_id"
   end
 
   create_table "healthtests", force: :cascade do |t|
@@ -85,11 +83,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_01_054618) do
     t.text "lname"
     t.bigint "sire_id", null: false
     t.bigint "bitch_id", null: false
+    t.bigint "puppy_id"
     t.boolean "notional"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["bitch_id"], name: "index_litters_on_bitch_id"
     t.index ["breeder_id"], name: "index_litters_on_breeder_id"
+    t.index ["puppy_id"], name: "index_litters_on_puppy_id"
     t.index ["sire_id"], name: "index_litters_on_sire_id"
   end
 
@@ -129,9 +129,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_01_054618) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "dogs", "litters"
   add_foreign_key "healthtests", "dogs"
   add_foreign_key "litters", "dogs", column: "bitch_id"
+  add_foreign_key "litters", "dogs", column: "puppy_id"
   add_foreign_key "litters", "dogs", column: "sire_id"
   add_foreign_key "litters", "users", column: "breeder_id"
 end

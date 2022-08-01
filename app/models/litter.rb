@@ -3,5 +3,5 @@ class Litter < ApplicationRecord
   belongs_to :sire, class_name: 'Dog'
   belongs_to :bitch, class_name: 'Dog'
 
-  has_many :dogs
+  has_many :puppy, class_name: 'Dog'
 end
