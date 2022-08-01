@@ -46,6 +46,6 @@ class LittersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def litter_params
-      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional)
+      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional, :dogs)
     end
 end
