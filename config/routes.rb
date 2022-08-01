@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :litters
 
   # user pages
   devise_for :users, defaults: { format: :json }
