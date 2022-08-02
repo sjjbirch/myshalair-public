@@ -34,7 +34,7 @@ if Dog.count == 0
   
   puts "Creating a litter"
 
-  Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+  litter1 = Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                 pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
                 adate: rand(1900).days.ago)
 
@@ -51,10 +51,12 @@ if Dog.count == 0
             ]
 
   doglist.each do | cname, rname, sex, ownername, breedername |
-    dog = Dog.new( #litter_id: 1, 
+    dog = Dog.new(  
                   callname: cname, realname: rname, dob: thebigdate,
-                  sex: sex, ownername: ownername, breedername: breedername )
+                  sex: sex, ownername: ownername, breedername: breedername 
+                  )
     dog.save!
+    PuppyList.create!(litter: litter1, dog: dog)
     puts cname + " was born!"
   end
 
@@ -62,9 +64,11 @@ if Dog.count == 0
 
   thebigdate = thebigdate+130.days
 
-  Litter.create(lname: "SecondLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
-  pdate: thebigdate+50.days, edate: thebigdate+51.days,
-  adate: thebigdate+52.days)
+  litter2 = Litter.create(
+                          lname: "SecondLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+                          pdate: thebigdate+50.days, edate: thebigdate+51.days,
+                          adate: thebigdate+52.days
+                          )
 
   doglist = [
             [ 'Princes Leia', 'Kisses her brother', 2, 'Han Solo', 'Darth Vader' ],
@@ -75,10 +79,12 @@ if Dog.count == 0
             ]
 
   doglist.each do | cname, rname, sex, ownername, breedername |
-    dog = Dog.new( #litter_id: 2, 
+    dog = Dog.new( 
                   callname: cname, realname: rname, dob: thebigdate+52.days,
-                  sex: sex, ownername: ownername, breedername: breedername )
+                  sex: sex, ownername: ownername, breedername: breedername 
+                  )
     dog.save!
+    PuppyList.create!(litter: litter2, dog: dog)
     puts dog.id
     puts cname + " was born!"
   end
