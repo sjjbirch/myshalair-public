@@ -3,9 +3,7 @@ class Dog < ApplicationRecord
     has_one_attached :main_image
 
     has_one :puppy_list
-    # has_one :parent_litter, class_name: 'Litter', through: :puppy_list
     has_one :litter, through: :puppy_list
-    # has_one :breeder, through: :parent_litter
 
     has_one :healthtest, dependent: :destroy
 

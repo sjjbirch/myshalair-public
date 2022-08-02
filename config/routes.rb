@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :litter_applications
   resources :litters
 
   # user pages

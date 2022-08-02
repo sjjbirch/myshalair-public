@@ -4,6 +4,7 @@ class Litter < ApplicationRecord
   belongs_to :bitch, class_name: 'Dog'
   
   has_one :puppy_list
-  # has_many :puppy#, class_name: 'Dog', through: :puppy_list
   has_many :dogs, through: :puppy_list
+
+  has_many :litter_applications
 end

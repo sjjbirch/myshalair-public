@@ -6,6 +6,8 @@ class User < ApplicationRecord
   # also has many dogs, bit need to decide if that is strictly through litters
   # or if a workaround should exist for a direct relationship
 
+  has_many :litter_applications
+
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
   devise :database_authenticatable, :registerable,

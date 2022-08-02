@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_02_033802) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_02_044237) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_02_033802) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "children", force: :cascade do |t|
+    t.bigint "litter_application_id", null: false
+    t.integer "age"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["litter_application_id"], name: "index_children_on_litter_application_id"
   end
 
   create_table "contacts", force: :cascade do |t|
@@ -75,6 +83,20 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_02_033802) do
     t.index ["dog_id"], name: "index_healthtests_on_dog_id"
   end
 
+  create_table "litter_applications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "litter_id", null: false
+    t.float "yardarea"
+    t.float "yardfenceheight"
+    t.integer "priority"
+    t.integer "fulfillstate"
+    t.integer "paystate"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["litter_id"], name: "index_litter_applications_on_litter_id"
+    t.index ["user_id"], name: "index_litter_applications_on_user_id"
+  end
+
   create_table "litters", force: :cascade do |t|
     t.bigint "breeder_id", null: false
     t.integer "esize"
@@ -90,6 +112,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_02_033802) do
     t.index ["bitch_id"], name: "index_litters_on_bitch_id"
     t.index ["breeder_id"], name: "index_litters_on_breeder_id"
     t.index ["sire_id"], name: "index_litters_on_sire_id"
+  end
+
+  create_table "pets", force: :cascade do |t|
+    t.bigint "litter_application_id", null: false
+    t.integer "age"
+    t.text "pettype"
+    t.text "petbreed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["litter_application_id"], name: "index_pets_on_litter_application_id"
   end
 
   create_table "puppy_lists", force: :cascade do |t|
@@ -137,10 +169,14 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_02_033802) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "children", "litter_applications"
   add_foreign_key "healthtests", "dogs"
+  add_foreign_key "litter_applications", "litters"
+  add_foreign_key "litter_applications", "users"
   add_foreign_key "litters", "dogs", column: "bitch_id"
   add_foreign_key "litters", "dogs", column: "sire_id"
   add_foreign_key "litters", "users", column: "breeder_id"
+  add_foreign_key "pets", "litter_applications"
   add_foreign_key "puppy_lists", "dogs"
   add_foreign_key "puppy_lists", "litters"
 end
