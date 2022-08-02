@@ -103,6 +103,12 @@ if Dog.count == 0
 
   puts "Images attached to dogs!"
 
+  puts "But because the litters were so much fun, another one that was creepy and incestuous was planned..."
+
+  Litter.create(lname: "ThirdLitter", sire_id: 3, bitch_id: 2, breeder_id: 1, 
+                pdate: rand(100).days.from_now, edate: rand(200).days.from_now
+                )
+
 else
 
   puts "dogs already in database, skipping dog creation"

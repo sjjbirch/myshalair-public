@@ -1,6 +1,18 @@
 class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy ]
 
+  def puppy_getter(litter)
+    if litter.dogs.count > 0
+      puppies = []
+      litter.dogs.each do |puppy|
+        puppies << puppy
+      end
+      litter.as_json.merge({ puppies: puppies })
+    else
+      litter.as_json.merge({ puppies: nil })
+    end
+  end
+
   # GET /litters
   def index
     @litters = Litter.all
@@ -10,6 +22,7 @@ class LittersController < ApplicationController
 
   # GET /litters/1
   def show
+    @litter = puppy_getter(@litter)
     render json: @litter
   end
 
