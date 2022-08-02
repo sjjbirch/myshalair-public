@@ -98,7 +98,7 @@ if Dog.count == 0
                 pdate: rand(100).days.from_now, edate: rand(200).days.from_now
                 )
 
-  puts "Two people really wanted Lannister puppies so they applied..."
+  puts "Everyone really wanted Lannister puppies so they applied..."
 
   app1 = LitterApplication.create( user: user2, litter: litter2, yardarea: 200.to_f, yardfenceheight: 5.to_f )
 
@@ -107,6 +107,14 @@ if Dog.count == 0
   Child.create( litter_application: app1, age: 1 )
 
   app2 = LitterApplication.create( user: user3, litter: litter3, yardarea: 205.to_f, yardfenceheight: 4.to_f )
+
+  app3 = LitterApplication.create( user: user3, litter: litter2, yardarea: 205.to_f, yardfenceheight: 4.to_f )
+
+  app4 = LitterApplication.create( user: user2, litter: litter1, yardarea: 200.to_f, yardfenceheight: 5.to_f )
+
+  Pet.create( litter_application: app4, age: 15, pettype: "Fish", petbreed: "Goldfish" )
+  Pet.create( litter_application: app4, age: 160, pettype: "Fish", petbreed: "Great White Shark" )
+  Child.create( litter_application: app4, age: 1 )
 
   puts "I wonder how the applications will be processed..."
 

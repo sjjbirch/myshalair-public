@@ -18,6 +18,11 @@ before_action :configure_permitted_parameters, if: :devise_controller?
         end
     end
 
+    def login_check
+      # need a login check here
+      puts "placeholder function - fix me in application controller/login_check"
+    end
+
     protected
 
     def configure_permitted_parameters
