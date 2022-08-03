@@ -2,7 +2,9 @@ class DogsController < ApplicationController
   before_action :set_dog, only: [:show, :update, :destroy]
 
   def uri_adder(dog)
-    dog.as_json.merge({ main_image: url_for(dog.main_image) })
+    if dog.main_image.present?
+      dog.as_json.merge({ main_image: url_for(dog.main_image) })
+    end
   end
 
   def boys
