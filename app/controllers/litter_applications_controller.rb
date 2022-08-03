@@ -3,12 +3,16 @@ class LitterApplicationsController < ApplicationController
   # before_action :match_breeder_and_litter
   before_action :login_check, except: [:new, :create]
 
+  # custom routes
+
   def process_application
     #the update version for admins that lets priority etc be patched,
     # needs to be separated from a user update that only touches the user stuff
   end
 
   def applications_for_breeder
+    admin_check
+
     @user = current_user
     @apps = []
     @litters = @user.litters_bred
@@ -29,6 +33,24 @@ class LitterApplicationsController < ApplicationController
 
     render json: @litter_applications
     ##"View litters for which you have applied."
+  end
+
+
+
+  def add_pet
+    if @litter_application.pet.build.build_pet
+      render json: @litter_application
+    else
+      render json: @litter_application.errors, status: :unprocessable_entity
+    end
+  end
+
+  def add_child
+    if @litter_application.child.build.build_child
+      render json: @litter_application
+    else
+      render json: @litter_application.errors, status: :unprocessable_entity
+    end
   end
 
   # GET /litter_applications

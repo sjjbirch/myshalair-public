@@ -5,7 +5,7 @@ class Dog < ApplicationRecord
     has_one :puppy_list
     has_one :litter, through: :puppy_list
     accepts_nested_attributes_for :puppy_list, allow_destroy: true
-    accepts_nested_attributes_for :litter
+    # accepts_nested_attributes_for :litter
 
     has_one :healthtest, dependent: :destroy
     accepts_nested_attributes_for :healthtest, allow_destroy: true

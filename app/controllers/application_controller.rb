@@ -14,12 +14,16 @@ before_action :configure_permitted_parameters, if: :devise_controller?
     def admin_check
         puts "WARNING: CALLED ADMIN CHECK FUNCTION - SHOULD NOT HAPPEN"
         unless current_user.admin?
-            render json: { error: "You cannot view this page" }, status: 403
+            render json: { error: "You cannot view this page" }, status: 403 and return
         end
     end
 
     def login_check
       # need a login check here
+      if current_user == nil
+        render json: { error: "You cannot view this page" }, status: 401 and return
+        # redirect them to login
+      end
       puts "placeholder function - fix me in application controller/login_check"
     end
 

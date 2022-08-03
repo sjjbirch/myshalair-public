@@ -18,7 +18,7 @@ class LittersController < ApplicationController
   #custom route actions
 
   def add_puppy
-    if @litter.dogs.build.build_dog
+    if @litter.dogs.build.build_dog(dog_params)
       render json: @litter
     else
       render json: @litter.errors, status: :unprocessable_entity
