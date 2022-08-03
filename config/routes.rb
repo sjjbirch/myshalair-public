@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   get '/boys', to: 'dogs#boys'
   get '/girls', to: 'dogs#girls'
   get '/puppies', to: 'dogs#puppies'
+  post '/add_p_to_l', to: 'dogs#add_p_to_l'
 
   # contact form pages
   # need to overwrite /contacts for unsigned post to /contact

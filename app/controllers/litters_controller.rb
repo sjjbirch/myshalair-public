@@ -18,7 +18,14 @@ class LittersController < ApplicationController
   #custom route actions
 
   def add_puppy
-    @doggo = @litter.dogs.build
+
+    # thedog = params[:foo]
+
+    # puts thedog
+    # puts params[:foo]
+
+    @doggo = @litter.dogs.build(callname:params[:callname], realname:params[:realname], 
+                                 dob:params[:dob],sex: params[:sex])
     if @doggo.save
       render json: @doggo
     else
@@ -75,6 +82,6 @@ class LittersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def litter_params
-      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional, :dogs, :puppy_lists)
+      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional)
     end
 end

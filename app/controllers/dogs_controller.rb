@@ -25,6 +25,21 @@ class DogsController < ApplicationController
     render json: @dogs
   end
 
+  def add_p_to_l
+    #broken don't use it
+    puts dog_params
+
+    @dog = Dog.new(dog_params)
+
+    if @dog.save
+      render json: @dog, status: :created, location: @dog
+    else
+      render json: @dog.errors, status: :unprocessable_entity
+    end
+
+    # PuppyList.create!(litter: request.body.read.litter_id, dog: @dog)
+  end
+
   # GET /dogs
   def index
     @dogs = Dog.all.map { |dog| uri_adder(dog) }
@@ -88,6 +103,6 @@ class DogsController < ApplicationController
     params.require(:dog).permit(:callname, :realname, :dob, :sex,
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
-                                :main_image)
+                                :main_image, :litter_id)
   end
 end
