@@ -1,5 +1,7 @@
 class LittersController < ApplicationController
-  before_action :set_litter, only: %i[ show update destroy ]
+  before_action :set_litter, only: %i[ show update destroy add_puppy ]
+
+# custom helpers
 
   def puppy_getter(litter)
     if litter.dogs.count > 0
@@ -11,6 +13,19 @@ class LittersController < ApplicationController
     else
       litter.as_json.merge({ puppies: nil })
     end
+  end
+
+  #custom route actions
+
+  def add_puppy
+    if @litter.dogs.build.build_dog
+      render json: @litter
+    else
+      render json: @litter.errors, status: :unprocessable_entity
+    end
+  end
+
+  def assign_puppy
   end
 
   # GET /litters
@@ -59,6 +74,6 @@ class LittersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def litter_params
-      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional, :dogs)
+      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional, :dogs, :puppy_lists)
     end
 end
