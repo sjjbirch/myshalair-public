@@ -18,12 +18,6 @@ class LittersController < ApplicationController
   #custom route actions
 
   def add_puppy
-
-    # thedog = params[:foo]
-
-    # puts thedog
-    # puts params[:foo]
-
     @doggo = @litter.dogs.build(callname:params[:callname], realname:params[:realname], 
                                  dob:params[:dob],sex: params[:sex])
     if @doggo.save

@@ -24,7 +24,6 @@ before_action :configure_permitted_parameters, if: :devise_controller?
         render json: { error: "You cannot view this page" }, status: 401 and return
         # redirect them to login
       end
-      puts "placeholder function - fix me in application controller/login_check"
     end
 
     protected

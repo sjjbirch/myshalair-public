@@ -28,9 +28,9 @@ if Dog.count == 0
   
   puts "Creating an Adamdog and an Evedog to have litters"
 
-  Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1')
+  Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1', dprio: 12)
 
-  Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1')
+  Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1', dprio: 11)
   
   puts "Creating a litter"
 
@@ -43,17 +43,18 @@ if Dog.count == 0
   puts "A wonderful litter of 5 dogs was born on: " + thebigdate.to_s
 
   doglist = [
-            [ 'Fido', 'Fidolimus III', 1, 'Owner 1', 'Larry Breeder' ],
-            [ 'Lassie', 'Lassietudinal IV', 2, 'Owner 2', 'Larry Breeder' ],
-            [ 'Redditor', 'Cringelord I', 1, 'Hilaire Yeates', 'Hilaire Yeates' ],
-            [ 'Barker', 'Barks-at-2-am', 1, 'Hilaire Yeates', 'Hilaire Yeates' ],
-            [ 'Mog', 'Mogdog', 2, 'Solomon Birch', 'Some Farmer']
+            [ 'Fido', 'Fidolimus III', 1, 'Owner 1', 'Larry Breeder', 10 ],
+            [ 'Lassie', 'Lassietudinal IV', 2, 'Owner 2', 'Larry Breeder', 9 ],
+            [ 'Redditor', 'Cringelord I', 1, 'Hilaire Yeates', 'Hilaire Yeates', 8 ],
+            [ 'Barker', 'Barks-at-2-am', 1, 'Hilaire Yeates', 'Hilaire Yeates', 7 ],
+            [ 'Mog', 'Mogdog', 2, 'Solomon Birch', 'Some Farmer', 6 ]
             ]
 
-  doglist.each do | cname, rname, sex, ownername, breedername |
+  doglist.each do | cname, rname, sex, ownername, breedername, dprio |
     dog = Dog.new(  
                   callname: cname, realname: rname, dob: thebigdate,
-                  sex: sex, ownername: ownername, breedername: breedername 
+                  sex: sex, ownername: ownername, breedername: breedername,
+                  dprio: dprio 
                   )
     dog.save!
     PuppyList.create!(litter: litter1, dog: dog)
@@ -71,17 +72,18 @@ if Dog.count == 0
                           )
 
   doglist = [
-            [ 'Princes Leia', 'Kisses her brother', 2, 'Han Solo', 'Darth Vader' ],
-            [ 'Sandman', 'Even The Younglings', 1, 'George Lucas', 'Luke Skinwalker' ],
-            [ 'Pluto', 'Pluto The Pup', 1, 'Walt Disney', 'Marv the Martian' ],
-            [ 'Red', 'Red The Kelpie', 1, 'Some Seppo', 'Mongrel Man' ],
-            [ 'Blue', "Children's Show Blue", 1, 'ABC Kids', 'Animator Man']
+            [ 'Princes Leia', 'Kisses her brother', 2, 'Han Solo', 'Darth Vader', 5 ],
+            [ 'Sandman', 'Even The Younglings', 1, 'George Lucas', 'Luke Skinwalker', 4 ],
+            [ 'Pluto', 'Pluto The Pup', 1, 'Walt Disney', 'Marv the Martian', 3 ],
+            [ 'Red', 'Red The Kelpie', 1, 'Some Seppo', 'Mongrel Man', 2 ],
+            [ 'Blue', "Children's Show Blue", 1, 'ABC Kids', 'Animator Man', 1 ]
             ]
 
-  doglist.each do | cname, rname, sex, ownername, breedername |
+  doglist.each do | cname, rname, sex, ownername, breedername, dprio |
     dog = Dog.new( 
                   callname: cname, realname: rname, dob: thebigdate+52.days,
-                  sex: sex, ownername: ownername, breedername: breedername 
+                  sex: sex, ownername: ownername, breedername: breedername,
+                  dprio: dprio
                   )
     dog.save!
     PuppyList.create!(litter: litter2, dog: dog)

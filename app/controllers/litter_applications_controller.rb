@@ -38,7 +38,7 @@ class LitterApplicationsController < ApplicationController
 
 
   def add_pet
-    if @litter_application.pet.build.build_pet
+    if @litter_application.pet.build(params[:placeholder])
       render json: @litter_application
     else
       render json: @litter_application.errors, status: :unprocessable_entity
@@ -46,7 +46,7 @@ class LitterApplicationsController < ApplicationController
   end
 
   def add_child
-    if @litter_application.child.build.build_child
+    if @litter_application.child.build(params[:placeholder])
       render json: @litter_application
     else
       render json: @litter_application.errors, status: :unprocessable_entity

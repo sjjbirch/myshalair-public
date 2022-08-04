@@ -1,5 +1,6 @@
 class DogsController < ApplicationController
   before_action :set_dog, only: [:show, :update, :destroy]
+  before_create :init_dprio, only: :create
 
   def uri_adder(dog)
     if dog.main_image.present?
@@ -96,6 +97,10 @@ class DogsController < ApplicationController
   # Use callbacks to share common setup or constraints between actions.
   def set_dog
     @dog = Dog.find(params[:id])
+  end
+
+  def init_dprio
+    self.dprio ||= self.id
   end
 
   # Only allow a list of trusted parameters through.
