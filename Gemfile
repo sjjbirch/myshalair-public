@@ -55,3 +55,4 @@ gem "devise-jwt"
 gem "responders"
 gem "net-http"
 gem "mini_magick"
+gem 'acts_as_list'

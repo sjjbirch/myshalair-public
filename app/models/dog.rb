@@ -1,4 +1,5 @@
 class Dog < ApplicationRecord
+    acts_as_list
 
     has_one_attached :main_image
 

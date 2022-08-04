@@ -69,7 +69,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "retired", default: false
-    t.integer "dprio", null: false
+    t.integer "position", null: false
+    t.index ["position"], name: "index_dogs_on_position"
   end
 
   create_table "healthtests", force: :cascade do |t|

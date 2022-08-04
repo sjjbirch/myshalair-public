@@ -1,10 +1,36 @@
 class DogsController < ApplicationController
   before_action :set_dog, only: [:show, :update, :destroy]
-  before_create :init_dprio, only: :create
 
   def uri_adder(dog)
     if dog.main_image.present?
       dog.as_json.merge({ main_image: url_for(dog.main_image) })
+    end
+  end
+
+  def reorder_position
+    # receives list of dogs as dog_ids and new position, updates the DB with them
+    # requires refactor: n+1 query problem
+
+    dogs = params[:dogs]
+    numbertomove = dogs.count
+
+    dogs.each do |dog|
+      puts dog
+      @d = Dog.find(dog[:id])
+      puts "Old position " + @d.position.to_s
+      unless @d.position == dog[:position]
+        if @d.insert_at(dog[:position])
+            numbertomove -= 1
+        end
+      else
+        numbertomove -= 1
+      end
+    end
+
+    if numbertomove == 0
+      render json: { success: "Success", message: "Dog positions updated" }, status: 201
+    else
+      render json: { success: "Failure", message: "Dog positions not updated" }, status: :unprocessable_entity
     end
   end
 
@@ -69,7 +95,7 @@ class DogsController < ApplicationController
 
   # POST /dogs
   def create
-    @dog = Dog.new(dog_params)
+    @dog = Dog.new(dog_params, position: 5)
 
     if @dog.save
       render json: @dog, status: :created, location: @dog
@@ -99,15 +125,16 @@ class DogsController < ApplicationController
     @dog = Dog.find(params[:id])
   end
 
-  def init_dprio
-    self.dprio ||= self.id
-  end
+  # def init_position
+  # unused function for manually initing the display position of a dog intended for call at before_create if used
+  #   self.position ||= self.id
+  # end
 
   # Only allow a list of trusted parameters through.
   def dog_params
     params.require(:dog).permit(:callname, :realname, :dob, :sex,
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
-                                :main_image, :litter_id)
+                                :main_image, :litter_id, :position, :dlist)
   end
 end

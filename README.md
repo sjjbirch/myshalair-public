@@ -18,6 +18,7 @@
 * rack-cors (1.1.1)
 * responders (3.0.1)
 * net-http (0.2.2)
+* acts_as_list (1.0.4)
 
 ## Maintenance notes
 * bcrypt

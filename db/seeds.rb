@@ -28,9 +28,10 @@ if Dog.count == 0
   
   puts "Creating an Adamdog and an Evedog to have litters"
 
-  Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1', dprio: 12)
+  Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1')
+  # acts_as_list will create these at the top prio by default, but later we will move them
 
-  Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1', dprio: 11)
+  Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1')
   
   puts "Creating a litter"
 
@@ -50,13 +51,13 @@ if Dog.count == 0
             [ 'Mog', 'Mogdog', 2, 'Solomon Birch', 'Some Farmer', 6 ]
             ]
 
-  doglist.each do | cname, rname, sex, ownername, breedername, dprio |
+  doglist.each do | cname, rname, sex, ownername, breedername, position |
     dog = Dog.new(  
                   callname: cname, realname: rname, dob: thebigdate,
-                  sex: sex, ownername: ownername, breedername: breedername,
-                  dprio: dprio 
+                  sex: sex, ownername: ownername, breedername: breedername
                   )
     dog.save!
+    dog.move_to_top
     PuppyList.create!(litter: litter1, dog: dog)
     puts cname + " was born!"
   end
@@ -79,13 +80,13 @@ if Dog.count == 0
             [ 'Blue', "Children's Show Blue", 1, 'ABC Kids', 'Animator Man', 1 ]
             ]
 
-  doglist.each do | cname, rname, sex, ownername, breedername, dprio |
+  doglist.each do | cname, rname, sex, ownername, breedername, position |
     dog = Dog.new( 
                   callname: cname, realname: rname, dob: thebigdate+52.days,
-                  sex: sex, ownername: ownername, breedername: breedername,
-                  dprio: dprio
+                  sex: sex, ownername: ownername, breedername: breedername
                   )
     dog.save!
+    dog.move_to_top
     PuppyList.create!(litter: litter2, dog: dog)
     puts cname + " was born!"
   end
