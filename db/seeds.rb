@@ -6,23 +6,23 @@
 #   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
 #   Character.create(name: "Luke", movie: movies.first)
 
-puts "Starting seeding..."
-
-puts "Creating three users"
-
-user1 = User.new(username: "User1", password: "qwerty", postcode:"2000", email: "1@qwerty.com", admin: true)
-user1.skip_confirmation!
-user1.save!
-
-user2 = User.new(username: "User2", password: "qwerty", postcode:"2000", email: "2@qwerty.com", admin: false)
-user2.skip_confirmation!
-user2.save!
-
-user3 = User.new(username: "User3", password: "qwerty", postcode:"2000", email: "3@qwerty.com", admin: false)
-user3.skip_confirmation!
-user3.save!
-
 if Dog.count == 0
+
+  puts "Starting seeding..."
+
+  puts "Creating three users"
+  
+  user1 = User.new(username: "User1", password: "qwerty", postcode:"2000", email: "1@qwerty.com", admin: true)
+  user1.skip_confirmation!
+  user1.save!
+  
+  user2 = User.new(username: "User2", password: "qwerty", postcode:"2000", email: "2@qwerty.com", admin: false)
+  user2.skip_confirmation!
+  user2.save!
+  
+  user3 = User.new(username: "User3", password: "qwerty", postcode:"2000", email: "3@qwerty.com", admin: false)
+  user3.skip_confirmation!
+  user3.save!
 
   puts "No dogs found in DB"
   
@@ -133,7 +133,7 @@ if Dog.count == 0
 
 else
 
-  puts "dogs already in database, skipping dog creation"
+  puts "dogs already in database; seeding skipped"
 
 end
 
