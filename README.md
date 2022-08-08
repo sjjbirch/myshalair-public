@@ -10,15 +10,25 @@
 * ubuntu 20.04.4 LTS
 * imagemagick (-v?) (os level, not gem)
 * ruby 3.0.2p107 2021-07-07 rev 0db68f0233
+* foreman -0.87.2 (environment, NOT Rails, for testing only; ie gem install foreman NOT in the gemfile)
 #### gems
 * rails (7.0.3.1)
 * image_processing (1.12.2)
 * mini_magick (4.11.0)
-* rspec-core (3.11.0)
 * rack-cors (1.1.1)
 * responders (3.0.1)
 * net-http (0.2.2)
 * acts_as_list (1.0.4)
+
+#### gems test
+*  gem 'capybara', '~> 2.4.4'
+*  gem 'capybara-screenshot', '~> 1.0.11'
+*  gem 'database_cleaner'
+*  gem "rspec-rails", "~> 5.1"
+*  gem "database_cleaner", "~> 2.0"
+*  gem 'selenium-webdriver'
+
+I'm so sad that I've installed Capybara. Last time I tried to use it I spent a week trying to make it work and succeeded only in disappointing myself.
 
 ## Maintenance notes
 * bcrypt

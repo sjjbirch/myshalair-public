@@ -48,11 +48,18 @@ group :development do
 end
 
 
-gem "rspec-rails", "~> 5.1"
-gem "database_cleaner", "~> 2.0"
 gem "devise"
 gem "devise-jwt"
 gem "responders"
 gem "net-http"
 gem "mini_magick"
 gem 'acts_as_list'
+
+group :test do
+  gem 'capybara', '~> 2.4.4'
+  gem 'capybara-screenshot', '~> 1.0.11'
+  gem 'database_cleaner'
+  gem "rspec-rails", "~> 5.1"
+  gem "database_cleaner", "~> 2.0"
+  gem 'selenium-webdriver'
+end
