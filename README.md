@@ -1,5 +1,15 @@
 # README
 
+## Usage
+### To test:
+* Install environment, dependencies and bundle install.
+* If you are feeling extremely risky then add ``api: RAILS_ENV=test bundle exec rails s -p 3001`` to ``procfile-react-test``, and then run ``foreman start -f procfile-react-test``, but be aware that that foreman seems not to consistently kill Puma servers and you may need to manually troubleshoot if this occurs.
+* If you aren't feeling risky then just run ``foreman start -f procfile-react-test`` and in another terminal run ``RAILS_ENV=test bundle exec rails s -p 3001``.
+* Either way, run ``bundle exec rspec spec`` to run the integration and unit tests.
+
+* If you're feeling ultra risky then add ``batch_test: sleep 4 && bundle exec rspec spec`` after ``api: `` and then start foreman. This seems to run once and once only without manual troubleshooting.
+* If you'd like this issue to be addressed, please go and comment on the [pull request to fix it that's been open for a year even though it has no conflicts](https://github.com/ddollar/foreman/pull/780).
+
 ## Config notes
 * Dev DB username:postgres pw:postgres port:5432 on localhost
 * Web server = puma, listening on port 3001
@@ -11,6 +21,7 @@
 * imagemagick (-v?) (os level, not gem)
 * ruby 3.0.2p107 2021-07-07 rev 0db68f0233
 * foreman -0.87.2 (environment, NOT Rails, for testing only; ie gem install foreman NOT in the gemfile)
+
 #### gems
 * rails (7.0.3.1)
 * image_processing (1.12.2)

@@ -54,12 +54,15 @@ gem "responders"
 gem "net-http"
 gem "mini_magick"
 gem 'acts_as_list'
+#these should really be test
+gem 'webrick'
+gem 'webdrivers', '~> 5.0'
 
-group :test do
+group :test, :development do
   gem 'capybara', '~> 2.4.4'
   gem 'capybara-screenshot', '~> 1.0.11'
-  gem 'database_cleaner'
   gem "rspec-rails", "~> 5.1"
   gem "database_cleaner", "~> 2.0"
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver' #this should do the thing
+  gem 'faker'
 end

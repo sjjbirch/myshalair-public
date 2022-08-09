@@ -1,4 +1,3 @@
 
-web: cd clients/react && yarn start
-api: RAILS_ENV=test bundle exec rails s -p 3001
+web: cd ../../t3a2-dev/WillemSwanepoel-T3A2 && npm start -f
 
