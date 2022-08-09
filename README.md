@@ -38,6 +38,7 @@
 *  gem "rspec-rails", "~> 5.1"
 *  gem "database_cleaner", "~> 2.0"
 *  gem 'selenium-webdriver'
+*  gem 'simplecov'
 
 I'm so sad that I've installed Capybara. Last time I tried to use it I spent a week trying to make it work and succeeded only in disappointing myself.
 
