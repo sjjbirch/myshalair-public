@@ -65,4 +65,5 @@ group :test, :development do
   gem "database_cleaner", "~> 2.0"
   gem 'selenium-webdriver' #this should do the thing
   gem 'faker'
+  gem 'simplecov', require: false
 end
