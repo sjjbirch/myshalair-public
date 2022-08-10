@@ -2,6 +2,7 @@ class LitterApplicationsController < ApplicationController
   before_action :set_litter_application, only: %i[ show update destroy auth_check assign_puppy ]
   # before_action :match_breeder_and_litter
   before_action :login_check, except: [:new, :create]
+  before_action :admin_check, only: %i[ assign_puppy applications_for_breeder ]
 
   # custom routes
 
@@ -24,7 +25,6 @@ class LitterApplicationsController < ApplicationController
   end
 
   def applications_for_breeder
-    admin_check
 
     @user = current_user
     @apps = []

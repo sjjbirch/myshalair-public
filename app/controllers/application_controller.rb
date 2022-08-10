@@ -12,7 +12,7 @@ before_action :configure_permitted_parameters, if: :devise_controller?
                         # for devise compatibility
 
     def admin_check
-        puts "WARNING: CALLED ADMIN CHECK FUNCTION - SHOULD NOT HAPPEN"
+        puts "WARNING: CALLED ADMIN CHECK FUNCTION - SHOULD NOT HAPPEN, unsure if this is still valid"
         unless current_user.admin?
             render json: { error: "You cannot view this page" }, status: 403 and return
         end
