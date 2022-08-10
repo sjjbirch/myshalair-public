@@ -56,8 +56,22 @@ class LittersController < ApplicationController
 
   # PATCH/PUT /litters/1
   def update
+    # if puppies are attached, then update their dob if adate is changed or added
+    changeddogs = []
+
+    if @litter.dogs.count > 0 && @litter.adate != params[:adate]
+      @litter.dogs.each do |dog|
+        dog.dob = params[:adate]
+        dog.save!
+        changeddogs << dog.id
+      end
+      # update the each of the children dob with new adate
+      # return something but avoid double render
+    else
+    end
+
     if @litter.update(litter_params)
-      render json: @litter
+      render json: { litter: @litter, updatedPuppies: changeddogs }
     else
       render json: @litter.errors, status: :unprocessable_entity
     end
