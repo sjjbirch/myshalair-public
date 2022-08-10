@@ -4,7 +4,7 @@ class LittersController < ApplicationController
 # custom helpers
 
   def puppy_getter(litter)
-    if litter.dogs.count > 0
+    if litter.dogs.exists?
       puppies = []
       litter.dogs.each do |puppy|
         puppies << puppy
@@ -59,7 +59,7 @@ class LittersController < ApplicationController
     # if puppies are attached, then update their dob if adate is changed or added
     changeddogs = []
 
-    if @litter.dogs.count > 0 && @litter.adate != params[:adate]
+    if params.has_key?(:adate) && @litter.adate != params[:adate] && @litter.dogs.exists?
       @litter.dogs.each do |dog|
         dog.dob = params[:adate]
         dog.save!
@@ -75,6 +75,7 @@ class LittersController < ApplicationController
     else
       render json: @litter.errors, status: :unprocessable_entity
     end
+
   end
 
   # DELETE /litters/1
