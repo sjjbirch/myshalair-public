@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_10_084534) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -131,7 +131,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
     t.bigint "litter_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "litter_application_id"
     t.index ["dog_id"], name: "index_puppy_lists_on_dog_id"
+    t.index ["litter_application_id"], name: "index_puppy_lists_on_litter_application_id"
     t.index ["litter_id"], name: "index_puppy_lists_on_litter_id"
   end
 
@@ -180,5 +182,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
   add_foreign_key "litters", "users", column: "breeder_id"
   add_foreign_key "pets", "litter_applications"
   add_foreign_key "puppy_lists", "dogs"
+  add_foreign_key "puppy_lists", "litter_applications"
   add_foreign_key "puppy_lists", "litters"
 end

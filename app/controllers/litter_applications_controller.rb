@@ -14,6 +14,7 @@ class LitterApplicationsController < ApplicationController
   def assign_puppy
     @puppylist = @litter_application.litter.dogs.id(param[:selected_puppy_id]).puppy_list
     if @puppylist.update(litter_application_id: @litter_application.id)
+      # add owner to the dog as well
       render json: {
         success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
       }, status: 200
