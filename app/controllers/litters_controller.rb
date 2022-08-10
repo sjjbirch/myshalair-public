@@ -18,8 +18,8 @@ class LittersController < ApplicationController
   #custom route actions
 
   def add_puppy
-    @doggo = @litter.dogs.build(callname:params[:callname], realname:params[:realname], 
-                                 dob:params[:dob],sex: params[:sex])
+    @doggo = @litter.dogs.build( callname:params[:callname], realname:params[:realname], 
+                                 dob: @litter.adate, sex: params[:sex] )
     if @doggo.save
       render json: @doggo
     else
