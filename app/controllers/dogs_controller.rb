@@ -2,6 +2,8 @@ class DogsController < ApplicationController
   before_action :set_dog, only: [:show, :update, :destroy]
 
   def uri_adder(dog)
+    # also requires refactor - causes n queries instead of getting when it gets the main dog object
+
     if dog.main_image.present?
       dog.as_json.merge({ main_image: url_for(dog.main_image) })
     end
@@ -27,8 +29,10 @@ class DogsController < ApplicationController
       end
     end
 
+    @dogz = Dog.all
+
     if numbertomove == 0
-      render json: { success: "Success", message: "Dog positions updated" }, status: 201
+      render json: { success: "Success", message: "Dog positions updated", dogs: @dogz }, status: 201
     else
       render json: { success: "Failure", message: "Dog positions not updated" }, status: :unprocessable_entity
     end

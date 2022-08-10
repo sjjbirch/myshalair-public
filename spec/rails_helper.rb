@@ -1,11 +1,25 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
+require 'database_cleaner'
+require 'devise'
+
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+
+Dir['spec/support/**/*.rb'].each do |file|
+  require Rails.root.join(file).to_s
+end
+
+def wait_for_page_load
+# I can't believe this is necessary
+# nvm apparently it's not
+# nvm it definitely does for cold starts, what a joke
+  sleep 1
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
