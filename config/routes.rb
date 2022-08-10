@@ -14,6 +14,9 @@ Rails.application.routes.draw do
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'
   get '/applications_from_me', to: 'litter_applications#applications_for_user'
   get '/applications_to_me', to: 'litter_applications#applications_for_breeder'
+  post '/add_pet', to: 'litter_applications#add_pet'
+  post '/add_child', to: 'litter_applications#add_child'
+  patch '/assign_puppy', to: 'litter_applications#assign_puppy'
 
   # dog pages
   resources :dogs

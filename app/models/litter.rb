@@ -5,6 +5,7 @@ class Litter < ApplicationRecord
   
   has_many :puppy_lists
   has_many :dogs, through: :puppy_lists
+  
   accepts_nested_attributes_for :puppy_lists
   accepts_nested_attributes_for :dogs
 

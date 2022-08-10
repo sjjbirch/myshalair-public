@@ -15,6 +15,18 @@ class LittersController < ApplicationController
     end
   end
 
+  def litter_applications_getter(litter)
+    if litter.litter_applications.exists?
+      litter_applications = []
+      litter.litter_applications.each do |app|
+        litter_applications << app
+      end
+      litter.as_json.merge({ litterApplications: litter_applications })
+    else
+      litter.as_json.merge({ litterApplications: nil })
+    end
+  end
+
   #custom route actions
 
   def add_puppy
@@ -27,9 +39,6 @@ class LittersController < ApplicationController
     end
   end
 
-  def assign_puppy
-  end
-
   # GET /litters
   def index
     @litters = Litter.all
@@ -40,6 +49,7 @@ class LittersController < ApplicationController
   # GET /litters/1
   def show
     @litter = puppy_getter(@litter)
+    @litter = litter_applications_getter(@litter)
     render json: @litter
   end
 

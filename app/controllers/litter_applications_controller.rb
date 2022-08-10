@@ -1,5 +1,5 @@
 class LitterApplicationsController < ApplicationController
-  before_action :set_litter_application, only: %i[ show update destroy auth_check ]
+  before_action :set_litter_application, only: %i[ show update destroy auth_check assign_puppy ]
   # before_action :match_breeder_and_litter
   before_action :login_check, except: [:new, :create]
 
@@ -8,6 +8,19 @@ class LitterApplicationsController < ApplicationController
   def process_application
     #the update version for admins that lets priority etc be patched,
     # needs to be separated from a user update that only touches the user stuff
+  end
+
+  def assign_puppy
+    @puppylist = @litter_application.litter.dogs.id(param[:selected_puppy_id]).puppy_list
+    if @puppylist.update(litter_application_id: @litter_application.id)
+      render json: {
+        success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
+      }, status: 200
+    else
+      render json: {
+        success: "Failure", message: "Honestly it's a miracle the spaghetti code got this far anyway.", errors: @puppylist.errors
+      }, status: :unprocessable_entity
+    end
   end
 
   def applications_for_breeder
@@ -38,18 +51,26 @@ class LitterApplicationsController < ApplicationController
   def add_pet
     @pet = @litter_application.pets.build(age: params[:age], pettype: params[:pettype], petbreed: params[:petbreed])
     if @pet.save
-     render json: { success: "Success", message: "Pet created" }, status: 201
+      render json: {
+        success: "Success", message: "Pet created"
+      }, status: 201
     else
-      render json: { success: "Failure", message: "Pet not created", errors: @litter_application.errors }, status: :unprocessable_entity
+      render json: {
+        success: "Failure", message: "Pet not created", errors: @litter_application.errors
+      }, status: :unprocessable_entity
     end
   end
 
   def add_child
     @child = @litter_application.children.build(age: params[:age])
     if @child.save
-     render json: { success: "Success", message: "Child created" }, status: 201
+      render json: {
+        success: "Success", message: "Child created"
+      }, status: 201
     else
-      render json: { success: "Failure", message: "Child not created", errors: @litter_application.errors }, status: :unprocessable_entity
+      render json: {
+        success: "Failure", message: "Child not created", errors: @litter_application.errors
+      }, status: :unprocessable_entity
     end
   end
 
@@ -62,7 +83,7 @@ class LitterApplicationsController < ApplicationController
 
   # GET /litter_applications/1
   def show
-    render json: @litter_application
+    render json: {litterApplication: @litter_application, availablePuppies: @litter_application.litter.dogs}
   end
 
   # POST /litter_applications
