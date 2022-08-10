@@ -63,7 +63,7 @@ class LittersController < ApplicationController
       @litter.dogs.each do |dog|
         dog.dob = params[:adate]
         dog.save!
-        changeddogs << dog.id
+        changeddogs << dog
       end
       # update the each of the children dob with new adate
       # return something but avoid double render

@@ -35,21 +35,21 @@ class LitterApplicationsController < ApplicationController
     ##"View litters for which you have applied."
   end
 
-
-
   def add_pet
-    if @litter_application.pet.build(params[:placeholder])
-      render json: @litter_application
+    @pet = @litter_application.pets.build(age: params[:age], pettype: params[:pettype], petbreed: params[:petbreed])
+    if @pet.save
+     render json: { success: "Success", message: "Pet created" }, status: 201
     else
-      render json: @litter_application.errors, status: :unprocessable_entity
+      render json: { success: "Failure", message: "Pet not created", errors: @litter_application.errors }, status: :unprocessable_entity
     end
   end
 
   def add_child
-    if @litter_application.child.build(params[:placeholder])
-      render json: @litter_application
+    @child = @litter_application.children.build(age: params[:age])
+    if @child.save
+     render json: { success: "Success", message: "Child created" }, status: 201
     else
-      render json: @litter_application.errors, status: :unprocessable_entity
+      render json: { success: "Failure", message: "Child not created", errors: @litter_application.errors }, status: :unprocessable_entity
     end
   end
 
@@ -118,4 +118,5 @@ class LitterApplicationsController < ApplicationController
           render json: { error: "You cannot view this page" }, status: 403
       end
     end
+    
 end
