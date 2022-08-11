@@ -1,5 +1,5 @@
 class LitterApplicationsController < ApplicationController
-  before_action :set_litter_application, only: %i[ show update destroy auth_check assign_puppy ]
+  before_action :set_litter_application, only: %i[ show update destroy auth_check assign_puppy process_application ]
   # before_action :match_breeder_and_litter
   before_action :login_check, except: [:new, :create] #this should actually be for all outside of testing
   before_action :admin_check, only: %i[ assign_puppy applications_for_breeder ]
@@ -9,10 +9,28 @@ class LitterApplicationsController < ApplicationController
   def process_application
     #the update version for admins that lets priority etc be patched,
     # needs to be separated from a user update that only touches the user stuff
-    if @litter_application.update(litter_application_params)
-      render json: @litter_application
+    # this needs more testing with more seeds, I'm not convinced that priority shuffling is working
+
+    if params[:fulfillstate] == 1
+      if params[:priority].present?
+        @litter_application.update(fulfillstate: params[:fulfillstate], priority: params[:priority])
+        render json: {success: "Success", message: "Approved application at priority #{params[:priority]}"}
+      else
+        @litter_application.update(fulfillstate: params[:fulfillstate])
+        @litter_application.move_to_bottom
+        render json: {success: "Success", message: "Approved application at lowest priority."}
+      end
+    elsif params[:fulfillstate] == 2
+      @litter_application.fulfillstate = params[:fulfillstate]
+      if @litter_application.save!
+        @litter_application.remove_from_list
+        render json: {success: "Success", message: "Rejected application"}
+      else
+        render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
+      end
+
     else
-      render json: @litter_application.errors, status: :unprocessable_entity
+      render json: {success: "Failure", message: "Update failed, must accept or reject the application"}, status: :unprocessable_entity
     end
   end
 
@@ -114,7 +132,7 @@ class LitterApplicationsController < ApplicationController
     @puppylist = @dog.puppy_list
 
     if @litter_application.litter.id == @dog.litter.id
-      if @puppylist.update(litter_application_id: @litter_application.id) && @litter_application.update(fulfillstate: 1)
+      if @puppylist.update(litter_application_id: @litter_application.id) && @litter_application.update(fulfillstate: 3)
         @dog.update(owner_id: @litter_application.user.id)
         render json: {
           success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"

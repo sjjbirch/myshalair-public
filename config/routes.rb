@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   post '/add_child', to: 'litter_applications#add_child'
   patch '/assign_puppy', to: 'litter_applications#assign_puppy'
   post '/lazy_litter_application_create', to: 'litter_applications#lazy_create'
+  patch '/process_application', to: 'litter_applications#process_application'
 
   # dog pages
   resources :dogs

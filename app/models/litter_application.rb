@@ -1,4 +1,6 @@
 class LitterApplication < ApplicationRecord
+  acts_as_list scope: :litter, column: :priority
+  
   belongs_to :user
   belongs_to :litter
 

@@ -126,6 +126,11 @@ if Dog.count == 0
   Pet.create( litter_application: app4, age: 160, pettype: "Fish", petbreed: "Great White Shark" )
   Child.create( litter_application: app4, age: 1 )
 
+  apps = LitterApplication.all
+  apps.each do |app|
+    app.move_to_bottom
+  end
+
   puts "I wonder how the applications will be processed..."
 
   @dogs = Dog.all

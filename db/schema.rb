@@ -91,7 +91,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_11_061119) do
     t.bigint "litter_id", null: false
     t.float "yardarea"
     t.float "yardfenceheight"
-    t.integer "priority"
+    t.integer "priority", default: 999
     t.integer "fulfillstate"
     t.integer "paystate"
     t.datetime "created_at", null: false
