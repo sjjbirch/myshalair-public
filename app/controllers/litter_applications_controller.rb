@@ -15,31 +15,24 @@ class LitterApplicationsController < ApplicationController
     @dog = Dog.find(params[:selected_puppy_id])
     @puppylist = @dog.puppy_list
 
-    puts @litter_application.litter.id
-    # puts params[:selected_puppy_id]
-    puts @dog.litter.id
-  if @litter_application.litter.dogs.find {|x| x[:id] == :selected_puppy_id}
-    puts "dog in litter"
+  if @litter_application.litter.id == @dog.litter.id
+    if @puppylist.update(litter_application_id: @litter_application.id)
+      # add owner to the dog as well
+      render json: {
+        success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
+      }, status: 200
+    else
+      render json: {
+        success: "Failure", message: "Honestly it's a miracle the spaghetti code got this far anyway.", errors: @puppylist.errors
+      }, status: :unprocessable_entity
+    end
   else
-    puts "dog not in litter"
+    render json: {
+      success: "Failure", message: "Puppy must belong to the same litter as the application to pair them."
+    }, status: :unprocessable_entity
   end
 
-    # unless @litter_application
-    #   render json: {
-    #     success: "Failure", message: "Puppy must belong to the same litter as the application to pair them."
-    #   }, status: :unprocessable_entity
-    # end
 
-    # if @puppylist.update(litter_application_id: @litter_application.id)
-    #   # add owner to the dog as well
-    #   render json: {
-    #     success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
-    #   }, status: 200
-    # else
-    #   render json: {
-    #     success: "Failure", message: "Honestly it's a miracle the spaghetti code got this far anyway.", errors: @puppylist.errors
-    #   }, status: :unprocessable_entity
-    # end
   end
 
   def applications_for_breeder
