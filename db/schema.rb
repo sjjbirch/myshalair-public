@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_10_084534) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_11_061119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_10_084534) do
     t.datetime "updated_at", null: false
     t.boolean "retired", default: false
     t.integer "position", null: false
+    t.integer "owner_id", default: 1
     t.index ["position"], name: "index_dogs_on_position"
   end
 
@@ -174,6 +175,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_10_084534) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "children", "litter_applications"
+  add_foreign_key "dogs", "users", column: "owner_id"
   add_foreign_key "healthtests", "dogs"
   add_foreign_key "litter_applications", "litters"
   add_foreign_key "litter_applications", "users"

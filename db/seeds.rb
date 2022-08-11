@@ -28,7 +28,12 @@ if Dog.count == 0
   
   puts "Creating an Adamdog and an Evedog to have litters"
 
-  Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1')
+  dog1 = Dog.create(callname: 'Adam', realname: 'The First Dog', dob: 2200.days.ago, sex: 1, ownername: 'Owner 1')
+  if dog1.save
+    puts "created a dog"
+  else
+    puts dog1.errors.full_messages
+  end
   # acts_as_list will create these at the top prio by default, but later we will move them
 
   Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1')
@@ -38,6 +43,8 @@ if Dog.count == 0
   litter1 = Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                 pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
                 adate: rand(1900).days.ago)
+
+  puts "saving a date"
 
   thebigdate = Litter.first.adate
 

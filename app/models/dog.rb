@@ -1,6 +1,8 @@
 class Dog < ApplicationRecord
     acts_as_list
 
+    belongs_to :owner, class_name: 'User'
+
     has_one_attached :main_image
 
     has_one :puppy_list

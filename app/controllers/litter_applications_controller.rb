@@ -115,7 +115,7 @@ class LitterApplicationsController < ApplicationController
 
     if @litter_application.litter.id == @dog.litter.id
       if @puppylist.update(litter_application_id: @litter_application.id) && @litter_application.update(fulfillstate: 1)
-        # add owner to the dog as well
+        @dog.update(owner_id: @litter_application.user.id)
         render json: {
           success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
         }, status: 200
