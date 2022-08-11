@@ -3,27 +3,27 @@ class LittersController < ApplicationController
 
 # custom helpers
 
-  def puppy_getter(litter)
+  def puppy_getter(litter,output)
     if litter.dogs.exists?
       puppies = []
       litter.dogs.each do |puppy|
         puppies << puppy
       end
-      litter.as_json.merge({ puppies: puppies })
+      output.as_json.merge({ puppies: puppies })
     else
-      litter.as_json.merge({ puppies: nil })
+      output.as_json.merge({ puppies: nil })
     end
   end
 
-  def litter_applications_getter(litter)
+  def litter_applications_getter(litter,output)
     if litter.litter_applications.exists?
       litter_applications = []
       litter.litter_applications.each do |app|
         litter_applications << app
       end
-      litter.as_json.merge({ litterApplications: litter_applications })
+      output.as_json.merge({ litterApplications: litter_applications })
     else
-      litter.as_json.merge({ litterApplications: nil })
+      output.as_json.merge({ litterApplications: nil })
     end
   end
 
@@ -48,9 +48,10 @@ class LittersController < ApplicationController
 
   # GET /litters/1
   def show
-    @litter = puppy_getter(@litter)
-    @litter = litter_applications_getter(@litter)
-    render json: @litter
+    @output = @litter
+    @output = puppy_getter(@litter, @output)
+    @output = litter_applications_getter(@litter, @output)
+    render json: @output
   end
 
   # POST /litters

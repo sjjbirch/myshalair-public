@@ -17,9 +17,7 @@ class DogsController < ApplicationController
     numbertomove = dogs.count
 
     dogs.each do |dog|
-      puts dog
       @d = Dog.find(dog[:id])
-      puts "Old position " + @d.position.to_s
       unless @d.position == dog[:position]
         if @d.insert_at(dog[:position])
             numbertomove -= 1
