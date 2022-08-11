@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   
   resources :litters
   post '/add_puppy', to: 'litters#add_puppy'
+  post '/add_puppies', to: 'litters#add_puppies'
 
   resources :litter_applications
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'
@@ -17,6 +18,7 @@ Rails.application.routes.draw do
   post '/add_pet', to: 'litter_applications#add_pet'
   post '/add_child', to: 'litter_applications#add_child'
   patch '/assign_puppy', to: 'litter_applications#assign_puppy'
+  post '/lazy_litter_application_create', to: 'litter_applications#lazy_create'
 
   # dog pages
   resources :dogs

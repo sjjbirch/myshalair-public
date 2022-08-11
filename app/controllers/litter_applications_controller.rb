@@ -1,7 +1,7 @@
 class LitterApplicationsController < ApplicationController
   before_action :set_litter_application, only: %i[ show update destroy auth_check assign_puppy ]
   # before_action :match_breeder_and_litter
-  before_action :login_check, except: [:new, :create]
+  before_action :login_check, except: [:new, :create] #this should actually be for all outside of testing
   before_action :admin_check, only: %i[ assign_puppy applications_for_breeder ]
 
   # custom routes
@@ -12,17 +12,34 @@ class LitterApplicationsController < ApplicationController
   end
 
   def assign_puppy
-    @puppylist = @litter_application.litter.dogs.id(param[:selected_puppy_id]).puppy_list
-    if @puppylist.update(litter_application_id: @litter_application.id)
-      # add owner to the dog as well
-      render json: {
-        success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
-      }, status: 200
-    else
-      render json: {
-        success: "Failure", message: "Honestly it's a miracle the spaghetti code got this far anyway.", errors: @puppylist.errors
-      }, status: :unprocessable_entity
-    end
+    @dog = Dog.find(params[:selected_puppy_id])
+    @puppylist = @dog.puppy_list
+
+    puts @litter_application.litter.id
+    # puts params[:selected_puppy_id]
+    puts @dog.litter.id
+  if @litter_application.litter.dogs.find {|x| x[:id] == :selected_puppy_id}
+    puts "dog in litter"
+  else
+    puts "dog not in litter"
+  end
+
+    # unless @litter_application
+    #   render json: {
+    #     success: "Failure", message: "Puppy must belong to the same litter as the application to pair them."
+    #   }, status: :unprocessable_entity
+    # end
+
+    # if @puppylist.update(litter_application_id: @litter_application.id)
+    #   # add owner to the dog as well
+    #   render json: {
+    #     success: "Success", message: "#{@puppylist.dog.callname} added to #{@litter_application.user.username}"
+    #   }, status: 200
+    # else
+    #   render json: {
+    #     success: "Failure", message: "Honestly it's a miracle the spaghetti code got this far anyway.", errors: @puppylist.errors
+    #   }, status: :unprocessable_entity
+    # end
   end
 
   def applications_for_breeder
@@ -75,16 +92,72 @@ class LitterApplicationsController < ApplicationController
     end
   end
 
+  def lazy_dependent_add
+    @children = params[:children]
+    @pets = params[:pets]
+    dependent_errors = []
+
+    childrentoadd = @children.count
+    petstoadd = @pets.count
+
+    if childrentoadd > 0
+      @children.each do |child|
+          @child = @litter_application.children.build(age: child[:age])
+          if @child.save
+            childrentoadd -= 1
+          else
+            @child.errors >> dependent_errors
+          end
+      end
+    end
+
+    if petstoadd > 0
+      @pets.each do |pet|
+        @pet = @litter_application.pets.build(age: pet[:age], pettype: pet[:pettype], petbreed: pet[:petbreed])
+        if @pet.save
+          petstoadd -= 1
+        else
+          @pet.errors >> dependent_errors
+        end
+      end
+    end
+
+    if petstoadd == 0 && childrentoadd == 0
+      # send success
+    else
+      render json: {
+        success: "Failure",
+        message: "The application was created but at least some of the dependends weren't.",
+        errors: dependent_errors
+      }, status: :unprocessable_entity
+      return
+    end
+
+  end
+
   # GET /litter_applications
   def index
     @litter_applications = LitterApplication.all
-
     render json: @litter_applications
   end
 
   # GET /litter_applications/1
   def show
     render json: {litterApplication: @litter_application, availablePuppies: @litter_application.litter.dogs}
+  end
+
+  # POST /lazy_litter_applications
+  def lazy_create
+    @litter_application = LitterApplication.new(litter_application_params)
+
+    if @litter_application.save
+      if params[:children].count > 0 or params[:pets].count > 0
+        lazy_dependent_add
+      end
+      render json: @litter_application, status: :created, location: @litter_application
+    else
+      render json: @litter_application.errors, status: :unprocessable_entity
+    end
   end
 
   # POST /litter_applications

@@ -1,5 +1,5 @@
 class LittersController < ApplicationController
-  before_action :set_litter, only: %i[ show update destroy add_puppy ]
+  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies ]
 
 # custom helpers
 
@@ -30,13 +30,42 @@ class LittersController < ApplicationController
   #custom route actions
 
   def add_puppy
-    @doggo = @litter.dogs.build( callname:params[:callname], realname:params[:realname], 
+    @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
                                  dob: @litter.adate, sex: params[:sex] )
     if @doggo.save
       render json: { success: "Success", message: "#{params[:callname]} created" }, status: 201
     else
       render json: { success: "Failure", message: "#{params[:callname]} not created", errors: @litter.errors }, status: :unprocessable_entity
     end
+  end
+
+  def add_puppies
+
+    if params[:dogs].count != 0
+      @dogs = params[:dogs]
+      dogstocreate = @dogs.count
+      errinos = []
+    else
+      render json: { success: "Failure", message: "No puppies sent in update" }, status: :unprocessable_entity
+      return
+    end
+
+    @dogs.each do |dog|
+      @dog = @litter.dogs.build( callname: dog[:callname], realname: dog[:realname], 
+      dob: @litter.adate, sex: dog[:sex] )
+      if @dog.save
+        dogstocreate -= 1
+      else
+        @dog.errors >> errinos
+      end
+    end
+    
+    if dogstocreate == 0
+       render json: { success: "Success", message: "Puppies attached" }, status: 201
+    else
+      render json: { success: "Failure", message: "At least some puppies not created", errors: errinos }, status: :unprocessable_entity
+    end
+
   end
 
   # GET /litters
@@ -102,6 +131,6 @@ class LittersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def litter_params
-      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional)
+      params.require(:litter).permit(:breeder_id, :esize, :pdate, :edate, :adate, :lname, :sire_id, :bitch_id, :notional, :dogs)
     end
 end
