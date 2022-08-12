@@ -1,12 +1,12 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder]
+  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder, :parent_adder1]
 
   def uri_adder(dog)
     # also requires refactor - causes n queries instead of getting when it gets the main dog object
     if dog.main_image.present?
       dog.as_json.merge({ main_image: url_for(dog.main_image) })
     else
-      return dog
+      return dog.as_json.merge({ main_image: nil })
     end
   end
 
@@ -40,7 +40,8 @@ class DogsController < ApplicationController
   end
 
   def parent_adder
-    # all works
+
+    # all works, except the unrecorded bit which totally wouldn't and hasn't been tested
     # if @dog == "unrecorded"
     #   @dog.as_json.merge({ sire: "unrecorded", bitch: "unrecorded" })
     # else
@@ -50,10 +51,49 @@ class DogsController < ApplicationController
     # end
     # render json: @dog
 
+
+    # if dog.has_key?(id)
+    #       dog["sire"] = "unrecorded" && @dog["bitch"] = "unrecorded"
+    # else
+    #   if @dog.litter.present? then sire = @dog.litter.sire else sire = "unrecorded" end
+    #   if @dog.litter.present? then bitch = @dog.litter.bitch else bitch = "unrecorded" end
+    #   @dog = @dog.as_json.merge({ sire: sire, bitch: bitch })
+    # end
     attribs = @dog.attributes
     attribs["sire"] = @dog.litter.sire.attributes
+    foo = @dog
 
-    puts attribs
+    puts @dog.class
+    puts foo.class
+    puts attribs.class
+
+  end
+
+  def parent_adder_base(dogorstring)
+    if dogorstring.is_a?(Hash)
+      # it's a record of a valid dog
+    elsif dogorstring.is_a?(String)
+      # it doesn't exist
+    else
+    end
+  end
+
+  def parent_adder1
+    dogattribs = @dog.attributes
+    if @dog.litter.present?
+      dogattribs["sire"] = @dog.litter.sire.attributes
+      dogattribs["bitch"] = @dog.litter.bitch.attributes
+    else
+      dogattribs["sire"] = "unrecorded"
+      dogattribs["bitch"] = "unrecorded"
+    end
+
+    #dogattribs["sire"].class now returns hash if there's a dog string otherwise 
+
+    puts @dog.is_a?(Dog)
+    puts dogattribs["sire"].is_a?(Dog)
+    puts dogattribs["sire"].is_a?(Hash)
+    puts dogattribs["sire"].is_a?(String)
 
   end
 
