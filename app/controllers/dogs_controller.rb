@@ -1,5 +1,5 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder, :parent_adder1]
+  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder, :parent_adder1, :parent_adder_based]
 
   def uri_adder(dog)
     # also requires refactor - causes n queries instead of getting when it gets the main dog object
@@ -10,90 +10,53 @@ class DogsController < ApplicationController
     end
   end
 
-  def dumb_pedigree_builder(generations)
-    # output = []
+  def parent_adder_base(input, recursions)
 
-    generations.times do
-      # recurse
-    end
-
-    # subject = starting dog
-    
-    # sire = subject.litter.sire
-    # bitch = subject.litter.bitch
-    
-    # ssire = sire.litter.sire (paternal gf)
-    # bsire = sire.litter.bitch (paternal gm)
-
-    # sbitch = bitch.litter.sire (maternal gf)
-    # bbitch = bitch.litter.bitch (maternal gm)
-
-
-   # this should be recursive
-    # each level should only get the sire and bitch for the dog
-
-    # hilare wants it to be to great-great grandparents
-    # format for dog's name =
-    # show wins - breeder prefix - realname - agility comps - import/foreign tags
-    # sometimes the breeder's name appears underneath? unsure when or why
-
-  end
-
-  def parent_adder
-
-    # all works, except the unrecorded bit which totally wouldn't and hasn't been tested
-    # if @dog == "unrecorded"
-    #   @dog.as_json.merge({ sire: "unrecorded", bitch: "unrecorded" })
-    # else
-    #   if @dog.litter.present? then sire = @dog.litter.sire else sire = "unrecorded" end
-    #   if @dog.litter.present? then bitch = @dog.litter.bitch else bitch = "unrecorded" end
-    #   @dog = @dog.as_json.merge({ sire: sire, bitch: bitch })
-    # end
-    # render json: @dog
-
-
-    # if dog.has_key?(id)
-    #       dog["sire"] = "unrecorded" && @dog["bitch"] = "unrecorded"
-    # else
-    #   if @dog.litter.present? then sire = @dog.litter.sire else sire = "unrecorded" end
-    #   if @dog.litter.present? then bitch = @dog.litter.bitch else bitch = "unrecorded" end
-    #   @dog = @dog.as_json.merge({ sire: sire, bitch: bitch })
-    # end
-    attribs = @dog.attributes
-    attribs["sire"] = @dog.litter.sire.attributes
-    foo = @dog
-
-    puts @dog.class
-    puts foo.class
-    puts attribs.class
-
-  end
-
-  def parent_adder_base(dogorstring)
-    if dogorstring.is_a?(Hash)
-      # it's a record of a valid dog
-    elsif dogorstring.is_a?(String)
-      # it doesn't exist
+    if input["id"].is_a?(Integer)
+      dog = Dog.find(input["id"])
+      if dog.litter.present?
+        # puts "has a litter"
+        input["sire"] = dog.litter.sire.attributes
+        input["bitch"] = dog.litter.bitch.attributes
+      else
+        # puts "no litter"
+        input["sire"] = {"id" => "unrecorded"}
+        input["bitch"] = {"id" => "unrecorded"}
+      end
+    elsif input["id"].is_a?(String)
+      input["sire"] = {"id" => "unrecorded"}
+      input["bitch"] = {"id" => "unrecorded"}
     else
+      # some kind of rescue condition
+    end
+
+    if recursions > 0
+      recursions -= 1
+      parent_adder_base(input["sire"], recursions)
+      parent_adder_base(input["bitch"], recursions)
     end
   end
 
-  def parent_adder1
+  def pedigree
     dogattribs = @dog.attributes
+    generations = params[:generations]
+
     if @dog.litter.present?
       dogattribs["sire"] = @dog.litter.sire.attributes
       dogattribs["bitch"] = @dog.litter.bitch.attributes
+      # recursions -= 1
     else
-      dogattribs["sire"] = "unrecorded"
-      dogattribs["bitch"] = "unrecorded"
+      dogattrbis["sire"] = {"id" => "unrecorded"}
+      dogattribs["bitch"] = {"id" => "unrecorded"}
+      # recursions -= 1
     end
 
-    #dogattribs["sire"].class now returns hash if there's a dog string otherwise 
+    if generations == 1
+    else
+      parent_adder_base(dogattribs, generations-1)
+    end
 
-    puts @dog.is_a?(Dog)
-    puts dogattribs["sire"].is_a?(Dog)
-    puts dogattribs["sire"].is_a?(Hash)
-    puts dogattribs["sire"].is_a?(String)
+    render json: {"dog": dogattribs }
 
   end
 
@@ -225,6 +188,7 @@ class DogsController < ApplicationController
     params.require(:dog).permit(:callname, :realname, :dob, :sex,
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
-                                :main_image, :litter_id, :position, :dlist)
+                                :main_image, :litter_id, :position,
+                                :dlist, :generations)
   end
 end
