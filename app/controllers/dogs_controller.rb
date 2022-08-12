@@ -1,12 +1,60 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: [:show, :update, :destroy]
+  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder]
 
   def uri_adder(dog)
     # also requires refactor - causes n queries instead of getting when it gets the main dog object
-
     if dog.main_image.present?
       dog.as_json.merge({ main_image: url_for(dog.main_image) })
+    else
+      return dog
     end
+  end
+
+  def dumb_pedigree_builder(generations)
+    # output = []
+
+    generations.times do
+      # recurse
+    end
+
+    # subject = starting dog
+    
+    # sire = subject.litter.sire
+    # bitch = subject.litter.bitch
+    
+    # ssire = sire.litter.sire (paternal gf)
+    # bsire = sire.litter.bitch (paternal gm)
+
+    # sbitch = bitch.litter.sire (maternal gf)
+    # bbitch = bitch.litter.bitch (maternal gm)
+
+
+   # this should be recursive
+    # each level should only get the sire and bitch for the dog
+
+    # hilare wants it to be to great-great grandparents
+    # format for dog's name =
+    # show wins - breeder prefix - realname - agility comps - import/foreign tags
+    # sometimes the breeder's name appears underneath? unsure when or why
+
+  end
+
+  def parent_adder
+    # all works
+    # if @dog == "unrecorded"
+    #   @dog.as_json.merge({ sire: "unrecorded", bitch: "unrecorded" })
+    # else
+    #   if @dog.litter.present? then sire = @dog.litter.sire else sire = "unrecorded" end
+    #   if @dog.litter.present? then bitch = @dog.litter.bitch else bitch = "unrecorded" end
+    #   @dog = @dog.as_json.merge({ sire: sire, bitch: bitch })
+    # end
+    # render json: @dog
+
+    attribs = @dog.attributes
+    attribs["sire"] = @dog.litter.sire.attributes
+
+    puts attribs
+
   end
 
   def reorder_position
