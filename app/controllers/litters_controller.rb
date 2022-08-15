@@ -42,7 +42,6 @@ class LittersController < ApplicationController
   def add_puppies
     if params[:dogs].count != 0
       @dogs = params[:dogs]
-      dogstocreate = @dogs.count
       errinos = []
       createddogs = []
 
