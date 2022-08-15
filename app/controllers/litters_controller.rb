@@ -54,9 +54,9 @@ class LittersController < ApplicationController
       @dog = @litter.dogs.build( callname: dog[:callname], realname: dog[:realname], 
       dob: @litter.adate, sex: dog[:sex] )
       if @dog.save
-        createddogs >> @dog
+        createddogs << @dog
       else
-        @dog.errors >> errinos
+        @dog.errors << errinos
       end
     end
     
