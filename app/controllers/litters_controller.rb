@@ -33,7 +33,7 @@ class LittersController < ApplicationController
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
                                  dob: @litter.adate, sex: params[:sex] )
     if @doggo.save
-      render json: { success: "Success", message: "#{params[:callname]} created" }, status: 201
+      render json: { success: "Success", message: "#{params[:callname]} created", dog: @doggo }, status: 201
     else
       render json: { success: "Failure", message: "#{params[:callname]} not created", errors: @litter.errors }, status: :unprocessable_entity
     end
@@ -44,6 +44,8 @@ class LittersController < ApplicationController
       @dogs = params[:dogs]
       dogstocreate = @dogs.count
       errinos = []
+      createddogs = []
+
     else
       render json: { success: "Failure", message: "No puppies sent in update" }, status: :unprocessable_entity
       return
@@ -53,16 +55,16 @@ class LittersController < ApplicationController
       @dog = @litter.dogs.build( callname: dog[:callname], realname: dog[:realname], 
       dob: @litter.adate, sex: dog[:sex] )
       if @dog.save
-        dogstocreate -= 1
+        createddogs >> @dog
       else
         @dog.errors >> errinos
       end
     end
     
-    if dogstocreate == 0
-       render json: { success: "Success", message: "Puppies attached" }, status: 201
+    if createddogs.count == @dogs.count
+       render json: { success: "Success", message: "Puppies attached", dogs: createddogs }, status: 201
     else
-      render json: { success: "Failure", message: "At least some puppies not created", errors: errinos }, status: :unprocessable_entity
+      render json: { success: "Failure", message: "At least some puppies not created", dogs: createddogs, errors: errinos }, status: :unprocessable_entity
     end
 
   end

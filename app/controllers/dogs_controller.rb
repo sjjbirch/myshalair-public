@@ -48,10 +48,7 @@ class DogsController < ApplicationController
     elsif input["id"].is_a?(String)
       orphan_adder_base(input)
     else
-      render json: {
-        "success": "failure", 
-        "message": "for reasons unclear the dog controller has ended up in a place it shouldn't in the parent_adder_base function. If you're seeing this it means something broke in an unexpected way and you should try doing what you just did in a different way, or pay for maintenance."
-      }
+      puts "If you see this in server logs, I let something silently fail."
     end
 
     if recursions > 0
