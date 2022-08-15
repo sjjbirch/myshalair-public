@@ -40,7 +40,6 @@ class LittersController < ApplicationController
   end
 
   def add_puppies
-
     if params[:dogs].count != 0
       @dogs = params[:dogs]
       dogstocreate = @dogs.count
@@ -49,7 +48,6 @@ class LittersController < ApplicationController
       render json: { success: "Failure", message: "No puppies sent in update" }, status: :unprocessable_entity
       return
     end
-
 
     @dogs.each do |dog|
       @dog = @litter.dogs.build( callname: dog[:callname], realname: dog[:realname], 
@@ -116,7 +114,6 @@ class LittersController < ApplicationController
     else
       render json: @litter.errors, status: :unprocessable_entity
     end
-
   end
 
   # DELETE /litters/1
