@@ -1,4 +1,6 @@
 class Dog < ApplicationRecord
+    after_create :append_healthtest
+
     acts_as_list
 
     belongs_to :owner, class_name: 'User'
@@ -22,5 +24,16 @@ class Dog < ApplicationRecord
     scope :males, -> { where(sex: "1")}
     scope :females, -> { where(sex: "2")}
     scope :retired, -> { where(retired: true)}
+
+    def append_healthtest
+        # MVP placeholder
+        # not mvp = autofill based on attributes of parents
+        @healthtest = self.build_healthtest(
+            pra: 0, fn: 0,
+            aon: 0, ams: 0,
+            bss: 0
+          )
+        @healthtest.save
+    end
 
 end

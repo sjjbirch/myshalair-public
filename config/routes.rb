@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   get '/girls', to: 'dogs#girls'
   get '/puppies', to: 'dogs#puppies'
   patch '/reorder_dogs', to: 'dogs#reorder_position'
+  patch '/edit_healthtest', to:'dogs#healthtest_editor'
   get '/pedigree', to: 'dogs#pedigree'
   post '/lazy_dog_create', to: 'dogs#lazy_dog_create'
 
