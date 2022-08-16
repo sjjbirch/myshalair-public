@@ -124,23 +124,45 @@ class DogsController < ApplicationController
     end
   end
 
-  def lazy_create
-    @dog = Dog.new(dog_params)
+  def lazy_dog_create
+    littermess = "asdsadsad"
+    healthtestmess = "asdsa"
 
-    if @dog.save
-      lazy_healthtest_add
-      render json: @dog, status: :created, location: @dog
+    @dog = Dog.create(dog_params)
+    
+    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = "No litter provided"
+
+    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = "Added healthtest" : healthtestmess = "No healthtest provided"
+
+    if @dog.id.present?
+      render json: {dog: @dog, litter: littermess, healthtest: healthtestmess}, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
     end
   end
 
-  def lazy_healthtest_add
+  def lazy_litter_adder
+
+      PuppyList.create( litter_id: params[:litter_id], dog_id: @dog.id )
+      litterdate = Litter.find(params[:litter_id]).adate && @dog.update(dob: litterdate ) if Litter.find(params[:litter_id]).adate.present?
     
   end
 
-  # scoped endpoints
+  def lazy_healthtest_add
+    healthtest = params[:healthtest]
+      # below is the has_many build syntax,
+      # may need to be changed to the has_one form 
+    @healthtest = @dog.build_healthtest(
+      pra: healthtest[:pra], fn: healthtest[:fn],
+      aon: healthtest[:aon], ams: healthtest[:ams],
+      bss: healthtest[:bss]
+    )
 
+    @healthtest.save
+  
+  end
+
+  # prescoped endpoints
   def boys
     @dogs = Dog.males.map { |dog| uri_adder(dog) }
   

@@ -18,7 +18,7 @@ class HealthtestsController < ApplicationController
     private
 
     def healthtest_params
-        params.require(:healthtest).permit( :pra, :fn, :aon, :ams, :bss)
+        params.require(:healthtest).permit( :pra, :fn, :aon, :ams, :bss, :dog_id )
     end
 
 
