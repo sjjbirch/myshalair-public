@@ -124,6 +124,23 @@ class DogsController < ApplicationController
     end
   end
 
+  def lazy_create
+    @dog = Dog.new(dog_params)
+
+    if @dog.save
+      lazy_healthtest_add
+      render json: @dog, status: :created, location: @dog
+    else
+      render json: @dog.errors, status: :unprocessable_entity
+    end
+  end
+
+  def lazy_healthtest_add
+    
+  end
+
+  # scoped endpoints
+
   def boys
     @dogs = Dog.males.map { |dog| uri_adder(dog) }
   

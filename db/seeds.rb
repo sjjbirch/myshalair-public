@@ -42,7 +42,7 @@ if Dog.count == 0
 
   litter1 = Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                 pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
-                adate: rand(1900).days.ago)
+                adate: rand(1900).days.ago, status: 1)
 
   puts "saving a date"
 
@@ -76,7 +76,7 @@ if Dog.count == 0
   litter2 = Litter.create(
                           lname: "SecondLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                           pdate: thebigdate+50.days, edate: thebigdate+51.days,
-                          adate: thebigdate+52.days
+                          adate: thebigdate+52.days, status: 1
                           )
 
   doglist = [
@@ -105,7 +105,7 @@ if Dog.count == 0
   puts "But because the litters were so much fun, another one that was creepy and incestuous was planned..."
 
   litter3 = Litter.create(lname: "ThirdLitter", sire_id: 3, bitch_id: 2, breeder_id: 1, 
-                pdate: rand(100).days.from_now, edate: rand(200).days.from_now
+                pdate: rand(100).days.from_now, edate: rand(200).days.from_now, status: 1
                 )
 
   puts "Everyone really wanted Lannister puppies so they applied..."
