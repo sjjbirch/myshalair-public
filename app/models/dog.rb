@@ -1,10 +1,14 @@
 class Dog < ApplicationRecord
     acts_as_list
 
+    belongs_to :owner, class_name: 'User'
+
     has_one_attached :main_image
 
     has_one :puppy_list
     has_one :litter, through: :puppy_list
+    has_one :litter_application, through: :puppy_list
+    
     accepts_nested_attributes_for :puppy_list, allow_destroy: true
     accepts_nested_attributes_for :litter
 

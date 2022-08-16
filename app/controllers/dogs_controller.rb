@@ -1,12 +1,100 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: [:show, :update, :destroy]
+  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder, :pedigree]
 
   def uri_adder(dog)
-    # also requires refactor - causes n queries instead of getting when it gets the main dog object
-
+    # receives a dog, returns the dog with the url for its profile picture
     if dog.main_image.present?
       dog.as_json.merge({ main_image: url_for(dog.main_image) })
+    else
+      return dog.as_json.merge({ main_image: nil })
     end
+  end
+
+  def parent_adder_base(input, dog)
+    # receives:
+    # input = a hash of dog attributes
+    # dog = an instantiated dog object
+    # returns:
+    # input with the parents attached
+    # called by:
+    # parent_adder_rec, pedigree
+    input["sire"] = dog.litter.sire.attributes
+    input["bitch"] = dog.litter.bitch.attributes
+  end
+
+  def orphan_adder_base(input)
+    # receives:
+    # input = a hash of dog attributes
+    # returns:
+    # input with the parents attached, listed as "unrecorded"
+    # called by:
+    # parent_adder_rec, pedigree
+    input["sire"] = {"id" => "unrecorded"}
+    input["bitch"] = {"id" => "unrecorded"}
+  end
+
+  def parent_adder_rec(input, recursions)
+    # receives input which is either a dog or a string and the number of generations back it will build the family tree
+    # appends the sire and bitch of input and then the sires and bitches of those sires and bitches back recursion number of generations
+    # output is rendered family tree in json
+
+    if input["id"].is_a?(Integer)
+      dog = Dog.find(input["id"])
+      if dog.litter.present?
+        parent_adder_base(input, dog)
+      else
+        orphan_adder_base(input)
+      end
+    elsif input["id"].is_a?(String)
+      orphan_adder_base(input)
+    else
+      puts "If you see this in server logs, I let something silently fail."
+    end
+
+    if recursions > 0
+      recursions -= 1
+      parent_adder_rec(input["sire"], recursions)
+      parent_adder_rec(input["bitch"], recursions)
+    end
+  end
+
+  def pedigree
+    # called by /pedigree
+    # expects a dog ID in params and a number of generations
+    # builds the first generation (the input dog with its sire and bitch)
+    # if the requested number of generations is > 1 
+    # then it calls the recursive parent adder function to build generations past 1
+    # returns the pedigree of the dog in JSON with the form:
+    # {
+      # dog: {
+        # dog k and v
+        # sire: {
+            # id: id,
+            # sire:{},
+            # bitch: {}
+        # },
+        # bitch: {
+            # id: id,
+            # sire: {},
+            # bitch: {}
+        # }
+      #}
+    # }
+    # etc for the number of generations requested
+
+    dogattribs = @dog.attributes
+    generations = params[:generations]
+
+    if @dog.litter.present?
+      parent_adder_base(dogattribs, @dog)
+    else
+      orphan_adder_base(dogattribs)
+    end
+
+    parent_adder_rec(dogattribs, generations-1) if generations > 1
+
+    render json: {"dog": dogattribs }
+
   end
 
   def reorder_position
@@ -17,9 +105,7 @@ class DogsController < ApplicationController
     numbertomove = dogs.count
 
     dogs.each do |dog|
-      puts dog
       @d = Dog.find(dog[:id])
-      puts "Old position " + @d.position.to_s
       unless @d.position == dog[:position]
         if @d.insert_at(dog[:position])
             numbertomove -= 1
@@ -54,21 +140,6 @@ class DogsController < ApplicationController
     @dogs = Dog.puppers.map { |dog| uri_adder(dog) }
 
     render json: @dogs
-  end
-
-  def add_p_to_l
-    #broken don't use it
-    puts dog_params
-
-    @dog = Dog.new(dog_params)
-
-    if @dog.save
-      render json: @dog, status: :created, location: @dog
-    else
-      render json: @dog.errors, status: :unprocessable_entity
-    end
-
-    # PuppyList.create!(litter: request.body.read.litter_id, dog: @dog)
   end
 
   # GET /dogs
@@ -139,6 +210,7 @@ class DogsController < ApplicationController
     params.require(:dog).permit(:callname, :realname, :dob, :sex,
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
-                                :main_image, :litter_id, :position, :dlist)
+                                :main_image, :litter_id, :position,
+                                :dlist, :generations)
   end
 end

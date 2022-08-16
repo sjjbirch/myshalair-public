@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_11_061119) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
     t.datetime "updated_at", null: false
     t.boolean "retired", default: false
     t.integer "position", null: false
+    t.integer "owner_id", default: 1
     t.index ["position"], name: "index_dogs_on_position"
   end
 
@@ -90,7 +91,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
     t.bigint "litter_id", null: false
     t.float "yardarea"
     t.float "yardfenceheight"
-    t.integer "priority"
+    t.integer "priority", default: 999
     t.integer "fulfillstate"
     t.integer "paystate"
     t.datetime "created_at", null: false
@@ -131,7 +132,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
     t.bigint "litter_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "litter_application_id"
     t.index ["dog_id"], name: "index_puppy_lists_on_dog_id"
+    t.index ["litter_application_id"], name: "index_puppy_lists_on_litter_application_id"
     t.index ["litter_id"], name: "index_puppy_lists_on_litter_id"
   end
 
@@ -172,6 +175,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "children", "litter_applications"
+  add_foreign_key "dogs", "users", column: "owner_id"
   add_foreign_key "healthtests", "dogs"
   add_foreign_key "litter_applications", "litters"
   add_foreign_key "litter_applications", "users"
@@ -180,5 +184,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_04_032202) do
   add_foreign_key "litters", "users", column: "breeder_id"
   add_foreign_key "pets", "litter_applications"
   add_foreign_key "puppy_lists", "dogs"
+  add_foreign_key "puppy_lists", "litter_applications"
   add_foreign_key "puppy_lists", "litters"
 end

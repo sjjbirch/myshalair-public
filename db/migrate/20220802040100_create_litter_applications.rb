@@ -5,7 +5,7 @@ class CreateLitterApplications < ActiveRecord::Migration[7.0]
       t.references :litter, null: false, foreign_key: true
       t.float :yardarea
       t.float :yardfenceheight
-      t.integer :priority
+      t.integer :priority, default: 999
       t.integer :fulfillstate
       t.integer :paystate
 

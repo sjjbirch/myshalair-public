@@ -9,11 +9,17 @@ Rails.application.routes.draw do
   
   resources :litters
   post '/add_puppy', to: 'litters#add_puppy'
+  post '/add_puppies', to: 'litters#add_puppies'
 
   resources :litter_applications
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'
   get '/applications_from_me', to: 'litter_applications#applications_for_user'
   get '/applications_to_me', to: 'litter_applications#applications_for_breeder'
+  post '/add_pet', to: 'litter_applications#add_pet'
+  post '/add_child', to: 'litter_applications#add_child'
+  patch '/assign_puppy', to: 'litter_applications#assign_puppy'
+  post '/lazy_litter_application_create', to: 'litter_applications#lazy_create'
+  patch '/process_application', to: 'litter_applications#process_application'
 
   # dog pages
   resources :dogs
@@ -22,6 +28,7 @@ Rails.application.routes.draw do
   get '/puppies', to: 'dogs#puppies'
   post '/add_p_to_l', to: 'dogs#add_p_to_l'
   patch '/reorder_dogs', to: 'dogs#reorder_position'
+  get '/pedigree', to: 'dogs#pedigree'
 
   # contact form pages
   # need to overwrite /contacts for unsigned post to /contact
