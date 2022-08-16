@@ -261,6 +261,6 @@ class DogsController < ApplicationController
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
                                 :main_image, :litter_id, :position,
-                                :dlist, :generations)
+                                :dlist, :generations, :retired)
   end
 end
