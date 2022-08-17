@@ -192,6 +192,10 @@ class DogsController < ApplicationController
     @dog.main_image.attach(params[:main_image])
   end
 
+  def gallery_image_updater
+    @dog.gallery_images.attach(params[:gallery_images])
+  end
+
   # GET /dogs
   def index
     @dogs = Dog.all.map { |dog| uri_adder(dog) }
@@ -238,17 +242,20 @@ class DogsController < ApplicationController
     @dog = Dog.new(dog_params, position: 5)
 
     if @dog.save
+      main_image_updater if params[:main_image].present?
       render json: @dog, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
     end
   end
 
+
   # PATCH/PUT /dogs/1
   def update
-    main_image_updater if params[:main_image].present?
 
     if @dog.update(dog_params)
+      main_image_updater if params[:main_image].present?
+      gallery_image_updater if params[:gallery_images].present?
       render json: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
