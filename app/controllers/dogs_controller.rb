@@ -204,13 +204,24 @@ class DogsController < ApplicationController
     # links to show results -- down the track
     # the breedername if present else dog.litter.breeder.username else "Unrecorded"
 
+    dog_images = Hash.new
+    if @dog.gallery_images.present?
+      # put them in the hash
+      @dog.gallery_images.each_with_index do |image, index|
+        puts index
+        dog_images[index] = url_for(image)
+      end
+    end
+
     @dog = uri_adder(@dog)
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
+    
+
 
     render json: {
       dog: @dog,
-      gallery_images: 'placeholder string, will be list',
+      gallery_images: dog_images,
       healthtest: 'placeholder string',
       pedigree: 'placeholder string, to n places',
       litters: 'placeholder string',
@@ -260,7 +271,8 @@ class DogsController < ApplicationController
     params.require(:dog).permit(:callname, :realname, :dob, :sex,
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
-                                :main_image, :litter_id, :position,
-                                :dlist, :generations, :retired)
+                                :litter_id, :position,
+                                :dlist, :generations, :retired,
+                                :description, :main_image, :gallery_images => [])
   end
 end

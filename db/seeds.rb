@@ -138,7 +138,13 @@ if Dog.count == 0
   @dogs.each do | dog |
     dog.main_image.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
     filename: 'dogplaceholder.png', content_type: 'image/png')
-    puts "Attached a picture to " + dog.callname
+    puts "Attached an avatar picture to " + dog.callname
+    dog.gallery_images.attach(io: File.open(Rails.root.join("app", "assets", "images", "gallery1.jpg")),
+    filename: 'gallery1.jpg', content_type: 'image/jpg')
+    puts "Attached first gallery picture to " + dog.callname
+    dog.gallery_images.attach(io: File.open(Rails.root.join("app", "assets", "images", "gallery2.jpg")),
+    filename: 'gallery2.jpg', content_type: 'image/jpg')
+    puts "Attached second gallery picture to " + dog.callname
   end
 
   puts "Images attached to dogs!"

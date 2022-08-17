@@ -54,6 +54,7 @@ gem "responders"
 gem "net-http"
 gem "mini_magick"
 gem 'acts_as_list'
+gem 'cloudinary'
 #these should really be test
 gem 'webrick'
 gem 'webdrivers', '~> 5.0'

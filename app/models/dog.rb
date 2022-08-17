@@ -5,7 +5,8 @@ class Dog < ApplicationRecord
 
     belongs_to :owner, class_name: 'User'
 
-    has_one_attached :main_image
+    has_one_attached :main_image, dependent: :purge
+    has_many_attached :gallery_images, dependent: :purge
 
     has_one :puppy_list
     has_one :litter, through: :puppy_list

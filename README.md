@@ -30,6 +30,7 @@
 * responders (3.0.1)
 * net-http (0.2.2)
 * acts_as_list (1.0.4)
+* gem 'cloudinary'
 
 #### gems test
 *  gem 'capybara', '~> 2.4.4'
@@ -39,6 +40,8 @@
 *  gem "database_cleaner", "~> 2.0"
 *  gem 'selenium-webdriver'
 *  gem 'simplecov'
+*  gem 'webrick' (in all env but for test funcs)
+*  gem 'webdrivers', '~> 5.0' (in all env but for test funcs)
 
 I'm so sad that I've installed Capybara. Last time I tried to use it I spent a week trying to make it work and succeeded only in disappointing myself.
 
