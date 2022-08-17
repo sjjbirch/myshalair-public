@@ -1,5 +1,5 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor]
+  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor main_image_adder]
 
   def uri_adder(dog)
     # receives a dog, returns the dog with the url for its profile picture
@@ -186,6 +186,12 @@ class DogsController < ApplicationController
     render json: @dogs
   end
 
+  # special adders
+  def main_image_updater
+    @dog.main_image.purge if @dog.main_image.attached?
+    @dog.main_image.attach(params[:main_image])
+  end
+
   # GET /dogs
   def index
     @dogs = Dog.all.map { |dog| uri_adder(dog) }
@@ -216,8 +222,6 @@ class DogsController < ApplicationController
     @dog = uri_adder(@dog)
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
-    
-
 
     render json: {
       dog: @dog,
@@ -242,6 +246,8 @@ class DogsController < ApplicationController
 
   # PATCH/PUT /dogs/1
   def update
+    main_image_updater if params[:main_image].present?
+
     if @dog.update(dog_params)
       render json: @dog
     else

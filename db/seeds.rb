@@ -38,6 +38,11 @@ if Dog.count == 0
 
   Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1')
   
+  puts "creating waitlist"
+  Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+                pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
+                adate: rand(1900).days.ago, status: 1)
+
   puts "Creating a litter"
 
   litter1 = Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
@@ -46,7 +51,7 @@ if Dog.count == 0
 
   puts "saving a date"
 
-  thebigdate = Litter.first.adate
+  thebigdate = Litter.second.adate
 
   puts "A wonderful litter of 5 dogs was born on: " + thebigdate.to_s
 
