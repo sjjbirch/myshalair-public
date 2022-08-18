@@ -14,4 +14,6 @@ class LitterApplication < ApplicationRecord
   accepts_nested_attributes_for :pets, allow_destroy: true
   accepts_nested_attributes_for :dog
 
+  enum colour_preference: [:unspecified, :red, :blue]
+
 end

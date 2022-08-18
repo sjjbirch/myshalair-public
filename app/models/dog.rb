@@ -28,7 +28,6 @@ class Dog < ApplicationRecord
 
     enum colour: [:unspecified, :red, :blue]
 
-
     def append_healthtest
         @healthtest = self.build_healthtest(
             pra: 0, fn: 0,
