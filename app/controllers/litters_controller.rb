@@ -1,5 +1,6 @@
 class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies ]
+  before action :teapot, only: %i[ update destroy add_puppy add_puppies ]
 
 # custom helpers
 
@@ -102,7 +103,6 @@ class LittersController < ApplicationController
   def update
     # if puppies are attached, then update their dob if adate is changed or added
     # should break out into own action, low prio
-    teapot
 
     changeddogs = []
 
@@ -126,7 +126,6 @@ class LittersController < ApplicationController
 
   # DELETE /litters/1
   def destroy
-    teapot
     @litter.destroy
   end
 
