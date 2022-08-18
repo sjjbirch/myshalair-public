@@ -230,7 +230,7 @@ class DogsController < ApplicationController
     render json: {
       dog: @dog,
       gallery_images: dog_images,
-      healthtest: @dog.healthtest,
+      healthtest: Dog.find(params[:id]).healthtest,
       pedigree: 'placeholder string, to n places',
       litters: 'placeholder string',
       show_results: 'placeholder string'
@@ -286,6 +286,7 @@ class DogsController < ApplicationController
                                 :sired_litters, :bitched_litters,
                                 :litter_id, :position,
                                 :dlist, :generations, :retired,
-                                :description, :main_image, :gallery_images => [])
+                                :description, :colour,
+                                :main_image, :gallery_images => [])
   end
 end
