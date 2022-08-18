@@ -230,7 +230,7 @@ class DogsController < ApplicationController
     render json: {
       dog: @dog,
       gallery_images: dog_images,
-      healthtest: 'placeholder string',
+      healthtest: @dog.healthtest,
       pedigree: 'placeholder string, to n places',
       litters: 'placeholder string',
       show_results: 'placeholder string'
