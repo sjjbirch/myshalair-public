@@ -94,9 +94,16 @@ class LittersController < ApplicationController
     end
   end
 
+  def teapot
+    render json: { message: "So help me god Hilare, if you ever manage to change the waitlist I will not fix your website."}, status: 418 and return if @litter.id == 1
+  end
+
   # PATCH/PUT /litters/1
   def update
     # if puppies are attached, then update their dob if adate is changed or added
+    # should break out into own action, low prio
+    teapot
+
     changeddogs = []
 
     if params.has_key?(:adate) && @litter.adate != params[:adate] && @litter.dogs.exists?
@@ -119,6 +126,7 @@ class LittersController < ApplicationController
 
   # DELETE /litters/1
   def destroy
+    teapot
     @litter.destroy
   end
 
