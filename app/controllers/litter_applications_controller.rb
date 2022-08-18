@@ -157,7 +157,7 @@ class LitterApplicationsController < ApplicationController
 
   # GET /litter_applications/1
   def show
-    render json: {litterApplication: @litter_application, availablePuppies: @litter_application.litter.dogs}
+    render json: {litterApplication: @litter_application, allocatedpuppy: @litter_application.dog}
   end
 
   # POST /lazy_litter_applications
