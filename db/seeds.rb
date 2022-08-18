@@ -38,15 +38,20 @@ if Dog.count == 0
 
   Dog.create(callname: 'Eve', realname: 'Created From A Rib', dob: 2199.days.ago, sex: 2, ownername: 'Owner 1')
   
+  puts "creating waitlist"
+  Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+                pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
+                adate: rand(1900).days.ago, status: 1)
+
   puts "Creating a litter"
 
   litter1 = Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                 pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
-                adate: rand(1900).days.ago)
+                adate: rand(1900).days.ago, status: 1)
 
   puts "saving a date"
 
-  thebigdate = Litter.first.adate
+  thebigdate = Litter.second.adate
 
   puts "A wonderful litter of 5 dogs was born on: " + thebigdate.to_s
 
@@ -76,7 +81,7 @@ if Dog.count == 0
   litter2 = Litter.create(
                           lname: "SecondLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                           pdate: thebigdate+50.days, edate: thebigdate+51.days,
-                          adate: thebigdate+52.days
+                          adate: thebigdate+52.days, status: 1
                           )
 
   doglist = [
@@ -105,7 +110,7 @@ if Dog.count == 0
   puts "But because the litters were so much fun, another one that was creepy and incestuous was planned..."
 
   litter3 = Litter.create(lname: "ThirdLitter", sire_id: 3, bitch_id: 2, breeder_id: 1, 
-                pdate: rand(100).days.from_now, edate: rand(200).days.from_now
+                pdate: rand(100).days.from_now, edate: rand(200).days.from_now, status: 1
                 )
 
   puts "Everyone really wanted Lannister puppies so they applied..."
@@ -138,7 +143,13 @@ if Dog.count == 0
   @dogs.each do | dog |
     dog.main_image.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
     filename: 'dogplaceholder.png', content_type: 'image/png')
-    puts "Attached a picture to " + dog.callname
+    puts "Attached an avatar picture to " + dog.callname
+    dog.gallery_images.attach(io: File.open(Rails.root.join("app", "assets", "images", "gallery1.jpg")),
+    filename: 'gallery1.jpg', content_type: 'image/jpg')
+    puts "Attached first gallery picture to " + dog.callname
+    dog.gallery_images.attach(io: File.open(Rails.root.join("app", "assets", "images", "gallery2.jpg")),
+    filename: 'gallery2.jpg', content_type: 'image/jpg')
+    puts "Attached second gallery picture to " + dog.callname
   end
 
   puts "Images attached to dogs!"

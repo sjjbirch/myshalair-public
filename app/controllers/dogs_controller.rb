@@ -1,12 +1,12 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: [:show, :update, :destroy, :parent_adder, :pedigree]
+  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor main_image_adder]
 
   def uri_adder(dog)
     # receives a dog, returns the dog with the url for its profile picture
     if dog.main_image.present?
       dog.as_json.merge({ main_image: url_for(dog.main_image) })
     else
-      return dog.as_json.merge({ main_image: nil })
+      dog.as_json.merge({ main_image: nil })
     end
   end
 
@@ -18,8 +18,8 @@ class DogsController < ApplicationController
     # input with the parents attached
     # called by:
     # parent_adder_rec, pedigree
-    input["sire"] = dog.litter.sire.attributes
-    input["bitch"] = dog.litter.bitch.attributes
+    input['sire'] = dog.litter.sire.attributes
+    input['bitch'] = dog.litter.bitch.attributes
   end
 
   def orphan_adder_base(input)
@@ -29,8 +29,8 @@ class DogsController < ApplicationController
     # input with the parents attached, listed as "unrecorded"
     # called by:
     # parent_adder_rec, pedigree
-    input["sire"] = {"id" => "unrecorded"}
-    input["bitch"] = {"id" => "unrecorded"}
+    input['sire'] = { 'id' => 'unrecorded' }
+    input['bitch'] = { 'id' => 'unrecorded' }
   end
 
   def parent_adder_rec(input, recursions)
@@ -38,23 +38,23 @@ class DogsController < ApplicationController
     # appends the sire and bitch of input and then the sires and bitches of those sires and bitches back recursion number of generations
     # output is rendered family tree in json
 
-    if input["id"].is_a?(Integer)
-      dog = Dog.find(input["id"])
+    if input['id'].is_a?(Integer)
+      dog = Dog.find(input['id'])
       if dog.litter.present?
         parent_adder_base(input, dog)
       else
         orphan_adder_base(input)
       end
-    elsif input["id"].is_a?(String)
+    elsif input['id'].is_a?(String)
       orphan_adder_base(input)
     else
-      puts "If you see this in server logs, I let something silently fail."
+      puts 'If you see this in server logs, I let something silently fail.'
     end
 
     if recursions > 0
       recursions -= 1
-      parent_adder_rec(input["sire"], recursions)
-      parent_adder_rec(input["bitch"], recursions)
+      parent_adder_rec(input['sire'], recursions)
+      parent_adder_rec(input['bitch'], recursions)
     end
   end
 
@@ -62,23 +62,23 @@ class DogsController < ApplicationController
     # called by /pedigree
     # expects a dog ID in params and a number of generations
     # builds the first generation (the input dog with its sire and bitch)
-    # if the requested number of generations is > 1 
+    # if the requested number of generations is > 1
     # then it calls the recursive parent adder function to build generations past 1
     # returns the pedigree of the dog in JSON with the form:
     # {
-      # dog: {
-        # dog k and v
-        # sire: {
-            # id: id,
-            # sire:{},
-            # bitch: {}
-        # },
-        # bitch: {
-            # id: id,
-            # sire: {},
-            # bitch: {}
-        # }
-      #}
+    # dog: {
+    # dog k and v
+    # sire: {
+    # id: id,
+    # sire:{},
+    # bitch: {}
+    # },
+    # bitch: {
+    # id: id,
+    # sire: {},
+    # bitch: {}
+    # }
+    # }
     # }
     # etc for the number of generations requested
 
@@ -91,10 +91,9 @@ class DogsController < ApplicationController
       orphan_adder_base(dogattribs)
     end
 
-    parent_adder_rec(dogattribs, generations-1) if generations > 1
+    parent_adder_rec(dogattribs, generations - 1) if generations > 1
 
-    render json: {"dog": dogattribs }
-
+    render json: { "dog": dogattribs }
   end
 
   def reorder_position
@@ -106,11 +105,9 @@ class DogsController < ApplicationController
 
     dogs.each do |dog|
       @d = Dog.find(dog[:id])
-      unless @d.position == dog[:position]
-        if @d.insert_at(dog[:position])
-            numbertomove -= 1
-        end
-      else
+      if @d.position == dog[:position]
+        numbertomove -= 1
+      elsif @d.insert_at(dog[:position])
         numbertomove -= 1
       end
     end
@@ -118,18 +115,65 @@ class DogsController < ApplicationController
     @dogz = Dog.all
 
     if numbertomove == 0
-      render json: { success: "Success", message: "Dog positions updated", dogs: @dogz }, status: 201
+      render json: { success: 'Success', message: 'Dog positions updated', dogs: @dogz }, status: 201
     else
-      render json: { success: "Failure", message: "Dog positions not updated" }, status: :unprocessable_entity
+      render json: { success: 'Failure', message: 'Dog positions not updated' }, status: :unprocessable_entity
     end
   end
 
+  def lazy_dog_create
+    littermess = 'asdsadsad'
+    healthtestmess = 'asdsa'
+
+    @dog = Dog.create(dog_params)
+
+    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = 'No litter provided'
+
+    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided'
+
+    if @dog.id.present?
+      render json: { dog: @dog, litter: littermess, healthtest: healthtestmess }, status: :created, location: @dog
+    else
+      render json: @dog.errors, status: :unprocessable_entity
+    end
+  end
+
+  def lazy_litter_adder
+    PuppyList.create(litter_id: params[:litter_id], dog_id: @dog.id)
+    @dog.update(dob: Litter.find(params[:litter_id]).adate) if Litter.find(params[:litter_id]).adate.present?
+  end
+
+  def lazy_healthtest_add
+    healthtest = params[:healthtest]
+    if @dog.healthtest.update(
+      pra: healthtest[:pra], fn: healthtest[:fn],
+      aon: healthtest[:aon], ams: healthtest[:ams],
+      bss: healthtest[:bss]
+    )
+      true
+    else
+      false
+    end
+    # known silent fail: else can't be triggered even if you give strings etc
+    # problem for healthtest_editor, not for lazy dog creator
+  end
+
+  def healthtest_editor
+    if lazy_healthtest_add
+      render json: { success: 'Success', message: "Updated dog's healthtest", healthtest: @dog.healthtest }, status: 201
+    else
+      render json: { success: 'Failure', message: "Updated dog's healthtest", healthtest: @dog.errors },
+             status: :unprocessable_entity
+    end
+  end
+
+  # prescoped endpoints
   def boys
     @dogs = Dog.males.map { |dog| uri_adder(dog) }
-  
+
     render json: @dogs
-  end  
-  
+  end
+
   def girls
     @dogs = Dog.females.map { |dog| uri_adder(dog) }
 
@@ -142,6 +186,16 @@ class DogsController < ApplicationController
     render json: @dogs
   end
 
+  # special adders
+  def main_image_updater
+    @dog.main_image.purge if @dog.main_image.attached?
+    @dog.main_image.attach(params[:main_image])
+  end
+
+  def gallery_image_updater
+    @dog.gallery_images.attach(params[:gallery_images])
+  end
+
   # GET /dogs
   def index
     @dogs = Dog.all.map { |dog| uri_adder(dog) }
@@ -151,21 +205,36 @@ class DogsController < ApplicationController
 
   # GET /dogs/1
   def show
+    # the show action needs to give the front end everything about the dog, including:
+    # the dog object itself
+    # all of the pictures and the mainpicture attached to the dog
+    # a healthtest
+    # a pedigree that links to the parents and links to own litter
+    # links to each of the sired/bitched litters
+    # links to show results -- down the track
+    # the breedername if present else dog.litter.breeder.username else "Unrecorded"
 
-    if @dog.sex == 1
-      puts "it's a boy"
-      #@dog = @dog.add each of its sired litters
-    else
-      puts "it's a girl"
-      #@dog = @dog.add its bitched_litters
+    dog_images = Hash.new
+    if @dog.gallery_images.present?
+      # put them in the hash
+      @dog.gallery_images.each_with_index do |image, index|
+        puts index
+        dog_images[index] = url_for(image)
+      end
     end
 
-    # puts @dog.litter
-    # puts @dog.litter.breeder
-
     @dog = uri_adder(@dog)
+    # add function here to modify the breedername depending on presence or absence
+    # to dog.litter.breeder.username if absent
 
-    render json: @dog
+    render json: {
+      dog: @dog,
+      gallery_images: dog_images,
+      healthtest: @dog.healthtest,
+      pedigree: 'placeholder string, to n places',
+      litters: 'placeholder string',
+      show_results: 'placeholder string'
+    }
   end
 
   # POST /dogs
@@ -173,15 +242,20 @@ class DogsController < ApplicationController
     @dog = Dog.new(dog_params, position: 5)
 
     if @dog.save
+      main_image_updater if params[:main_image].present?
       render json: @dog, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
     end
   end
 
+
   # PATCH/PUT /dogs/1
   def update
+
     if @dog.update(dog_params)
+      main_image_updater if params[:main_image].present?
+      gallery_image_updater if params[:gallery_images].present?
       render json: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -210,7 +284,8 @@ class DogsController < ApplicationController
     params.require(:dog).permit(:callname, :realname, :dob, :sex,
                                 :ownername, :breedername, :breeder,
                                 :sired_litters, :bitched_litters,
-                                :main_image, :litter_id, :position,
-                                :dlist, :generations)
+                                :litter_id, :position,
+                                :dlist, :generations, :retired,
+                                :description, :main_image, :gallery_images => [])
   end
 end
