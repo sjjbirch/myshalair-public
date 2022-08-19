@@ -22,7 +22,7 @@ if Rails.env.development? || Rails.env.test?
 
     Rails.application.config.middleware.insert_before 0, Rack::Cors do
       allow do
-        origins 'http://localhost:3000'
+        origins 'https://main--sparkling-genie-eccda2.netlify.app/'
   
         resource '*',
                 headers: :any,
