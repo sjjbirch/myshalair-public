@@ -45,7 +45,6 @@ group :development, :test do
   gem "rspec-rails", "~> 5.1"
   gem "database_cleaner", "~> 2.0"
   gem 'selenium-webdriver' #this should do the thing
-  gem 'faker'
   gem 'simplecov', require: false
 end
 
@@ -61,7 +60,8 @@ gem "responders"
 gem "net-http"
 gem "mini_magick"
 gem 'acts_as_list'
-gem 'cloudinary'
+gem 'cloudinary' 
+gem 'faker'
 #these should really be test
 gem 'webrick'
 gem 'webdrivers', '~> 5.0'
