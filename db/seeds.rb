@@ -145,10 +145,10 @@ if Dog.count == 0
     parsed_res = JSON.parse(res.body)
     puts "Grabbed #{parsed_res.fetch("message").count} cocker-spaniel pictures."
 
-    parsed_res.fetch("message").each do |picurl|
-      puts picurl
-      puts picurl[-15..-1].parameterize
-    end
+    # parsed_res.fetch("message").each do |picurl|
+    #   puts picurl
+    #   puts picurl[-15..-1].parameterize
+    # end
 
     counter = 0
 
