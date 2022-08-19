@@ -139,28 +139,28 @@ if Dog.count == 0
 
   @dogs = Dog.all
   puts "Attempting to grab images...."
-  uri = URI("https://dog.ceo/api/breed/spaniel/cocker/images/random/#{@dogs.count * 3}")
+  uri = URI("https://dog.ceo/api/breed/spaniel/cocker/images/random/#{@dogs.count*3}")
   res = Net::HTTP.get_response(uri)
   if res.is_a?(Net::HTTPSuccess)
     parsed_res = JSON.parse(res.body)
-    puts "Grabbed some cocker-spaniel pictures."
+    puts "Grabbed #{parsed_res.fetch("message").count} cocker-spaniel pictures."
 
     counter = 0
 
     @dogs.each do | dog |
       pic1 = URI.parse(parsed_res.fetch("message")[counter]).open
-      dog.main_image.attach(io: pic1 , filename: "foo.jpg")
-      counter =+ 1
+      dog.main_image.attach(io: pic1, filename: "foo.jpg")
+      counter += 1
       puts "Added main image to #{dog.callname}"
 
       pic2 = URI.parse(parsed_res.fetch("message")[counter]).open
-      dog.gallery_images.attach(io: pic2 , filename: "foo.jpg")
-      counter =+ 1
+      dog.gallery_images.attach(io: pic2, filename: "foo.jpg")
+      counter += 1
       puts "Added first gallery image to #{dog.callname}"
 
       pic3 = URI.parse(parsed_res.fetch("message")[counter]).open
-      dog.gallery_images.attach(io: pic3 , filename: "foo.jpg")
-      counter =+ 1
+      dog.gallery_images.attach(io: pic3, filename: "foo.jpg")
+      counter += 1
       puts "Added second gallery image to #{dog.callname}"
 
     end

@@ -1,6 +1,6 @@
 class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies ]
-  before action :teapot, only: %i[ update destroy add_puppy add_puppies ]
+  before_action :teapot, only: %i[ update destroy add_puppy add_puppies ]
 
 # custom helpers
 
