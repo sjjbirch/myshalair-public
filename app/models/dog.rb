@@ -26,9 +26,9 @@ class Dog < ApplicationRecord
     scope :females, -> { where(sex: "2")}
     scope :retired, -> { where(retired: true)}
 
+    enum colour: [:unspecified, :red, :blue]
+
     def append_healthtest
-        # MVP placeholder
-        # not mvp = autofill based on attributes of parents
         @healthtest = self.build_healthtest(
             pra: 0, fn: 0,
             aon: 0, ams: 0,

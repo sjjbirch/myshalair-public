@@ -157,7 +157,7 @@ class LitterApplicationsController < ApplicationController
 
   # GET /litter_applications/1
   def show
-    render json: {litterApplication: @litter_application, availablePuppies: @litter_application.litter.dogs}
+    render json: {litterApplication: @litter_application, allocatedPuppy: @litter_application.dog}
   end
 
   # POST /lazy_litter_applications
@@ -212,16 +212,34 @@ class LitterApplicationsController < ApplicationController
 
     def auth_check
       if request.post?
-        params.require(:litter_application).permit(:user_id, :litter_id, :yardarea, :yardfenceheight)
+        params.require(:litter_application).permit(
+                                                    :user_id, :litter_id, :yardarea,
+                                                    :yardfenceheight, :colour_preference, :sex_preference
+                                                  )
       elsif current_user.admin
-        params.require(:litter_application).permit(:user_id, :litter_id, :yardarea, :yardfenceheight, :priority, :fulfillstate, :paystate)
+        params.require(:litter_application).permit(
+                                                    :user_id, :litter_id, :yardarea,
+                                                    :yardfenceheight, :colour_preference, :sex_preference,
+                                                    :priority, :fulfillstate, :paystate
+                                                  )
       elsif current_user == @litter_application.litter.breeder
-        params.require(:litter_application).permit(:user_id, :litter_id, :yardarea, :yardfenceheight, :priority, :fulfillstate, :paystate)
+        params.require(:litter_application).permit(
+                                                    :user_id, :litter_id, :yardarea,
+                                                    :yardfenceheight, :colour_preference, :sex_preference,
+                                                    :priority, :fulfillstate, :paystate
+                                                  )
       elsif current_user == @litter_application.user
         if request.patch?
-          params.require(:litter_application).permit(:user_id, :yardarea, :yardfenceheight)
+          params.require(:litter_application).permit(
+                                                    :user_id, :yardarea, :yardfenceheight,
+                                                    :colour_preference, :sex_preference
+                                                  )
         else
-          params.require(:litter_application).permit(:user_id, :litter_id, :yardarea, :yardfenceheight, :fulfillstate, :paystate)
+          params.require(:litter_application).permit(
+                                                      :user_id, :litter_id, :yardarea,
+                                                      :yardfenceheight, :fulfillstate, :paystate,
+                                                      :colour_preference, :sex_preference
+                                                    )
         end
       else
           render json: { error: "You cannot view this page" }, status: 403

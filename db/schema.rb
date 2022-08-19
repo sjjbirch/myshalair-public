@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_08_16_080002) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_18_063226) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_16_080002) do
     t.integer "position", null: false
     t.integer "owner_id", default: 1
     t.text "description", default: "This dog doesn't yet have a description."
+    t.integer "colour", default: 0
     t.index ["position"], name: "index_dogs_on_position"
   end
 
@@ -97,6 +98,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_16_080002) do
     t.integer "paystate"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "colour_preference"
+    t.integer "sex_preference"
     t.index ["litter_id"], name: "index_litter_applications_on_litter_id"
     t.index ["user_id"], name: "index_litter_applications_on_user_id"
   end
@@ -125,6 +128,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_16_080002) do
     t.text "petbreed"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "desexed", default: false
     t.index ["litter_application_id"], name: "index_pets_on_litter_application_id"
   end
 
