@@ -145,23 +145,31 @@ if Dog.count == 0
     parsed_res = JSON.parse(res.body)
     puts "Grabbed #{parsed_res.fetch("message").count} cocker-spaniel pictures."
 
+    parsed_res.fetch("message").each do |picurl|
+      puts picurl
+      puts picurl[-15..-1].parameterize
+    end
+
     counter = 0
 
     @dogs.each do | dog |
-      pic1 = URI.parse(parsed_res.fetch("message")[counter]).open
-      dog.main_image.attach(io: pic1, filename: "foo.jpg")
+      url = parsed_res.fetch("message")[counter]
+      pic1 = URI.parse(url).open
+      dog.main_image.attach(io: pic1, filename: "#{url[-15..-1].parameterize}")
       counter += 1
-      puts "Added main image to #{dog.callname}"
+      puts "Added #{url[-15..-1].parameterize} as main image to #{dog.callname}"
 
-      pic2 = URI.parse(parsed_res.fetch("message")[counter]).open
-      dog.gallery_images.attach(io: pic2, filename: "foo.jpg")
+      url = parsed_res.fetch("message")[counter]
+      pic2 = URI.parse(url).open
+      dog.gallery_images.attach(io: pic2, filename: "#{url[-15..-1].parameterize}")
       counter += 1
-      puts "Added first gallery image to #{dog.callname}"
+      puts "Added  #{url[-15..-1].parameterize} as first gallery image to #{dog.callname}"
 
-      pic3 = URI.parse(parsed_res.fetch("message")[counter]).open
-      dog.gallery_images.attach(io: pic3, filename: "foo.jpg")
+      url = parsed_res.fetch("message")[counter]
+      pic3 = URI.parse(url).open
+      dog.gallery_images.attach(io: pic3, filename: "#{url[-15..-1].parameterize}")
       counter += 1
-      puts "Added second gallery image to #{dog.callname}"
+      puts "Added  #{url[-15..-1].parameterize} as second gallery image to #{dog.callname}"
 
     end
 
