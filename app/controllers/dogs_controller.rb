@@ -239,10 +239,11 @@ class DogsController < ApplicationController
 
   # POST /dogs
   def create
-    @dog = Dog.new(dog_params, position: 5)
+    @dog = Dog.new(dog_params)
 
     if @dog.save
       main_image_updater if params[:main_image].present?
+      uri_adder
       render json: @dog, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -256,6 +257,7 @@ class DogsController < ApplicationController
     if @dog.update(dog_params)
       main_image_updater if params[:main_image].present?
       gallery_image_updater if params[:gallery_images].present?
+      uri_adder
       render json: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
