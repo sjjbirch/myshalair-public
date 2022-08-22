@@ -185,7 +185,7 @@ class LitterApplicationsController < ApplicationController
     @output = @litter_application
     @output = pets_getter(@litter_application, @output)
     @output = children_getter(@litter_application, @output)
-    render json: {litterApplication: @litter_application, allocatedPuppy: @litter_application.dog}
+    render json: {litterApplication: @output, allocatedPuppy: @litter_application.dog}
   end
 
   # POST /lazy_litter_applications
