@@ -243,7 +243,7 @@ class DogsController < ApplicationController
 
     if @dog.save
       main_image_updater if params[:main_image].present?
-      uri_adder
+      uri_adder(@dog)
       render json: @dog, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -257,7 +257,7 @@ class DogsController < ApplicationController
     if @dog.update(dog_params)
       main_image_updater if params[:main_image].present?
       gallery_image_updater if params[:gallery_images].present?
-      uri_adder
+      uri_adder(@dog)
       render json: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
