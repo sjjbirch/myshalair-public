@@ -26,10 +26,6 @@ class Dog < ApplicationRecord
     scope :females, -> { where(sex: "2")}
     scope :retired, -> { where(retired: true)}
 
-
-    # to do: delete it if asked
-    enum colour: [:unspecified, :black, :gold, :black_and_tan, :blue_roan]
-
     def append_healthtest
         @healthtest = self.build_healthtest(
             pra: 0, fn: 0,
