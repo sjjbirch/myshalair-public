@@ -59,6 +59,7 @@ I'm so sad that I've installed Capybara. Last time I tried to use it I spent a w
 * user controller missing function to validate address fields if user has entered some address info in signup
 * dogs currently missing owner and breeder fields to link them to users
 
-## Bugs
+## Known issues
 * Devise will not raise an error or exception if it is given unpermitted user params (at least on signup); it will not fail the operation and it will not use the unpermitted params, but it will not report that it got them either.
+* db:seed contains calls against an API that will occasionally return invalid uris; when this occurs the seed will not complete and will exit with an error, requiring the DB to have its attachments purged and then be reset again. This is easily fixable but is a very low priority since it only affects dev experience.
 * 
