@@ -126,15 +126,20 @@ class DogsController < ApplicationController
   def lazy_dog_create
     littermess = 'asdsadsad'
     healthtestmess = 'asdsa'
+    mainimagemess = 'astring'
 
     @dog = Dog.create(dog_params)
 
-    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = 'No litter provided'
+    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = 'No litter provided.'
 
-    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided'
+    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided.'
+    
+    params[:mainimage].present? ? main_image_updater && mainimagemess = 'Added main image' : mainimagemess = 'No main image provided.'
+
+    uri_adder(@dog)
 
     if @dog.id.present?
-      render json: { dog: @dog, litter: littermess, healthtest: healthtestmess }, status: :created, location: @dog
+      render json: { dog: @dog, litter: littermess, healthtest: healthtestmess, mainimage: mainimagemess }, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
     end
