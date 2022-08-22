@@ -3,7 +3,6 @@ class LittersController < ApplicationController
   before_action :teapot, only: %i[ update destroy add_puppy add_puppies ]
 
 # custom helpers
-
   def puppy_getter(litter,output)
     if litter.dogs.exists?
       puppies = []
@@ -25,6 +24,16 @@ class LittersController < ApplicationController
       output.as_json.merge({ litterApplications: litter_applications })
     else
       output.as_json.merge({ litterApplications: nil })
+    end
+  end
+
+  def puppy_picture_getter
+    @litter.dogs.each do |dog|
+      # so, rn it's unclear the best way forward on this
+      # should return 
+      # the puppy and:
+      # * its main_image using the uri_getting in the dogs controller
+      # * each of its gallery images from a method that doesn't exist in the dogs controller
     end
   end
 

@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   patch '/edit_healthtest', to:'dogs#healthtest_editor'
   get '/pedigree', to: 'dogs#pedigree'
   post '/lazy_dog_create', to: 'dogs#lazy_dog_create'
+  get '/find_dog', to: 'dogs#find_dog_by_chipnumber'
 
   # contact form pages
   # need to overwrite /contacts for unsigned post to /contact

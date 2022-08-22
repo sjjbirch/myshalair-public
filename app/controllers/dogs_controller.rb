@@ -58,6 +58,8 @@ class DogsController < ApplicationController
     end
   end
 
+  # custom routes
+
   def pedigree
     # called by /pedigree
     # expects a dog ID in params and a number of generations
@@ -203,9 +205,28 @@ class DogsController < ApplicationController
     render json: @dogs
   end
 
-  # GET /dogs/1
+  # front mutable endpoints
+  def find_dog_by_chipnumber
+    # refactor to avoid loading the dog twice from db
+    if params[:chipnumber].present?
+      @dog = Dog.where(chipnumber: params[:chipnumber]).first
+      if @dog
+        params[:id] = @dog.id
+        show
+      else
+        render json: { success: 'Success', message: "No dog with the microchip number #{params[:chipnumber]} found" }, status: 404
+      end
+    else
+      render json: { success: 'Failure', message: "Must provide a microchip number" }, status: 422
+    end
+  end
+
+   # GET /dogs/1
   def show
-    # the show action needs to give the front end everything about the dog, including:
+    #called by dogs#show, dogs#find_dog_by_chipnumber
+
+
+    # renders dogs and the kitchen sink associated with them:
     # the dog object itself
     # all of the pictures and the mainpicture attached to the dog
     # a healthtest
@@ -235,6 +256,9 @@ class DogsController < ApplicationController
       litters: 'placeholder string',
       show_results: 'placeholder string'
     }
+  end
+
+  def dog_shower(dog)
   end
 
   # POST /dogs
@@ -288,7 +312,7 @@ class DogsController < ApplicationController
                                 :sired_litters, :bitched_litters,
                                 :litter_id, :position,
                                 :dlist, :generations, :retired,
-                                :description, :colour,
+                                :description, :colour, :chipnumber,
                                 :main_image, :gallery_images => [])
   end
 end
