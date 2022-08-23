@@ -28,6 +28,9 @@ class LittersController < ApplicationController
   end
 
   def puppy_picture_getter
+    sirepic = url_for(litter.sire.main_image) if litter.sire.present? & litter.sire.main_image.present?
+    bitchpic = url_for(litter.bitch.main_image) if litter.bitch.present? & litter.bitch.main_image.present?
+
     @litter.dogs.each do |dog|
       # so, rn it's unclear the best way forward on this
       # should return 
