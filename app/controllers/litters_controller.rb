@@ -1,6 +1,6 @@
 class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies showcase_litter ]
-  before_action :teapot, only: %i[ update destroy add_puppy add_puppies ]
+  before_action :teapot, only: %i[ update destroy add_puppy add_puppies showcase_litter ]
 
 # custom helpers
 
@@ -37,8 +37,20 @@ end
     end
   end
 
-  def showcase_litter
+  def best
+    @litters = Litter.all
+    images = []
+    @litters.each do |litter|
+      images << litter.main_image.url if litter.main_image.present?
+    end
 
+    images = nil if images.count.zero?
+
+    render json: { images: images }
+
+  end
+
+  def showcase_litter
     if @litter.dogs.present?
       @puppies = @litter.dogs.map { |dog| dog.uri_adder }
     else
