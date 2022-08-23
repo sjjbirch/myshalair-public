@@ -1,5 +1,5 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor main_image_adder]
+  before_action :set_dog, only: %i[show update destroy parent_adder healthtest_editor main_image_adder]
 
   def parent_adder_base(input, dog)
     # receives:
@@ -51,9 +51,9 @@ class DogsController < ApplicationController
 
   # custom routes
 
-  def pedigree
+  def pedigree(dog, generations)
     # called by /pedigree
-    # expects a dog ID in params and a number of generations
+    # expects a dog and a number of generations
     # builds the first generation (the input dog with its sire and bitch)
     # if the requested number of generations is > 1
     # then it calls the recursive parent adder function to build generations past 1
@@ -75,8 +75,8 @@ class DogsController < ApplicationController
     # }
     # etc for the number of generations requested
 
-    dogattribs = @dog.attributes
-    generations = params[:generations]
+    @dog = Dog.find(dog['id'])
+    dogattribs = dog
 
     if @dog.litter.present?
       parent_adder_base(dogattribs, @dog)
@@ -86,7 +86,7 @@ class DogsController < ApplicationController
 
     parent_adder_rec(dogattribs, generations - 1) if generations > 1
 
-    render json: { "dog": dogattribs }
+    # render json: { "dog": dogattribs }
   end
 
   def reorder_position
@@ -240,6 +240,16 @@ class DogsController < ApplicationController
       end
     end
 
+    if @dog.sex == 1
+      litters = @dog.sired_litters
+    else
+      litters = @dog.bitched_litters
+      litters = nil if litters.length.zero?
+    end
+
+    healthtest = @dog.healthtest
+    litter = @dog.litter
+
     @dog = @dog.uri_adder
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
@@ -247,10 +257,11 @@ class DogsController < ApplicationController
     render json: {
       dog: @dog,
       gallery_images: dog_images,
-      healthtest: Dog.find(params[:id]).healthtest,
-      pedigree: 'placeholder string, to n places',
-      litters: 'placeholder string',
-      show_results: 'placeholder string'
+      healthtest: healthtest,
+      litter: litter,
+      pedigree: pedigree(@dog, 3),
+      litters: litters,
+      show_results: 'Sadly, unimplemented.'
     }
   end
 
