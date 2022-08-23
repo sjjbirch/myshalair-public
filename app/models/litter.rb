@@ -11,6 +11,6 @@ class Litter < ApplicationRecord
 
   has_many :litter_applications
 
-  has_one_attached :gallery_image, dependent: :purge
+  has_one_attached :main_image, dependent: :purge
   has_many_attached :gallery_images, dependent: :purge
 end
