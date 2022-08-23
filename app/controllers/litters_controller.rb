@@ -43,7 +43,6 @@ end
     @litters.each do |litter|
       images << litter.main_image.url if litter.main_image.present?
     end
-
     images = nil if images.count.zero?
 
     render json: { images: images }
@@ -57,23 +56,21 @@ end
       @puppies = nil
     end
 
-    render json: {
-    litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
-    bitch: Dog.find(@litter.bitch.id).uri_adder, puppies: @puppies,
-    images: showcase_image_adder(@litter)
-    }, status: 200
-  end
-
-  def showcase_image_adder(inputlitter)
     images = []
-    images << inputlitter.main_image.url if inputlitter.main_image.present?
-    @gallery_images = inputlitter.gallery_images
+    images << @litter.main_image.url if @litter.main_image.present?
+    @gallery_images = @litter.gallery_images
     if @gallery_images
       @gallery_images.each do |image|
         images << image.url
       end
     end
     images = nil if images.count.zero?
+
+    render json: {
+    litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
+    bitch: Dog.find(@litter.bitch.id).uri_adder, puppies: @puppies,
+    images: images
+    }, status: 200
   end
 
     #custom route actions
