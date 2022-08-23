@@ -8,6 +8,11 @@ def gallery_image_updater
   @litter.gallery_images.attach(params[:gallery_images])
 end
 
+def main_image_updater
+  @litter.main_image.purge if @litter.main_image.attached?
+  @litter.main_image.attach(params[:main_image])
+end
+
   def puppy_getter(litter,output)
     if litter.dogs.exists?
       puppies = []
@@ -38,7 +43,6 @@ end
 
     @sire.uri_adder
     @bitch.uri_adder
-    
 
     puppypictures = []
 
@@ -161,6 +165,7 @@ end
 
     if @litter.update(litter_params)
       gallery_image_updater if params[:gallery_images].present?
+      main_image_updater if params[:main_image].present?
       render json: { litter: @litter, updatedPuppies: changeddogs }
     else
       render json: @litter.errors, status: :unprocessable_entity
@@ -183,7 +188,8 @@ end
       params.require(:litter).permit(
       :breeder_id, :esize, :pdate, :edate,
       :adate, :lname, :sire_id, :bitch_id,
-      :status, :dogs, :gallery_images => []
+      :status, :dogs, 
+      :main_image, :gallery_images => []
       )
     end
 end

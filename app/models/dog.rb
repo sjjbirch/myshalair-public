@@ -43,7 +43,7 @@ class Dog < ApplicationRecord
 
     def main_image_adder
         if self.main_image.present?
-            self.as_json.merge({ main_image: url_for(dog.main_image) })
+            self.as_json.merge({ main_image: url_for(self.main_image) })
           else
             self.as_json.merge({ main_image: nil })
         end

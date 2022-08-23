@@ -1,5 +1,5 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor main_image_adder]
+  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor ]
 
   def parent_adder_base(input, dog)
     # receives:
