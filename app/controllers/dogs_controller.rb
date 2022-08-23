@@ -204,7 +204,7 @@ class DogsController < ApplicationController
   # front mutable endpoints
   def find_dog_by_chipnumber
     # refactor to avoid loading the dog twice from db
-    if params[:chipnumber].present?
+    if params[:chipnumber].present? && params[:chipnumber].length == 15
       @dog = Dog.where(chipnumber: params[:chipnumber]).first
       if @dog
         params[:id] = @dog.id

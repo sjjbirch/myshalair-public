@@ -165,6 +165,8 @@ if Dog.count == 0
     counter = 0
 
     @dogs.each do | dog |
+      puts "Microchipping #{dog.callname}"
+      dog.update!(chipnumber: rand(100000000000000..900000000000000).to_s)
       begin
         url = parsed_res.fetch("message")[counter]
         pic1 = URI.parse(url).open
