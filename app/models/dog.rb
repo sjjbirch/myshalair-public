@@ -1,4 +1,6 @@
 class Dog < ApplicationRecord
+    include Rails.application.routes.url_helpers #to make url_for work
+
     after_create :append_healthtest
 
     acts_as_list

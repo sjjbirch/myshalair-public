@@ -1,5 +1,5 @@
 class LittersController < ApplicationController
-  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies litter_gallery ]
+  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies showcase_litter ]
   before_action :teapot, only: %i[ update destroy add_puppy add_puppies ]
 
 # custom helpers
@@ -37,15 +37,23 @@ end
     end
   end
 
-  def litter_gallery
+  def showcase_litter
     @sire = Dog.find(litter.sire.id)
     @bitch = Dog.find(litter.sire.id)
 
     @sire.uri_adder
     @bitch.uri_adder
 
-    puppypictures = []
-
+    # will this work?
+    if litter.dogs.present?
+      @puppies = @litter.dogs.map { |dog| dog.uri_adder }
+    else
+      @puppies = nil
+    end
+    
+    images = []
+    images << litter.main_image if litter.main_image.present?
+    
     # if @dog.gallery_images.present?
     #   # put them in the hash
     #   @dog.gallery_images.each_with_index do |image, index|
@@ -54,21 +62,12 @@ end
     #   end
     # end
 
-    @litter.dogs.each do |dog|
-      dog = Dog.find(dog.id)
-      puppypictures << url_for(dog.main_image) if dog.main_image.present?
-      if dog.gallery_images.present?
-        dog.gallery_images.each do |image|
-          puppypictures << url_for(dog.gallery_image)
-        end
-      end
 
       # so, rn it's unclear the best way forward on this
       # should return 
       # the puppy and:
       # * its main_image using the uri_getting in the dogs controller
       # * each of its gallery images from a method that doesn't exist in the dogs controller
-    end
 
     render json: { litter: @litter, sire: @sire, bitch: @bitch, puppies: puppypictures }, status: 200
 
