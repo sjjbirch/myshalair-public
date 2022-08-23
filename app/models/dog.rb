@@ -45,7 +45,7 @@ class Dog < ApplicationRecord
 
     def main_image_adder
         if self.main_image.present?
-            self.as_json.merge({ main_image: Rails.application.routes.url_helpers.url_for(self, :only_path => false, :host => "https://res.cloudinary.com"})
+            self.as_json.merge({ main_image: Rails.application.routes.url_helpers.url_for(self, :only_path => false, :host => "https://res.cloudinary.com")})
           else
             self.as_json.merge({ main_image: nil })
         end
