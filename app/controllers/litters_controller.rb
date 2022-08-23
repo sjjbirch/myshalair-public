@@ -1,8 +1,13 @@
 class LittersController < ApplicationController
-  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies ]
+  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies litter_gallery ]
   before_action :teapot, only: %i[ update destroy add_puppy add_puppies ]
 
 # custom helpers
+
+def gallery_image_updater
+  @litter.gallery_images.attach(params[:gallery_images])
+end
+
   def puppy_getter(litter,output)
     if litter.dogs.exists?
       puppies = []
@@ -27,17 +32,42 @@ class LittersController < ApplicationController
     end
   end
 
-  def puppy_picture_getter
-    sirepic = url_for(litter.sire.main_image) if litter.sire.present? & litter.sire.main_image.present?
-    bitchpic = url_for(litter.bitch.main_image) if litter.bitch.present? & litter.bitch.main_image.present?
+  def litter_gallery
+    @sire = Dog.find(litter.sire.id)
+    @bitch = Dog.find(litter.sire.id)
+
+    @sire.uri_adder
+    @bitch.uri_adder
+    
+
+    puppypictures = []
+
+    # if @dog.gallery_images.present?
+    #   # put them in the hash
+    #   @dog.gallery_images.each_with_index do |image, index|
+    #     puts index
+    #     dog_images[index] = url_for(image)
+    #   end
+    # end
 
     @litter.dogs.each do |dog|
+      dog = Dog.find(dog.id)
+      puppypictures << url_for(dog.main_image) if dog.main_image.present?
+      if dog.gallery_images.present?
+        dog.gallery_images.each do |image|
+          puppypictures << url_for(dog.gallery_image)
+        end
+      end
+
       # so, rn it's unclear the best way forward on this
       # should return 
       # the puppy and:
       # * its main_image using the uri_getting in the dogs controller
       # * each of its gallery images from a method that doesn't exist in the dogs controller
     end
+
+    render json: { litter: @litter, sire: @sire, bitch: @bitch, puppies: puppypictures }, status: 200
+
   end
 
   #custom route actions
@@ -130,6 +160,7 @@ class LittersController < ApplicationController
     end
 
     if @litter.update(litter_params)
+      gallery_image_updater if params[:gallery_images].present?
       render json: { litter: @litter, updatedPuppies: changeddogs }
     else
       render json: @litter.errors, status: :unprocessable_entity
@@ -152,7 +183,7 @@ class LittersController < ApplicationController
       params.require(:litter).permit(
       :breeder_id, :esize, :pdate, :edate,
       :adate, :lname, :sire_id, :bitch_id,
-      :status, :dogs
+      :status, :dogs, :gallery_images => []
       )
     end
 end

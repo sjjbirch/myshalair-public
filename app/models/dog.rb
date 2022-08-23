@@ -35,4 +35,21 @@ class Dog < ApplicationRecord
         @healthtest.save
     end
 
+    def uri_adder
+        # called on a dog, returns the dog with the url for its profile picture as json
+        self.main_image_adder
+
+    end
+
+    def main_image_adder
+        if self.main_image.present?
+            self.as_json.merge({ main_image: url_for(dog.main_image) })
+          else
+            self.as_json.merge({ main_image: nil })
+        end
+    end
+
+    def gallery_image_adder
+    end
+
 end

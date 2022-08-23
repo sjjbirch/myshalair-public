@@ -10,4 +10,6 @@ class Litter < ApplicationRecord
   accepts_nested_attributes_for :dogs
 
   has_many :litter_applications
+
+  has_many_attached :gallery_images, dependent: :purge
 end
