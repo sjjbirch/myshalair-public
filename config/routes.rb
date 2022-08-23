@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   resources :litters
   post '/add_puppy', to: 'litters#add_puppy'
   post '/add_puppies', to: 'litters#add_puppies'
+  get '/showcase/:id', to: 'litters#showcase_litter'
 
   resources :litter_applications
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'

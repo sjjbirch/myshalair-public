@@ -38,42 +38,33 @@ end
   end
 
   def showcase_litter
-    @sire = Dog.find(litter.sire.id)
-    @bitch = Dog.find(litter.sire.id)
 
-    @sire.uri_adder
-    @bitch.uri_adder
-
-    # will this work?
-    if litter.dogs.present?
+    if @litter.dogs.present?
       @puppies = @litter.dogs.map { |dog| dog.uri_adder }
     else
       @puppies = nil
     end
-    
-    images = []
-    images << litter.main_image if litter.main_image.present?
-    
-    # if @dog.gallery_images.present?
-    #   # put them in the hash
-    #   @dog.gallery_images.each_with_index do |image, index|
-    #     puts index
-    #     dog_images[index] = url_for(image)
-    #   end
-    # end
 
-
-      # so, rn it's unclear the best way forward on this
-      # should return 
-      # the puppy and:
-      # * its main_image using the uri_getting in the dogs controller
-      # * each of its gallery images from a method that doesn't exist in the dogs controller
-
-    render json: { litter: @litter, sire: @sire, bitch: @bitch, puppies: puppypictures }, status: 200
-
+    render json: {
+    litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
+    bitch: Dog.find(@litter.sire.id).uri_adder, puppies: @puppies,
+    images: showcase_image_adder(@litter)
+    }, status: 200
   end
 
-  #custom route actions
+  def showcase_image_adder(inputlitter)
+    images = []
+    images << inputlitter.main_image.url if inputlitter.main_image.present?
+    @gallery_images = inputlitter.gallery_images
+    if @gallery_images
+      @gallery_images.each do |image|
+        images << image.url
+      end
+    end
+    images = nil if images.count.zero?
+  end
+
+    #custom route actions
 
   def add_puppy
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
