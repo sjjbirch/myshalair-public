@@ -1,6 +1,16 @@
 class DogsController < ApplicationController
   before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor ]
 
+  def uri_adder(dog)
+    # replaced with equivalent model function. Left only for reference.
+      # receives a dog, returns the dog with the url for its profile picture
+      if dog.main_image.present?
+        dog.as_json.merge({ main_image: url_for(dog.main_image) })
+      else
+        dog.as_json.merge({ main_image: nil })
+      end
+  end
+
   def parent_adder_base(input, dog)
     # receives:
     # input = a hash of dog attributes
@@ -127,7 +137,8 @@ class DogsController < ApplicationController
     
     params[:mainimage].present? ? main_image_updater && mainimagemess = 'Added main image' : mainimagemess = 'No main image provided.'
 
-    @dog.uri_adder
+    # @dog.uri_adder
+    uri_adder(@dog)
 
     if @dog.id.present?
       render json: { dog: @dog, litter: littermess, healthtest: healthtestmess, mainimage: mainimagemess }, status: :created, location: @dog
@@ -167,19 +178,21 @@ class DogsController < ApplicationController
 
   # prescoped endpoints
   def boys
-    @dogs = Dog.males.map { |dog| dog.uri_adder }
-
+    # @dogs = Dog.males.map { |dog| dog.uri_adder }
+    @dogs = Dog.males.map { |dog|  uri_adder(dog) }
     render json: @dogs
   end
 
   def girls
-    @dogs = Dog.females.map { |dog| dog.uri_adder }
+    # @dogs = Dog.females.map { |dog| dog.uri_adder }
+    @dogs = Dog.females.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
 
   def puppies
-    @dogs = Dog.puppers.map { |dog| dog.uri_adder }
+    # @dogs = Dog.puppers.map { |dog| dog.uri_adder }
+    @dogs = Dog.puppers.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
@@ -196,7 +209,8 @@ class DogsController < ApplicationController
 
   # GET /dogs
   def index
-    @dogs = Dog.all.map { |dog| dog.uri_adder }
+    # @dogs = Dog.all.map { |dog| dog.uri_adder }
+    @dogs = Dog.all.map { |dog| uri_adder(dog) }
 
     render json: @dogs
   end
@@ -240,7 +254,8 @@ class DogsController < ApplicationController
       end
     end
 
-    @dog = @dog.uri_adder
+    # @dog = @dog.uri_adder
+    @dog = uri_adder(@dog)
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
 
@@ -263,7 +278,8 @@ class DogsController < ApplicationController
 
     if @dog.save
       main_image_updater if params[:main_image].present?
-      @dog.uri_adder
+      # @dog.uri_adder
+      uri_adder(@dog)
       render json: @dog, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -277,7 +293,8 @@ class DogsController < ApplicationController
     if @dog.update(dog_params)
       main_image_updater if params[:main_image].present?
       gallery_image_updater if params[:gallery_images].present?
-      @dog.uri_adder
+      # @dog.uri_adder
+      uri_adder(@dog)
       render json: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -314,13 +331,3 @@ class DogsController < ApplicationController
 end
 
 # Archived functions
-
-  # def uri_adder(dog)
-  # replaced with equivalent model function. Left only for reference.
-  #   # receives a dog, returns the dog with the url for its profile picture
-  #   if dog.main_image.present?
-  #     dog.as_json.merge({ main_image: url_for(dog.main_image) })
-  #   else
-  #     dog.as_json.merge({ main_image: nil })
-  #   end
-  # end
