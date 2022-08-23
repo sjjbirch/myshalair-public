@@ -59,7 +59,7 @@ end
 
     render json: {
     litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
-    bitch: Dog.find(@litter.sire.id).uri_adder, puppies: @puppies,
+    bitch: Dog.find(@litter.bitch.id).uri_adder, puppies: @puppies,
     images: showcase_image_adder(@litter)
     }, status: 200
   end
