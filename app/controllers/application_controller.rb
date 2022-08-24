@@ -12,18 +12,23 @@ before_action :configure_permitted_parameters, if: :devise_controller?
                         # for devise compatibility
 
     def admin_check
-        puts "WARNING: CALLED ADMIN CHECK FUNCTION - SHOULD NOT HAPPEN, unsure if this is still valid"
-        unless current_user.admin?
-            render json: { error: "You cannot view this page" }, status: 403 and return
-        end
+      if current_user.nil?
+        render json: { error: "You cannot view this page." }, status: 401# and return
+      elsif !current_user.admin?
+        render json: { error: "You cannot view this page, pleb." }, status: 403# and return
+      end
     end
 
     def login_check
-      # need a login check here
-      if current_user == nil
-        render json: { error: "You cannot view this page" }, status: 401 and return
-        # redirect them to login
+      if current_user.nil?
+        render json: { error: "You cannot view this page" }, status: 401# and return
       end
+    end
+
+    def ownership_check
+      # if the user is an admin, if they are then let them do whatever
+      # if the user owns the asset, then let them do whatever
+      # if neither are true then # render json: { error: "You cannot view this page" }, status: 401 and return
     end
 
     protected

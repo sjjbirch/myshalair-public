@@ -26,7 +26,8 @@ class Dog < ApplicationRecord
     scope :puppers, -> {where('dob > ?', 12.weeks.ago)}
     scope :males, -> { where(sex: "1")}
     scope :females, -> { where(sex: "2")}
-    scope :retired, -> { where(retired: true)}
+    scope :retired, -> { where(retired: true) }
+    scope :displayed, -> {where(display: true)}
 
     def append_healthtest
         @healthtest = self.build_healthtest(
@@ -45,8 +46,6 @@ class Dog < ApplicationRecord
 
     def main_image_adder
         if self.main_image.present?
-            # self.as_json.merge({ main_image: Rails.application.routes.url_helpers.url_for(self.main_image, :only_path => false, :host => "https://res.cloudinary.com")})
-            # self.as_json.merge({ main_image: url_for(self.main_image, :host => "https://res.cloudinary.com") } )
             self.as_json.merge({ main_image: self.main_image.url } )
           else
             self.as_json.merge({ main_image: nil })
@@ -54,6 +53,21 @@ class Dog < ApplicationRecord
     end
 
     def gallery_image_adder
+        # I'm just not object oriented enough
+    end
+
+    def stripper
+        # puts self.class
+        # if self.main_image.present?
+        #     main_image = self.main_image.url
+        #   else
+        #     main_image = nil
+        # end
+        # self["main_image"] = main_image
+
+        self.slice("id", "chipnumber")
+        
+
     end
 
     # Rails.application.routes.url_helpers.product_url(self, :only_path => false, :host => "www.foo.com")

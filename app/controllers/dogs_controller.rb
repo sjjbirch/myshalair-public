@@ -1,93 +1,11 @@
 class DogsController < ApplicationController
   before_action :set_dog, only: %i[show update destroy parent_adder healthtest_editor main_image_adder]
+  before_action :check_admin, only: %i[
+    update destroy create find_dog_by_chipnumber lazy_dog_create
+  ]
 
-  def parent_adder_base(input, dog)
-    # receives:
-    # input = a hash of dog attributes
-    # dog = an instantiated dog object
-    # returns:
-    # input with the parents attached
-    # called by:
-    # parent_adder_rec, pedigree
-    input['sire'] = dog.litter.sire.attributes
-    input['bitch'] = dog.litter.bitch.attributes
-  end
 
-  def orphan_adder_base(input)
-    # receives:
-    # input = a hash of dog attributes
-    # returns:
-    # input with the parents attached, listed as "unrecorded"
-    # called by:
-    # parent_adder_rec, pedigree
-    input['sire'] = { 'id' => 'unrecorded' }
-    input['bitch'] = { 'id' => 'unrecorded' }
-  end
-
-  def parent_adder_rec(input, recursions)
-    # receives input which is either a dog or a string and the number of generations back it will build the family tree
-    # appends the sire and bitch of input and then the sires and bitches of those sires and bitches back recursion number of generations
-    # output is rendered family tree in json
-
-    if input['id'].is_a?(Integer)
-      dog = Dog.find(input['id'])
-      if dog.litter.present?
-        parent_adder_base(input, dog)
-      else
-        orphan_adder_base(input)
-      end
-    elsif input['id'].is_a?(String)
-      orphan_adder_base(input)
-    else
-      puts 'If you see this in server logs, I let something silently fail.'
-    end
-
-    if recursions > 0
-      recursions -= 1
-      parent_adder_rec(input['sire'], recursions)
-      parent_adder_rec(input['bitch'], recursions)
-    end
-  end
-
-  # custom routes
-
-  def pedigree(dog, generations)
-    # called by /pedigree
-    # expects a dog and a number of generations
-    # builds the first generation (the input dog with its sire and bitch)
-    # if the requested number of generations is > 1
-    # then it calls the recursive parent adder function to build generations past 1
-    # returns the pedigree of the dog in JSON with the form:
-    # {
-    # dog: {
-    # dog k and v
-    # sire: {
-    # id: id,
-    # sire:{},
-    # bitch: {}
-    # },
-    # bitch: {
-    # id: id,
-    # sire: {},
-    # bitch: {}
-    # }
-    # }
-    # }
-    # etc for the number of generations requested
-
-    @dog = Dog.find(dog['id'])
-    dogattribs = dog
-
-    if @dog.litter.present?
-      parent_adder_base(dogattribs, @dog)
-    else
-      orphan_adder_base(dogattribs)
-    end
-
-    parent_adder_rec(dogattribs, generations - 1) if generations > 1
-
-    # render json: { "dog": dogattribs }
-  end
+ # custom routes
 
   def reorder_position
     # receives list of dogs as dog_ids and new position, updates the DB with them
@@ -166,21 +84,20 @@ class DogsController < ApplicationController
   end
 
   # prescoped endpoints
+  # currently allow bypass of auth
+  # once diplay field is added, chain displayed scope to method to fix
   def boys
-    @dogs = Dog.males.map { |dog| dog.uri_adder }
-
+    @dogs = Dog.males.displayed.map { |dog| dog.uri_adder }
     render json: @dogs
   end
 
   def girls
-    @dogs = Dog.females.map { |dog| dog.uri_adder }
-
+    @dogs = Dog.females.displayed.map { |dog| dog.uri_adder }
     render json: @dogs
   end
 
   def puppies
-    @dogs = Dog.puppers.map { |dog| dog.uri_adder }
-
+    @dogs = Dog.puppers.displayed.map { |dog| dog.uri_adder }
     render json: @dogs
   end
 
@@ -196,8 +113,22 @@ class DogsController < ApplicationController
 
   # GET /dogs
   def index
-    @dogs = Dog.all.map { |dog| dog.uri_adder }
+    if current_user.nil? or !current_user.admin?
+      plebdex
+    else
+      admindex
+    end
+  end
 
+  def admindex
+    @dogs = Dog.all.map { |dog| dog.uri_adder }
+    render json: @dogs
+  end
+
+  def plebdex
+    # @dogs = Dog.displayed.map{ |dog| dog.stripper }
+    # @dogs = @dogs.uri_adder
+    @dogs = Dog.displayed.map { |dog| dog.uri_adder }
     render json: @dogs
   end
 
@@ -265,9 +196,6 @@ class DogsController < ApplicationController
     }
   end
 
-  def dog_shower(dog)
-  end
-
   # POST /dogs
   def create
     @dog = Dog.new(dog_params)
@@ -298,6 +226,94 @@ class DogsController < ApplicationController
   # DELETE /dogs/1
   def destroy
     @dog.destroy
+  end
+
+  # controller actions that should be helper or model methods
+
+  def pedigree(dog, generations)
+    # called by /pedigree
+    # expects a dog and a number of generations
+    # builds the first generation (the input dog with its sire and bitch)
+    # if the requested number of generations is > 1
+    # then it calls the recursive parent adder function to build generations past 1
+    # returns the pedigree of the dog in JSON with the form:
+    # {
+    # dog: {
+    # dog k and v
+    # sire: {
+    # id: id,
+    # sire:{},
+    # bitch: {}
+    # },
+    # bitch: {
+    # id: id,
+    # sire: {},
+    # bitch: {}
+    # }
+    # }
+    # }
+    # etc for the number of generations requested
+
+    @dog = Dog.find(dog['id'])
+    dogattribs = dog
+
+    if @dog.litter.present?
+      parent_adder_base(dogattribs, @dog)
+    else
+      orphan_adder_base(dogattribs)
+    end
+
+    parent_adder_rec(dogattribs, generations - 1) if generations > 1
+
+    # render json: { "dog": dogattribs }
+  end
+
+  def parent_adder_base(input, dog)
+    # receives:
+    # input = a hash of dog attributes
+    # dog = an instantiated dog object
+    # returns:
+    # input with the parents attached
+    # called by:
+    # parent_adder_rec, pedigree
+    input['sire'] = dog.litter.sire.attributes
+    input['bitch'] = dog.litter.bitch.attributes
+  end
+
+  def orphan_adder_base(input)
+    # receives:
+    # input = a hash of dog attributes
+    # returns:
+    # input with the parents attached, listed as "unrecorded"
+    # called by:
+    # parent_adder_rec, pedigree
+    input['sire'] = { 'id' => 'unrecorded' }
+    input['bitch'] = { 'id' => 'unrecorded' }
+  end
+
+  def parent_adder_rec(input, recursions)
+    # receives input which is either a dog or a string and the number of generations back it will build the family tree
+    # appends the sire and bitch of input and then the sires and bitches of those sires and bitches back recursion number of generations
+    # output is rendered family tree in json
+
+    if input['id'].is_a?(Integer)
+      dog = Dog.find(input['id'])
+      if dog.litter.present?
+        parent_adder_base(input, dog)
+      else
+        orphan_adder_base(input)
+      end
+    elsif input['id'].is_a?(String)
+      orphan_adder_base(input)
+    else
+      puts 'If you see this in server logs, I let something silently fail.'
+    end
+
+    if recursions > 0
+      recursions -= 1
+      parent_adder_rec(input['sire'], recursions)
+      parent_adder_rec(input['bitch'], recursions)
+    end
   end
 
   private

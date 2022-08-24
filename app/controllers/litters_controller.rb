@@ -2,40 +2,7 @@ class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies showcase_litter ]
   before_action :teapot, only: %i[ update destroy add_puppy add_puppies showcase_litter ]
 
-# custom helpers
-
-def gallery_image_updater
-  @litter.gallery_images.attach(params[:gallery_images])
-end
-
-def main_image_updater
-  @litter.main_image.purge if @litter.main_image.attached?
-  @litter.main_image.attach(params[:main_image])
-end
-
-  def puppy_getter(litter,output)
-    if litter.dogs.exists?
-      puppies = []
-      litter.dogs.each do |puppy|
-        puppies << puppy
-      end
-      output.as_json.merge({ puppies: puppies })
-    else
-      output.as_json.merge({ puppies: nil })
-    end
-  end
-
-  def litter_applications_getter(litter,output)
-    if litter.litter_applications.exists?
-      litter_applications = []
-      litter.litter_applications.each do |app|
-        litter_applications << app
-      end
-      output.as_json.merge({ litterApplications: litter_applications })
-    else
-      output.as_json.merge({ litterApplications: nil })
-    end
-  end
+  # custom route actions
 
   def best
     @litters = Litter.all
@@ -67,13 +34,14 @@ end
     images = nil if images.count.zero?
 
     render json: {
-    litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
-    bitch: Dog.find(@litter.bitch.id).uri_adder, puppies: @puppies,
-    images: images
-    }, status: 200
+      litter: @litter,
+      sire: Dog.find(@litter.sire.id).uri_adder,
+      bitch: Dog.find(@litter.bitch.id).uri_adder,
+      puppies: @puppies,
+      images: images
+    },
+    status: 200
   end
-
-    #custom route actions
 
   def add_puppy
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
@@ -111,22 +79,27 @@ end
     else
       render json: { success: "Failure", message: "At least some puppies not created", dogs: createddogs, errors: errinos }, status: :unprocessable_entity
     end
-
   end
 
   # GET /litters
   def index
     @litters = Litter.all
-
     render json: @litters
   end
 
   # GET /litters/1
   def show
+    adminshow if current_user.admin?
+    @output = @litter
+    @output = puppy_getter(@litter, @output)
+    render json: @output
+  end
+
+  def adminshow
     @output = @litter
     @output = puppy_getter(@litter, @output)
     @output = litter_applications_getter(@litter, @output)
-    render json: @output
+    render json: @output and return
   end
 
   # POST /litters
@@ -174,6 +147,41 @@ end
   # DELETE /litters/1
   def destroy
     @litter.destroy
+  end
+
+  # controller actions that should be helper or model methods
+
+def gallery_image_updater
+  @litter.gallery_images.attach(params[:gallery_images])
+end
+
+def main_image_updater
+  @litter.main_image.purge if @litter.main_image.attached?
+  @litter.main_image.attach(params[:main_image])
+end
+
+  def puppy_getter(litter,output)
+    if litter.dogs.exists?
+      puppies = []
+      litter.dogs.each do |puppy|
+        puppies << puppy
+      end
+      output.as_json.merge({ puppies: puppies })
+    else
+      output.as_json.merge({ puppies: nil })
+    end
+  end
+
+  def litter_applications_getter(litter,output)
+    if litter.litter_applications.exists?
+      litter_applications = []
+      litter.litter_applications.each do |app|
+        litter_applications << app
+      end
+      output.as_json.merge({ litterApplications: litter_applications })
+    else
+      output.as_json.merge({ litterApplications: nil })
+    end
   end
 
   private
