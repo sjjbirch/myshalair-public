@@ -1,8 +1,17 @@
 class LittersController < ApplicationController
-  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies ]
-  before_action :teapot, only: %i[ update destroy add_puppy add_puppies ]
+  before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies showcase_litter ]
+  before_action :teapot, only: %i[ update destroy add_puppy add_puppies showcase_litter ]
 
 # custom helpers
+
+def gallery_image_updater
+  @litter.gallery_images.attach(params[:gallery_images])
+end
+
+def main_image_updater
+  @litter.main_image.purge if @litter.main_image.attached?
+  @litter.main_image.attach(params[:main_image])
+end
 
   def puppy_getter(litter,output)
     if litter.dogs.exists?
@@ -28,7 +37,43 @@ class LittersController < ApplicationController
     end
   end
 
-  #custom route actions
+  def best
+    @litters = Litter.all
+    images = []
+    @litters.each do |litter|
+      images << litter.main_image.url if litter.main_image.present?
+    end
+    images = nil if images.count.zero?
+
+    render json: { images: images }
+
+  end
+
+  def showcase_litter
+    if @litter.dogs.present?
+      @puppies = @litter.dogs.map { |dog| dog.uri_adder }
+    else
+      @puppies = nil
+    end
+
+    images = []
+    images << @litter.main_image.url if @litter.main_image.present?
+    @gallery_images = @litter.gallery_images
+    if @gallery_images
+      @gallery_images.each do |image|
+        images << image.url
+      end
+    end
+    images = nil if images.count.zero?
+
+    render json: {
+    litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
+    bitch: Dog.find(@litter.bitch.id).uri_adder, puppies: @puppies,
+    images: images
+    }, status: 200
+  end
+
+    #custom route actions
 
   def add_puppy
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
@@ -118,6 +163,8 @@ class LittersController < ApplicationController
     end
 
     if @litter.update(litter_params)
+      gallery_image_updater if params[:gallery_images].present?
+      main_image_updater if params[:main_image].present?
       render json: { litter: @litter, updatedPuppies: changeddogs }
     else
       render json: @litter.errors, status: :unprocessable_entity
@@ -140,7 +187,8 @@ class LittersController < ApplicationController
       params.require(:litter).permit(
       :breeder_id, :esize, :pdate, :edate,
       :adate, :lname, :sire_id, :bitch_id,
-      :status, :dogs
+      :status, :dogs, 
+      :main_image, :gallery_images => []
       )
     end
 end

@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   resources :litters
   post '/add_puppy', to: 'litters#add_puppy'
   post '/add_puppies', to: 'litters#add_puppies'
+  get '/showcase/:id', to: 'litters#showcase_litter'
+  get '/showcase', to: 'litters#best'
 
   resources :litter_applications
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'
@@ -30,6 +32,7 @@ Rails.application.routes.draw do
   patch '/edit_healthtest', to:'dogs#healthtest_editor'
   get '/pedigree', to: 'dogs#pedigree'
   post '/lazy_dog_create', to: 'dogs#lazy_dog_create'
+  get '/find_dog', to: 'dogs#find_dog_by_chipnumber'
 
   # contact form pages
   # need to overwrite /contacts for unsigned post to /contact

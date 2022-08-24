@@ -14,22 +14,30 @@ if Dog.count == 0
   onames = []
   20.times { onames << Faker::Name.name }
 
-  puts "Creating three users"
-  
-  user1 = User.new(username: Faker::Games::ElderScrolls.name, password: "qwerty", postcode:"2000", email: "1@qwerty.com", admin: true)
-  user1.skip_confirmation!
-  user1.save!
-  puts "Created the user #{user1.username}"
-  
-  user2 = User.new(username: Faker::Games::ElderScrolls.name, password: "qwerty", postcode:"2000", email: "2@qwerty.com", admin: false)
-  user2.skip_confirmation!
-  user2.save!
-  puts "Created the user #{user2.username}"
-  
-  user3 = User.new(username: Faker::Games::ElderScrolls.name, password: "qwerty", postcode:"2000", email: "3@qwerty.com", admin: false)
-  user3.skip_confirmation!
-  user3.save!
-  puts "Created the user #{user3.username}"
+  puts "Creating five users"
+
+  5.times do
+    variable = counter.zero?
+    if rand(100) > 15
+       address1 = nil
+    else
+      address1 = Faker::Address.secondary_address
+    end
+
+    user = User.new(
+      username: Faker::Games::ElderScrolls.name, firstname: Faker::Name.first_name, lastname: Faker::Name.last_name,
+      address1: address1, address2: Faker::Address.street_address, suburb: "#{Faker::Address.city}, #{Faker::Address.state}",
+      phonenumber: "04#{rand(10000000..30000000)}", password: "qwerty", postcode: rand(2000..6000).to_s, email: "#{counter+1}@qwerty.com", admin: variable)
+
+      counter += 1
+
+      user.skip_confirmation!
+      user.save!
+      puts "Created the user #{user.username}"
+
+  end
+
+  counter = 0
   
   puts "Creating first two dogs to have litters"
 
@@ -71,7 +79,7 @@ if Dog.count == 0
                   )
     dog.save!
     dog.move_to_top
-    PuppyList.create!(litter: litter1, dog: dog)
+    PuppyList.create!(litter: Litter.second, dog: dog)
     puts "#{rnames[counter]} better known as #{cnames[counter]} was born!"
     counter += 1
   end
@@ -101,7 +109,7 @@ if Dog.count == 0
                   )
     dog.save!
     dog.move_to_top
-    PuppyList.create!(litter: litter2, dog: dog)
+    PuppyList.create!(litter: Litter.third, dog: dog)
     puts "#{rnames[counter]} better known as #{cnames[counter]} was born!"
     counter += 1
   end
@@ -116,16 +124,20 @@ if Dog.count == 0
 
   puts "Everyone really wanted Lannister puppies so they applied..."
 
-  app1 = LitterApplication.create( user: user2, litter: litter2, yardarea: 200.to_f, yardfenceheight: 5.to_f )
+  app1 = LitterApplication.create( user: User.second, litter: Litter.third, yardarea: 200.to_f, yardfenceheight: 5.to_f )
   Pet.create( litter_application: app1, age: 15, pettype: "Fish", petbreed: "Goldfish" )
   Pet.create( litter_application: app1, age: 160, pettype: "Fish", petbreed: "Great White Shark" )
   Child.create( litter_application: app1, age: 1 )
+  
+  litter = Litter.find(2)
+  litter.puppy_lists.first.update!(litter_application_id: 1)
+  
 
-  app2 = LitterApplication.create( user: user3, litter: litter3, yardarea: 205.to_f, yardfenceheight: 4.to_f )
+  app2 = LitterApplication.create( user: User.third, litter: Litter.fourth, yardarea: 205.to_f, yardfenceheight: 4.to_f )
 
-  app3 = LitterApplication.create( user: user3, litter: litter2, yardarea: 205.to_f, yardfenceheight: 4.to_f )
+  app3 = LitterApplication.create( user: User.third, litter: Litter.third, yardarea: 205.to_f, yardfenceheight: 4.to_f )
 
-  app4 = LitterApplication.create( user: user2, litter: litter1, yardarea: 200.to_f, yardfenceheight: 5.to_f )
+  app4 = LitterApplication.create( user: User.second, litter: Litter.second, yardarea: 200.to_f, yardfenceheight: 5.to_f )
   Pet.create( litter_application: app4, age: 15, pettype: "Fish", petbreed: "Goldfish" )
   Pet.create( litter_application: app4, age: 160, pettype: "Fish", petbreed: "Great White Shark" )
   Child.create( litter_application: app4, age: 1 )
@@ -153,23 +165,46 @@ if Dog.count == 0
     counter = 0
 
     @dogs.each do | dog |
-      url = parsed_res.fetch("message")[counter]
-      pic1 = URI.parse(url).open
-      dog.main_image.attach(io: pic1, filename: "#{url[-15..-1].parameterize}")
-      counter += 1
-      puts "Added #{url[-15..-1].parameterize} as main image to #{dog.callname}"
+      puts "Microchipping #{dog.callname}"
+      dog.update!(chipnumber: rand(100000000000000..900000000000000).to_s)
+      begin
+        url = parsed_res.fetch("message")[counter]
+        pic1 = URI.parse(url).open
+        dog.main_image.attach(io: pic1, filename: "#{url[-15..-1].parameterize}")
+        puts "Added #{url[-15..-1].parameterize} as main image to #{dog.callname}"
+      rescue
+        dog.main_image.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
+        filename: 'dogplaceholder.png', content_type: 'image/png')
+        puts "Attached a placeholder main image to " + dog.callname
+      ensure
+        counter += 1
+      end
+      
+      begin
+        url = parsed_res.fetch("message")[counter]
+        pic2 = URI.parse(url).open
+        dog.gallery_images.attach(io: pic2, filename: "#{url[-15..-1].parameterize}")
+        puts "  Added #{url[-15..-1].parameterize} as first gallery image to #{dog.callname}"
+      rescue
+        dog.gallery_images.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
+        filename: 'dogplaceholder.png', content_type: 'image/png')
+        puts "  Attached a placeholder first gallery image to " + dog.callname
+      ensure
+       counter += 1
+      end
 
-      url = parsed_res.fetch("message")[counter]
-      pic2 = URI.parse(url).open
-      dog.gallery_images.attach(io: pic2, filename: "#{url[-15..-1].parameterize}")
-      counter += 1
-      puts "Added  #{url[-15..-1].parameterize} as first gallery image to #{dog.callname}"
-
-      url = parsed_res.fetch("message")[counter]
-      pic3 = URI.parse(url).open
-      dog.gallery_images.attach(io: pic3, filename: "#{url[-15..-1].parameterize}")
-      counter += 1
-      puts "Added  #{url[-15..-1].parameterize} as second gallery image to #{dog.callname}"
+      begin
+        url = parsed_res.fetch("message")[counter]
+        pic3 = URI.parse(url).open
+        dog.gallery_images.attach(io: pic3, filename: "#{url[-15..-1].parameterize}")
+        puts "  Added #{url[-15..-1].parameterize} as second gallery image to #{dog.callname}"
+      rescue
+        dog.gallery_images.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
+        filename: 'dogplaceholder.png', content_type: 'image/png')
+        puts "  Attached a placeholder second gallery image to " + dog.callname
+      ensure
+        counter += 1
+      end
 
     end
 
@@ -191,6 +226,13 @@ if Dog.count == 0
       filename: 'gallery2.jpg', content_type: 'image/jpg')
       puts "Attached second gallery picture to " + dog.callname
     end
+  end
+
+  @litters = Litter.all
+  @litters.each do |litter|
+    litter.main_image.attach(io: File.open(Rails.root.join("app", "assets", "images", "dogplaceholder.png")),
+    filename: 'dogplaceholder.png', content_type: 'image/png')
+    puts "Attached an avatar picture to litter number #{litter.id}"
   end
 
 else

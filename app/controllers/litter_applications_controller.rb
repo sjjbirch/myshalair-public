@@ -4,6 +4,31 @@ class LitterApplicationsController < ApplicationController
   before_action :login_check, except: [:new, :create] #this should actually be for all outside of testing
   before_action :admin_check, only: %i[ assign_puppy applications_for_breeder ]
 
+  #custom helper functions
+  def pets_getter(litter_application, output)
+    if litter_application.pets.exists?
+      pets = []
+      litter_application.pets.each do |pet|
+        pets << pet
+      end
+      output.as_json.merge({ pets: pets })
+    else
+      output.as_json.merge({ pets: nil })
+    end
+  end
+
+  def children_getter(litter_application, output)
+    if litter_application.children.exists?
+      children = []
+      litter_application.children.each do |child|
+        children << child
+      end
+      output.as_json.merge({ children: children })
+    else
+      output.as_json.merge({ children: nil })
+    end
+  end
+
   # custom routes
 
   def process_application
@@ -157,7 +182,10 @@ class LitterApplicationsController < ApplicationController
 
   # GET /litter_applications/1
   def show
-    render json: {litterApplication: @litter_application, allocatedPuppy: @litter_application.dog}
+    @output = @litter_application
+    @output = pets_getter(@litter_application, @output)
+    @output = children_getter(@litter_application, @output)
+    render json: {litterApplication: @output, allocatedPuppy: @litter_application.dog}
   end
 
   # POST /lazy_litter_applications

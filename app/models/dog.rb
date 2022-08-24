@@ -1,4 +1,6 @@
 class Dog < ApplicationRecord
+    include Rails.application.routes.url_helpers #to make url_for work
+
     after_create :append_healthtest
 
     acts_as_list
@@ -34,5 +36,26 @@ class Dog < ApplicationRecord
           )
         @healthtest.save
     end
+
+    def uri_adder
+        # called on a dog, returns the dog with the url for its profile picture as json
+        self.main_image_adder
+
+    end
+
+    def main_image_adder
+        if self.main_image.present?
+            # self.as_json.merge({ main_image: Rails.application.routes.url_helpers.url_for(self.main_image, :only_path => false, :host => "https://res.cloudinary.com")})
+            # self.as_json.merge({ main_image: url_for(self.main_image, :host => "https://res.cloudinary.com") } )
+            self.as_json.merge({ main_image: self.main_image.url } )
+          else
+            self.as_json.merge({ main_image: nil })
+        end
+    end
+
+    def gallery_image_adder
+    end
+
+    # Rails.application.routes.url_helpers.product_url(self, :only_path => false, :host => "www.foo.com")
 
 end

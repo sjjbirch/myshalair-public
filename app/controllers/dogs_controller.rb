@@ -1,14 +1,5 @@
 class DogsController < ApplicationController
-  before_action :set_dog, only: %i[show update destroy parent_adder pedigree healthtest_editor main_image_adder]
-
-  def uri_adder(dog)
-    # receives a dog, returns the dog with the url for its profile picture
-    if dog.main_image.present?
-      dog.as_json.merge({ main_image: url_for(dog.main_image) })
-    else
-      dog.as_json.merge({ main_image: nil })
-    end
-  end
+  before_action :set_dog, only: %i[show update destroy parent_adder healthtest_editor main_image_adder]
 
   def parent_adder_base(input, dog)
     # receives:
@@ -58,9 +49,11 @@ class DogsController < ApplicationController
     end
   end
 
-  def pedigree
+  # custom routes
+
+  def pedigree(dog, generations)
     # called by /pedigree
-    # expects a dog ID in params and a number of generations
+    # expects a dog and a number of generations
     # builds the first generation (the input dog with its sire and bitch)
     # if the requested number of generations is > 1
     # then it calls the recursive parent adder function to build generations past 1
@@ -82,8 +75,8 @@ class DogsController < ApplicationController
     # }
     # etc for the number of generations requested
 
-    dogattribs = @dog.attributes
-    generations = params[:generations]
+    @dog = Dog.find(dog['id'])
+    dogattribs = dog
 
     if @dog.litter.present?
       parent_adder_base(dogattribs, @dog)
@@ -93,7 +86,7 @@ class DogsController < ApplicationController
 
     parent_adder_rec(dogattribs, generations - 1) if generations > 1
 
-    render json: { "dog": dogattribs }
+    # render json: { "dog": dogattribs }
   end
 
   def reorder_position
@@ -124,15 +117,20 @@ class DogsController < ApplicationController
   def lazy_dog_create
     littermess = 'asdsadsad'
     healthtestmess = 'asdsa'
+    mainimagemess = 'astring'
 
     @dog = Dog.create(dog_params)
 
-    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = 'No litter provided'
+    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = 'No litter provided.'
 
-    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided'
+    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided.'
+    
+    params[:mainimage].present? ? main_image_updater && mainimagemess = 'Added main image' : mainimagemess = 'No main image provided.'
+
+    @dog.uri_adder
 
     if @dog.id.present?
-      render json: { dog: @dog, litter: littermess, healthtest: healthtestmess }, status: :created, location: @dog
+      render json: { dog: @dog, litter: littermess, healthtest: healthtestmess, mainimage: mainimagemess }, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
     end
@@ -169,19 +167,19 @@ class DogsController < ApplicationController
 
   # prescoped endpoints
   def boys
-    @dogs = Dog.males.map { |dog| uri_adder(dog) }
+    @dogs = Dog.males.map { |dog| dog.uri_adder }
 
     render json: @dogs
   end
 
   def girls
-    @dogs = Dog.females.map { |dog| uri_adder(dog) }
+    @dogs = Dog.females.map { |dog| dog.uri_adder }
 
     render json: @dogs
   end
 
   def puppies
-    @dogs = Dog.puppers.map { |dog| uri_adder(dog) }
+    @dogs = Dog.puppers.map { |dog| dog.uri_adder }
 
     render json: @dogs
   end
@@ -198,14 +196,33 @@ class DogsController < ApplicationController
 
   # GET /dogs
   def index
-    @dogs = Dog.all.map { |dog| uri_adder(dog) }
+    @dogs = Dog.all.map { |dog| dog.uri_adder }
 
     render json: @dogs
   end
 
-  # GET /dogs/1
+  # front mutable endpoints
+  def find_dog_by_chipnumber
+    # refactor to avoid loading the dog twice from db
+    if params[:chipnumber].present? && params[:chipnumber].length == 15
+      @dog = Dog.where(chipnumber: params[:chipnumber]).first
+      if @dog
+        params[:id] = @dog.id
+        show
+      else
+        render json: { success: 'Success', message: "No dog with the microchip number #{params[:chipnumber]} found" }, status: 404
+      end
+    else
+      render json: { success: 'Failure', message: "Must provide a microchip number" }, status: 422
+    end
+  end
+
+   # GET /dogs/1
   def show
-    # the show action needs to give the front end everything about the dog, including:
+    #called by dogs#show, dogs#find_dog_by_chipnumber
+
+
+    # renders dogs and the kitchen sink associated with them:
     # the dog object itself
     # all of the pictures and the mainpicture attached to the dog
     # a healthtest
@@ -223,18 +240,32 @@ class DogsController < ApplicationController
       end
     end
 
-    @dog = uri_adder(@dog)
+    if @dog.sex == 1
+      litters = @dog.sired_litters
+    else
+      litters = @dog.bitched_litters
+      litters = nil if litters.length.zero?
+    end
+
+    healthtest = @dog.healthtest
+    litter = @dog.litter
+
+    @dog = @dog.uri_adder
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
 
     render json: {
       dog: @dog,
       gallery_images: dog_images,
-      healthtest: Dog.find(params[:id]).healthtest,
-      pedigree: 'placeholder string, to n places',
-      litters: 'placeholder string',
-      show_results: 'placeholder string'
+      healthtest: healthtest,
+      litter: litter,
+      pedigree: pedigree(@dog, 3),
+      litters: litters,
+      show_results: 'Sadly, unimplemented.'
     }
+  end
+
+  def dog_shower(dog)
   end
 
   # POST /dogs
@@ -243,7 +274,7 @@ class DogsController < ApplicationController
 
     if @dog.save
       main_image_updater if params[:main_image].present?
-      uri_adder(@dog)
+      @dog.uri_adder
       render json: @dog, status: :created, location: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -257,7 +288,7 @@ class DogsController < ApplicationController
     if @dog.update(dog_params)
       main_image_updater if params[:main_image].present?
       gallery_image_updater if params[:gallery_images].present?
-      uri_adder(@dog)
+      @dog.uri_adder
       render json: @dog
     else
       render json: @dog.errors, status: :unprocessable_entity
@@ -288,7 +319,19 @@ class DogsController < ApplicationController
                                 :sired_litters, :bitched_litters,
                                 :litter_id, :position,
                                 :dlist, :generations, :retired,
-                                :description, :colour,
+                                :description, :colour, :chipnumber,
                                 :main_image, :gallery_images => [])
   end
 end
+
+# Archived functions
+
+  # def uri_adder(dog)
+  # replaced with equivalent model function. Left only for reference.
+  #   # receives a dog, returns the dog with the url for its profile picture
+  #   if dog.main_image.present?
+  #     dog.as_json.merge({ main_image: url_for(dog.main_image) })
+  #   else
+  #     dog.as_json.merge({ main_image: nil })
+  #   end
+  # end
