@@ -1,6 +1,7 @@
 class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies showcase_litter ]
   before_action :teapot, only: %i[ update destroy add_puppy add_puppies showcase_litter ]
+  before_action :admin_check, only: %i[ create update destroy add_puppy add_puppies ]
 
   # custom route actions
 
@@ -83,7 +84,11 @@ class LittersController < ApplicationController
 
   # GET /litters
   def index
-    @litters = Litter.all
+    if current_user.nil? or !current_user.admin?
+      @litters = Litter.pleb
+    else
+      @litters = Litter.all
+    end
     render json: @litters
   end
 
@@ -158,14 +163,14 @@ class LittersController < ApplicationController
 
   # controller actions that should be helper or model methods
 
-def gallery_image_updater
-  @litter.gallery_images.attach(params[:gallery_images])
-end
+  def gallery_image_updater
+    @litter.gallery_images.attach(params[:gallery_images])
+  end
 
-def main_image_updater
-  @litter.main_image.purge if @litter.main_image.attached?
-  @litter.main_image.attach(params[:main_image])
-end
+  def main_image_updater
+    @litter.main_image.purge if @litter.main_image.attached?
+    @litter.main_image.attach(params[:main_image])
+  end
 
   def puppy_getter(litter,output)
     if litter.dogs.exists?
@@ -173,7 +178,11 @@ end
       litter.dogs.each do |puppy|
         puppies << puppy
       end
-      output.as_json.merge({ puppies: puppies })
+      if current_user.nil? or !current_user.admin?
+        output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
+      else
+        output.as_json.merge({ puppies: puppies })
+      end
     else
       output.as_json.merge({ puppies: nil })
     end

@@ -130,6 +130,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_08_25_055613) do
     t.index ["bitch_id"], name: "index_litters_on_bitch_id"
     t.index ["breeder_id"], name: "index_litters_on_breeder_id"
     t.index ["sire_id"], name: "index_litters_on_sire_id"
+    t.index ["status"], name: "index_litters_on_status"
   end
 
   create_table "pets", force: :cascade do |t|

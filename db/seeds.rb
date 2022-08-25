@@ -48,7 +48,7 @@ if Dog.count == 0
   end
 
   puts "Creating Waitlist"
-  Litter.create(lname: "FirstLitter", sire_id: 1, bitch_id: 2, breeder_id: 1, 
+  Litter.create(lname: "Waitlist", sire_id: 1, bitch_id: 2, breeder_id: 1, 
                 pdate: rand(1900).days.ago, edate: rand(1900).days.ago,
                 adate: rand(1900).days.ago, status: 1)
 

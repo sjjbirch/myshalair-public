@@ -13,4 +13,6 @@ class Litter < ApplicationRecord
 
   has_one_attached :main_image, dependent: :purge
   has_many_attached :gallery_images, dependent: :purge
+
+  scope :pleb, -> { where("status < 3")}
 end
