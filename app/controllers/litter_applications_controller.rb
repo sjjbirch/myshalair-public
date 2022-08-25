@@ -183,7 +183,6 @@ class LitterApplicationsController < ApplicationController
 
   # GET /litter_applications/1
   def show
-    @user = @litter_application.user
     @output = @litter_application
     @output = pets_getter(@litter_application, @output)
     @output = children_getter(@litter_application, @output)
@@ -233,6 +232,7 @@ class LitterApplicationsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_litter_application
       @litter_application = LitterApplication.find(params[:id])
+      @user = @litter_application.user
     end
 
     # Only allow a list of trusted parameters through.
