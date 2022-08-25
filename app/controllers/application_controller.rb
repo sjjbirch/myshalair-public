@@ -5,6 +5,8 @@ class ApplicationController < ActionController::API
 # respond_to :html # I think this will break it so I commented it out - it was added by the responder install
 
 before_action :configure_permitted_parameters, if: :devise_controller?
+before_action :strip_user_jti, if: :devise_controller?
+
 
     # include ActionController::MimeResponds
     respond_to :json    # both added per: 
@@ -21,14 +23,25 @@ before_action :configure_permitted_parameters, if: :devise_controller?
 
     def login_check
       if current_user.nil?
-        render json: { error: "You cannot view this page" }, status: 401# and return
+        render json: { error: "You cannot view this page." }, status: 401# and return
       end
     end
 
     def ownership_check
+      if current_user.nil?
+        render json: { error: "You cannot view this page." }, status: 401
+      else
+        unless current_user.admin? or current_user.id == @user.id
+          render json: { error: "You cannot view this page." }, status: 403
+        end
+      end
       # if the user is an admin, if they are then let them do whatever
       # if the user owns the asset, then let them do whatever
       # if neither are true then # render json: { error: "You cannot view this page" }, status: 401 and return
+    end
+
+    def strip_user_jti
+      # self.except("jti")
     end
 
     protected

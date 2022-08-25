@@ -20,4 +20,9 @@ class User < ApplicationRecord
     validates :username, uniqueness: { case_sensitive: false }, presence: true
     # validates :postcode, comparison: { greater_than: 999, less_than: 10000 }, presence: false
     # function that validates the presence for all address items if and only if the other elements are present
+
+    def strip_user_jti
+      self.slice("jti")
+    end
+
 end

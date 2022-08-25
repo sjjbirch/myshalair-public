@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
     before_action :set_user, only: %i[show]
+    before_action :ownership_check, only: %i[show]
 
     def show
         @litter_apps = []
@@ -20,6 +21,8 @@ class UsersController < ApplicationController
         @litter_apps = nil if @litter_apps.count.zero?
         @dogs = nil if @dogs.count.zero?
         @bredlitters = nil if @bredlitters.count.zero?
+        
+
 
         render json: { user: @user, main_image: @user.main_image.url, applications: @litter_apps, dogs: @dogs, bred_litters: @bredlitters }
     end

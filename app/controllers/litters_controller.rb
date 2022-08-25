@@ -89,7 +89,14 @@ class LittersController < ApplicationController
 
   # GET /litters/1
   def show
-    adminshow if current_user.admin?
+    if current_user.nil? or !current_user.admin?
+      plebshow
+    else
+      adminshow
+    end
+  end
+
+  def plebshow
     @output = @litter
     @output = puppy_getter(@litter, @output)
     render json: @output
