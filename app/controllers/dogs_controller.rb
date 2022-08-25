@@ -87,17 +87,16 @@ class DogsController < ApplicationController
   # currently allow bypass of auth
   # once diplay field is added, chain displayed scope to method to fix
   def boys
-    @dogs = Dog.males.displayed.map { |dog| dog.uri_adder }
-    render json: @dogs
+    @dogs = Dog.males.displayed.map { |dog| dog.plebifier }
   end
 
   def girls
-    @dogs = Dog.females.displayed.map { |dog| dog.uri_adder }
+    @dogs = Dog.females.displayed.map { |dog| dog.plebifier }
     render json: @dogs
   end
 
   def puppies
-    @dogs = Dog.puppers.displayed.map { |dog| dog.uri_adder }
+    @dogs = Dog.puppers.displayed.map { |dog| dog.plebifier }
     render json: @dogs
   end
 
