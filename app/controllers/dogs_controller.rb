@@ -160,11 +160,11 @@ class DogsController < ApplicationController
     # links to show results -- down the track
     # the breedername if present else dog.litter.breeder.username else "Unrecorded"
 
-    dog_images = Hash.new
+    dog_images = []
     if @dog.gallery_images.present?
       # put them in the hash
       @dog.gallery_images.each_with_index do |image, index|
-        dog_images[index] = url_for(image)
+        dog_images << url_for(image)
       end
     end
 
