@@ -126,9 +126,7 @@ class DogsController < ApplicationController
   end
 
   def plebdex
-    # @dogs = Dog.displayed.map{ |dog| dog.stripper }
-    # @dogs = @dogs.uri_adder
-    @dogs = Dog.displayed.map { |dog| dog.uri_adder }
+    @dogs = Dog.all.map { |dog| dog.plebifier }
     render json: @dogs
   end
 
@@ -181,7 +179,7 @@ class DogsController < ApplicationController
     healthtest = @dog.healthtest
     litter = @dog.litter
 
-    @dog = @dog.uri_adder
+    @dog = @dog.plebifier
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
 
