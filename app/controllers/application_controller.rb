@@ -40,10 +40,6 @@ before_action :configure_permitted_parameters, if: :devise_controller?
       # if neither are true then # render json: { error: "You cannot view this page" }, status: 401 and return
     end
 
-    def strip_user_jti
-      # self.except("jti")
-    end
-
     protected
 
     def configure_permitted_parameters

@@ -163,7 +163,7 @@ class DogsController < ApplicationController
     dog_images = []
     if @dog.gallery_images.present?
       # put them in the hash
-      @dog.gallery_images.each_with_index do |image, index|
+      @dog.gallery_images.each do |image|
         dog_images << url_for(image)
       end
     end
