@@ -22,8 +22,7 @@ class UsersController < ApplicationController
         @dogs = nil if @dogs.count.zero?
         @bredlitters = nil if @bredlitters.count.zero?
 
-        # render json: { user: @user, main_image: @user.main_image.url, applications: @litter_apps, dogs: @dogs, bred_litters: @bredlitters }
-        render json: @contacts, :only => [:id, :fname]
+        render json: { user: @user.as_json(:except => [:jti]), main_image: @user.main_image.url, applications: @litter_apps, dogs: @dogs, bred_litters: @bredlitters }
     end
 
     private

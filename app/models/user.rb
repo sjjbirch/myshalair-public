@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   has_many :litter_applications
 
-  include Devise::JWT::RevocationStrategies::JTIMatcher
+  include Devise::JWT::RevocationStrategies::Allowlist
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,

@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   root to: 'dogs#index'
   
   # user pages
-  devise_for :users, defaults: { format: :json }
+  devise_for :users, defaults: { format: :json }, controllers: { sessions: 'users/sessions' }
   resources :users, defaults: { format: :json }
   
   resources :litters

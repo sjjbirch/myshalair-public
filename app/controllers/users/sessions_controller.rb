@@ -11,6 +11,7 @@ class Users::SessionsController < Devise::SessionsController
   # POST /resource/sign_in
   # def create
   #   super
+  #   render json: { user: @user.as_json(:except => [:jti]) }
   # end
 
   # DELETE /resource/sign_out
