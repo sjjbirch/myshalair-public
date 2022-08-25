@@ -5,7 +5,7 @@ class ApplicationController < ActionController::API
 # respond_to :html # I think this will break it so I commented it out - it was added by the responder install
 
 before_action :configure_permitted_parameters, if: :devise_controller?
-before_action :strip_user_jti, if: :devise_controller?
+# before_action :strip_user_jti, if: :devise_controller?
 
 
     # include ActionController::MimeResponds

@@ -1,6 +1,6 @@
 class DogsController < ApplicationController
   before_action :set_dog, only: %i[show update destroy parent_adder healthtest_editor main_image_adder]
-  before_action :check_admin, only: %i[
+  before_action :admin_check, only: %i[
     update destroy create find_dog_by_chipnumber lazy_dog_create
   ]
 

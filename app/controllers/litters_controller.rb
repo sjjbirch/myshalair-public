@@ -106,7 +106,7 @@ class LittersController < ApplicationController
     @output = @litter
     @output = puppy_getter(@litter, @output)
     @output = litter_applications_getter(@litter, @output)
-    render json: @output and return
+    render json: @output
   end
 
   # POST /litters
