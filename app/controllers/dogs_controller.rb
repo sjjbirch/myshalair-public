@@ -61,8 +61,11 @@ class DogsController < ApplicationController
   def lazy_litter_updater
     litter = params[:dog][:litter]
     @puppylist = PuppyList.where(dog_id: params[:id])
-    PuppyList.create(litter_id: litter[:litter_id], dog_id: @dog.id) if @puppylist.nil?
-    @puppylist.update(litter_id: litter[:litter_id], dog_id: @dog.id) if !@puppylist.nil?
+    if @puppylist.empty?
+      PuppyList.create(litter_id: litter[:litter_id], dog_id: @dog.id)
+    else
+      @puppylist.update(litter_id: litter[:litter_id], dog_id: @dog.id)
+    end
     @dog.update(dob: Litter.find(litter[:litter_id]).adate) if Litter.find(litter[:litter_id]).adate.present?
   end
 
