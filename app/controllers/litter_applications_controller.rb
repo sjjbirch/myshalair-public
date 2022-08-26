@@ -38,25 +38,47 @@ class LitterApplicationsController < ApplicationController
     # this needs more testing with more seeds, I'm not convinced that priority shuffling is working
 
     if params[:fulfillstate] == 1
-      if params[:priority].present?
-        @litter_application.update(fulfillstate: params[:fulfillstate], priority: params[:priority])
+      # this triggers only on approving a rejected application or initial processing
+      # does not trigger in the case of assigning an application to a litter
+      5.times do
+        puts "normal processing"
+      end
+
+      if !params[:priority].nil?
+        50.times do
+          puts "IT SAYS IT HAS A PRIORITY VALUE"
+        end
+        @litter_application.update(fulfillstate: params[:fulfillstate])
+        @litter_application.insert_at(LitterApplication.waitlisted.approved.count)
         render json: @litter_application
       else
+        50.times do
+          puts "NO PRIORITY VALUE"
+        end
         @litter_application.update(fulfillstate: params[:fulfillstate])
-        @litter_application.move_to_bottom
+        @litter_application.insert_at(LitterApplication.waitlisted.approved.count)
         render json: @litter_application
       end
 
     elsif params[:fulfillstate] == 2 && !@litter_application.dog.nil?
 
+      5.times do
+        puts "trying to move an application with puppy attached"
+      end
+
       render json: {success: "Failure", message: "Cannot move an application or change its status once a puppy has been assigned."}, status: :unprocessable_entity
 
     elsif params[:fulfillstate] == 2 && @litter_application.litter.id > 1
+
+      5.times do
+        puts "trying to reject an application that's on a litter (moving to waitlist)"
+      end
 
       @litter_application.fulfillstate = 1
       @litter_application.litter_id = 1
       if @litter_application.save!
         @litter_application.insert_at(1)
+        
         render json: @litter_application
       else
         render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
@@ -64,9 +86,13 @@ class LitterApplicationsController < ApplicationController
 
     elsif params[:fulfillstate] == 2
 
+      5.times do
+        puts "normal rejection"
+      end
+
       @litter_application.fulfillstate = params[:fulfillstate]
       if @litter_application.save!
-        @litter_application.remove_from_list
+        @litter_application.move_to_bottom
         render json: @litter_application
       else
         render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
@@ -206,7 +232,7 @@ class LitterApplicationsController < ApplicationController
     if @litter_application.dog.nil?
       puppy = nil
     else
-      @litter_application.dog.main_image.nil? ? puppy = @litter_application.dog.uri_adder : @litter_application.dog
+      @litter_application.dog.main_image.nil? ? puppy = @litter_application.dog : puppy = @litter_application.dog.uri_adder
     end
     render json: {litterApplication: @output, allocatedPuppy: puppy }
   end
@@ -240,6 +266,13 @@ class LitterApplicationsController < ApplicationController
   def update
     if params[:fulfillstate] != @litter_application.fulfillstate
       process_application
+    elsif params[:litter_id] != @litter_application.litter_id
+      @litter_application.remove_from_list
+      if @litter_application.update(litter_application_params)
+        render json: @litter_application
+      else
+        render json: @litter_application.errors, status: :unprocessable_entity
+      end
     else
 
       if @litter_application.update(litter_application_params)

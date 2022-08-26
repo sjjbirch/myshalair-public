@@ -66,3 +66,4 @@ I'm so sad that I've installed Capybara. Last time I tried to use it I spent a w
 * Cannot unassign or reassign a puppy once assigned
 * Applications once assigned to a litter can only be returned to the waitlist with status rejected
 * A dog can become its own ancestor since pedigree is not used for enforcement logic
+* manually setting the priority of a litter application to a value much higher than the number of applications on the waitlist will cause it to stop appearing in the UI

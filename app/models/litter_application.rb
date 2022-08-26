@@ -14,4 +14,10 @@ class LitterApplication < ApplicationRecord
   accepts_nested_attributes_for :pets, allow_destroy: true
   accepts_nested_attributes_for :dog
 
+  scope :approved, -> { where(fulfillstate: "1")}
+  scope :rejected, -> { where(fulfillstate: "2")}
+  scope :completed, -> { where(fulfillstate: "3")}
+  scope :assigned_to_litter, -> { where('litter_id > ?', 1)}
+  scope :waitlisted, -> { where(litter_id: "1")} 
+
 end
