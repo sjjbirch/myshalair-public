@@ -332,6 +332,7 @@ class DogsController < ApplicationController
                                 :litter_id, :position,
                                 :dlist, :generations, :retired,
                                 :description, :colour, :chipnumber,
+                                :healthtest,
                                 :main_image, :gallery_images => [])
   end
 end

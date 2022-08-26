@@ -173,6 +173,7 @@ class LittersController < ApplicationController
   end
 
   def puppy_getter(litter,output)
+    # to do provide dogs assigned and dogs unassigned
     if litter.dogs.exists?
       puppies = []
       litter.dogs.each do |puppy|

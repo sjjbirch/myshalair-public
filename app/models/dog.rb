@@ -68,10 +68,10 @@ class Dog < ApplicationRecord
 
     def stripper
         if self.main_image.present?
-            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id")
+            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id", "colour")
                 .as_json.merge({ main_image: self.main_image.url } )
           else
-            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id")
+            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id", "colour")
                 .as_json.merge({ main_image: nil })
         end
     end
