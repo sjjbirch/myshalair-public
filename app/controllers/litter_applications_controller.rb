@@ -47,6 +47,7 @@ class LitterApplicationsController < ApplicationController
         render json: {success: "Success", message: "Approved application at lowest priority."}
       end
     elsif params[:fulfillstate] == 2
+
       @litter_application.fulfillstate = params[:fulfillstate]
       if @litter_application.save!
         @litter_application.remove_from_list
@@ -186,7 +187,7 @@ class LitterApplicationsController < ApplicationController
     @output = @litter_application
     @output = pets_getter(@litter_application, @output)
     @output = children_getter(@litter_application, @output)
-    render json: {litterApplication: @output, allocatedPuppy: @litter_application.dog}
+    render json: {litterApplication: @output, allocatedPuppy: @litter_application.dog.uri_adder}
   end
 
   # POST /lazy_litter_applications

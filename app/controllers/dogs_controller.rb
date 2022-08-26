@@ -187,8 +187,8 @@ class DogsController < ApplicationController
       @dog = @dog.plebifier
       @owner = "Not authorised."
     else
-      @dog = @dog.uri_adder
       @owner = User.find(@dog.owner_id)
+      @dog = @dog.uri_adder
     end
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
