@@ -1,8 +1,9 @@
 class LitterApplicationsController < ApplicationController
   before_action :set_litter_application, only: %i[ show update destroy auth_check assign_puppy process_application ]
   # before_action :match_breeder_and_litter
-  before_action :login_check, except: [:new, :create] #this should actually be for all outside of testing
-  before_action :admin_check, only: %i[ assign_puppy applications_for_breeder ]
+  before_action :login_check
+  before_action :admin_check, only: %i[ assign_puppy applications_for_breeder destroy ]
+  before_action :ownership_check, only: %i[ show update ]
 
   #custom helper functions
   def pets_getter(litter_application, output)
@@ -231,6 +232,7 @@ class LitterApplicationsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_litter_application
       @litter_application = LitterApplication.find(params[:id])
+      @user = @litter_application.user
     end
 
     # Only allow a list of trusted parameters through.

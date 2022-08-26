@@ -1,6 +1,18 @@
 class ContactsController < ApplicationController
   # before_action :admin_check, only: [ :index, :show, :update, :destroy ]
-  before_action :set_contact, only: %i[ show update destroy ]
+  # before_action :set_contact, only: %i[ show update destroy ]
+  before_action :deprecated
+
+  # This whole controller is deprecated because the client
+  # requested for the features it supports to be removed.
+
+  def deprecated
+    render json: {
+      success: "Failure",
+      message: "Do not meddle in the affairs of the parliament of bugs. You have been warned."
+    },
+      status: 404
+  end
 
   # GET /contacts
   def index

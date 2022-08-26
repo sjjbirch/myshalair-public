@@ -1,41 +1,9 @@
 class LittersController < ApplicationController
   before_action :set_litter, only: %i[ show update destroy add_puppy add_puppies showcase_litter ]
   before_action :teapot, only: %i[ update destroy add_puppy add_puppies showcase_litter ]
+  before_action :admin_check, only: %i[ create update destroy add_puppy add_puppies ]
 
-# custom helpers
-
-def gallery_image_updater
-  @litter.gallery_images.attach(params[:gallery_images])
-end
-
-def main_image_updater
-  @litter.main_image.purge if @litter.main_image.attached?
-  @litter.main_image.attach(params[:main_image])
-end
-
-  def puppy_getter(litter,output)
-    if litter.dogs.exists?
-      puppies = []
-      litter.dogs.each do |puppy|
-        puppies << puppy
-      end
-      output.as_json.merge({ puppies: puppies })
-    else
-      output.as_json.merge({ puppies: nil })
-    end
-  end
-
-  def litter_applications_getter(litter,output)
-    if litter.litter_applications.exists?
-      litter_applications = []
-      litter.litter_applications.each do |app|
-        litter_applications << app
-      end
-      output.as_json.merge({ litterApplications: litter_applications })
-    else
-      output.as_json.merge({ litterApplications: nil })
-    end
-  end
+  # custom route actions
 
   def best
     @litters = Litter.all
@@ -67,18 +35,20 @@ end
     images = nil if images.count.zero?
 
     render json: {
-    litter: @litter, sire: Dog.find(@litter.sire.id).uri_adder,
-    bitch: Dog.find(@litter.bitch.id).uri_adder, puppies: @puppies,
-    images: images
-    }, status: 200
+      litter: @litter,
+      sire: Dog.find(@litter.sire.id).uri_adder,
+      bitch: Dog.find(@litter.bitch.id).uri_adder,
+      puppies: @puppies,
+      images: images
+    },
+    status: 200
   end
-
-    #custom route actions
 
   def add_puppy
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
                                  dob: @litter.adate, sex: params[:sex] )
     if @doggo.save
+      @doggo.main_image.attach(params[:main_image]) if params[:main_image].present?
       render json: { success: "Success", message: "#{params[:callname]} created", dog: @doggo }, status: 201
     else
       render json: { success: "Failure", message: "#{params[:callname]} not created", errors: @litter.errors }, status: :unprocessable_entity
@@ -111,18 +81,34 @@ end
     else
       render json: { success: "Failure", message: "At least some puppies not created", dogs: createddogs, errors: errinos }, status: :unprocessable_entity
     end
-
   end
 
   # GET /litters
   def index
-    @litters = Litter.all
-
+    if current_user.nil? or !current_user.admin?
+      @litters = Litter.pleb
+    else
+      @litters = Litter.all
+    end
     render json: @litters
   end
 
   # GET /litters/1
   def show
+    if current_user.nil? or !current_user.admin?
+      plebshow
+    else
+      adminshow
+    end
+  end
+
+  def plebshow
+    @output = @litter
+    @output = puppy_getter(@litter, @output)
+    render json: @output
+  end
+
+  def adminshow
     @output = @litter
     @output = puppy_getter(@litter, @output)
     @output = litter_applications_getter(@litter, @output)
@@ -174,6 +160,52 @@ end
   # DELETE /litters/1
   def destroy
     @litter.destroy
+  end
+
+  # controller actions that should be helper or model methods
+
+  def gallery_image_updater
+    @litter.gallery_images.attach(params[:gallery_images])
+  end
+
+  def main_image_updater
+    @litter.main_image.purge if @litter.main_image.attached?
+    @litter.main_image.attach(params[:main_image])
+  end
+
+  def puppy_getter(litter,output)
+    # to do provide dogs assigned and dogs unassigned
+    if litter.dogs.exists?
+      puppies = []
+      unassigned = []
+      litter.dogs.each do |puppy|
+        puppies << puppy
+        unassigned << puppy.id if puppy.owner_id == 1
+      end
+    end
+
+    if puppies.count.nil?
+      output.as_json.merge({ puppies: nil, unassigned: nil })
+    elsif current_user.nil? or !current_user.admin?
+      output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
+    elsif unassigned.count.nil?
+      output.as_json.merge({ puppies: puppies, unassigned: nil })
+    else
+      output.as_json.merge({ puppies: puppies, unassigned: unassigned })
+    end
+
+  end
+
+  def litter_applications_getter(litter,output)
+    if litter.litter_applications.exists?
+      litter_applications = []
+      litter.litter_applications.each do |app|
+        litter_applications << app
+      end
+      output.as_json.merge({ litterApplications: litter_applications })
+    else
+      output.as_json.merge({ litterApplications: nil })
+    end
   end
 
   private
