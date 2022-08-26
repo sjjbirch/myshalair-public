@@ -40,28 +40,24 @@ class LitterApplicationsController < ApplicationController
     if params[:fulfillstate] == 1
       if params[:priority].present?
         @litter_application.update(fulfillstate: params[:fulfillstate], priority: params[:priority])
-        render json: {success: "Success", message: "Approved application at priority #{params[:priority]}"}
+        render json: @litter_application
       else
         @litter_application.update(fulfillstate: params[:fulfillstate])
         @litter_application.move_to_bottom
-        render json: {success: "Success", message: "Approved application at lowest priority."}
+        render json: @litter_application
       end
 
-    elsif params[:fulfillstate] == 2 && @litter_application.dog.present?
+    elsif params[:fulfillstate] == 2 && !@litter_application.dog.nil?
 
       render json: {success: "Failure", message: "Cannot move an application or change its status once a puppy has been assigned."}, status: :unprocessable_entity
 
-    elsif params[:fulfillstate] == 2 && @litter_application.litter.id != 1
-
-      5.times do
-        puts "trying to reject an application not on waitlist"
-      end
+    elsif params[:fulfillstate] == 2 && @litter_application.litter.id > 1
 
       @litter_application.fulfillstate = 1
       @litter_application.litter_id = 1
       if @litter_application.save!
         @litter_application.insert_at(1)
-        render json: {success: "Success", message: "Returned to waitlist with highest priority."}
+        render json: @litter_application
       else
         render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
       end
@@ -71,7 +67,7 @@ class LitterApplicationsController < ApplicationController
       @litter_application.fulfillstate = params[:fulfillstate]
       if @litter_application.save!
         @litter_application.remove_from_list
-        render json: {success: "Success", message: "Rejected application"}
+        render json: @litter_application
       else
         render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
       end
@@ -207,7 +203,11 @@ class LitterApplicationsController < ApplicationController
     @output = @litter_application
     @output = pets_getter(@litter_application, @output)
     @output = children_getter(@litter_application, @output)
-    @litter_application.dog.main_image.nil? ? puppy = @litter_application.dog.uri_adder : @litter_application.dog
+    if @litter_application.dog.nil?
+      puppy = nil
+    else
+      @litter_application.dog.main_image.nil? ? puppy = @litter_application.dog.uri_adder : @litter_application.dog
+    end
     render json: {litterApplication: @output, allocatedPuppy: puppy }
   end
 
