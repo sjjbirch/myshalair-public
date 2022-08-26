@@ -47,12 +47,21 @@ class LitterApplicationsController < ApplicationController
         render json: {success: "Success", message: "Approved application at lowest priority."}
       end
 
+    elsif params[:fulfillstate] == 2 && @litter_application.dog.present?
+
+      render json: {success: "Failure", message: "Cannot move an application or change its status once a puppy has been assigned."}, status: :unprocessable_entity
+
     elsif params[:fulfillstate] == 2 && @litter_application.litter.id != 1
 
-      @litter_application.fulfillstate = params[:fulfillstate]
+      5.times do
+        puts "trying to reject an application not on waitlist"
+      end
+
+      @litter_application.fulfillstate = 1
+      @litter_application.litter_id = 1
       if @litter_application.save!
-        @litter_application.remove_from_list
-        render json: {success: "Success", message: "Rejected application"}
+        @litter_application.insert_at(1)
+        render json: {success: "Success", message: "Returned to waitlist with highest priority."}
       else
         render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
       end
@@ -198,7 +207,8 @@ class LitterApplicationsController < ApplicationController
     @output = @litter_application
     @output = pets_getter(@litter_application, @output)
     @output = children_getter(@litter_application, @output)
-    render json: {litterApplication: @output, allocatedPuppy: @litter_application.dog.uri_adder}
+    @litter_application.dog.main_image.nil? ? puppy = @litter_application.dog.uri_adder : @litter_application.dog
+    render json: {litterApplication: @output, allocatedPuppy: puppy }
   end
 
   # POST /lazy_litter_applications

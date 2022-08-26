@@ -182,18 +182,18 @@ class LittersController < ApplicationController
         puppies << puppy
         unassigned << puppy.id if puppy.owner_id == 1
       end
-    end
 
-    if puppies.count.nil?
-      output.as_json.merge({ puppies: nil, unassigned: nil })
-    elsif current_user.nil? or !current_user.admin?
-      output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
-    elsif unassigned.count.nil?
-      output.as_json.merge({ puppies: puppies, unassigned: nil })
+      if current_user.nil? or !current_user.admin?
+        output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
+      elsif unassigned.count.nil?
+        output.as_json.merge({ puppies: puppies, unassigned: nil })
+      else
+        output.as_json.merge({ puppies: puppies, unassigned: unassigned })
+      end
+
     else
-      output.as_json.merge({ puppies: puppies, unassigned: unassigned })
+      output.as_json.merge({ puppies: nil, unassigned: nil })
     end
-
   end
 
   def litter_applications_getter(litter,output)
