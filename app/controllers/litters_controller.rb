@@ -177,17 +177,21 @@ class LittersController < ApplicationController
     # to do provide dogs assigned and dogs unassigned
     if litter.dogs.exists?
       puppies = []
+      unassigned = []
       litter.dogs.each do |puppy|
         puppies << puppy
+        unassigned << puppy.id if puppy.owner_id == 1
       end
-      if current_user.nil? or !current_user.admin?
-        output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
-      else
-        output.as_json.merge({ puppies: puppies })
-      end
-    else
-      output.as_json.merge({ puppies: nil })
     end
+
+    if puppies.count.nil?
+      output.as_json.merge({ puppies: nil, unassigned: nil })
+    elsif current_user.nil? or !current_user.admin?
+      output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
+    else
+      output.as_json.merge({ puppies: puppies, unassigned: unassigned })
+    end
+
   end
 
   def litter_applications_getter(litter,output)
