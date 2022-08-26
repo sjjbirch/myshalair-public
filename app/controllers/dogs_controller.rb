@@ -40,9 +40,7 @@ class DogsController < ApplicationController
     @dog = Dog.create(dog_params)
 
     params[:dog][:litter].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:dog][:litter][:litter_id]}" : littermess = 'No litter provided.'
-
     params[:dog][:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided.'
-    
     params[:mainimage].present? ? main_image_updater && mainimagemess = 'Added main image' : mainimagemess = 'No main image provided.'
 
     @dog.uri_adder
@@ -58,6 +56,13 @@ class DogsController < ApplicationController
     puppylist = params[:dog][:litter]
     PuppyList.create(litter_id: puppylist[:litter_id], dog_id: @dog.id)
     @dog.update(dob: Litter.find(puppylist[:litter_id]).adate) if Litter.find(puppylist[:litter_id]).adate.present?
+  end
+
+  def lazy_litter_updater
+    litter = params[:dog][:litter]
+    @puppylist = PuppyList.where(dog_id: params[:id])
+    @puppylist.update(litter_id: litter[:litter_id], dog_id: @dog.id)
+    @dog.update(dob: Litter.find(litter[:litter_id]).adate) if Litter.find(litter[:litter_id]).adate.present?
   end
 
   def lazy_healthtest_add
@@ -211,6 +216,8 @@ class DogsController < ApplicationController
   def update
 
     if @dog.update(dog_params)
+      lazy_healthtest_add if params[:dog][:healthtest].present?
+      lazy_litter_updater if params[:dog][:litter].present?
       main_image_updater if params[:main_image].present?
       gallery_image_updater if params[:gallery_images].present?
 
