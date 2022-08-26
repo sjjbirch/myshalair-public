@@ -188,6 +188,8 @@ class LittersController < ApplicationController
       output.as_json.merge({ puppies: nil, unassigned: nil })
     elsif current_user.nil? or !current_user.admin?
       output.as_json.merge({ puppies: puppies.as_json(:except => [:chipnumber]) })
+    elsif unassigned.count.nil?
+      output.as_json.merge({ puppies: puppies, unassigned: nil })
     else
       output.as_json.merge({ puppies: puppies, unassigned: unassigned })
     end
