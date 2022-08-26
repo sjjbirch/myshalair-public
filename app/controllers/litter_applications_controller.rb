@@ -224,6 +224,11 @@ class LitterApplicationsController < ApplicationController
     render json: @litter_applications
   end
 
+  def waitlisted
+    @litter_applications = LitterApplication.waitlisted
+    render json: @litter_applications
+  end
+
   # GET /litter_applications/1
   def show
     @output = @litter_application
