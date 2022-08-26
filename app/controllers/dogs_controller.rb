@@ -177,13 +177,19 @@ class DogsController < ApplicationController
       litters = @dog.sired_litters
     else
       litters = @dog.bitched_litters
-      litters = nil if litters.length.zero?
     end
+    litters = nil if litters.length.zero?
 
     healthtest = @dog.healthtest
     litter = @dog.litter
 
-    @dog = @dog.plebifier
+    if current_user.nil? or !current_user.admin?
+      @dog = @dog.plebifier
+      @owner = "Not authorised."
+    else
+      @dog = @dog.uri_adder
+      @owner = User.find(@dog.owner_id)
+    end
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
 
@@ -194,7 +200,8 @@ class DogsController < ApplicationController
       litter: litter,
       pedigree: pedigree(@dog, 3),
       litters: litters,
-      show_results: 'Sadly, unimplemented.'
+      show_results: 'Sadly, unimplemented.',
+      owner_details: @owner
     }
   end
 
