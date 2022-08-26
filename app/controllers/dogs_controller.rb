@@ -39,9 +39,9 @@ class DogsController < ApplicationController
 
     @dog = Dog.create(dog_params)
 
-    params[:litter_id].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:litter_id]}" : littermess = 'No litter provided.'
+    params[:dog][:litter].present? ? lazy_litter_adder && littermess = "Added to litter #{params[:dog][:litter][:litter_id]}" : littermess = 'No litter provided.'
 
-    params[:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided.'
+    params[:dog][:healthtest].present? ? lazy_healthtest_add && healthtestmess = 'Added healthtest' : healthtestmess = 'No healthtest provided.'
     
     params[:mainimage].present? ? main_image_updater && mainimagemess = 'Added main image' : mainimagemess = 'No main image provided.'
 
@@ -55,18 +55,13 @@ class DogsController < ApplicationController
   end
 
   def lazy_litter_adder
-    PuppyList.create(litter_id: params[:litter_id], dog_id: @dog.id)
-    @dog.update(dob: Litter.find(params[:litter_id]).adate) if Litter.find(params[:litter_id]).adate.present?
-    5.times do
-      puts "litter adder fired"
-    end
+    puppylist = params[:dog][:litter]
+    PuppyList.create(litter_id: puppylist[:litter_id], dog_id: @dog.id)
+    @dog.update(dob: Litter.find(puppylist[:litter_id]).adate) if Litter.find(puppylist[:litter_id]).adate.present?
   end
 
   def lazy_healthtest_add
-    5.times do
-      puts "lazy healthtest add fired"
-    end
-    healthtest = params[:healthtest]
+    healthtest = params[:dog][:healthtest]
     if @dog.healthtest.update(
       pra: healthtest[:pra], fn: healthtest[:fn],
       aon: healthtest[:aon], ams: healthtest[:ams],
@@ -218,6 +213,7 @@ class DogsController < ApplicationController
     if @dog.update(dog_params)
       main_image_updater if params[:main_image].present?
       gallery_image_updater if params[:gallery_images].present?
+
       @dog.uri_adder
       render json: @dog
     else
