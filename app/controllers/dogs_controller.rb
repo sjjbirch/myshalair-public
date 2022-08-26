@@ -57,9 +57,15 @@ class DogsController < ApplicationController
   def lazy_litter_adder
     PuppyList.create(litter_id: params[:litter_id], dog_id: @dog.id)
     @dog.update(dob: Litter.find(params[:litter_id]).adate) if Litter.find(params[:litter_id]).adate.present?
+    5.times do
+      puts "litter adder fired"
+    end
   end
 
   def lazy_healthtest_add
+    5.times do
+      puts "lazy healthtest add fired"
+    end
     healthtest = params[:healthtest]
     if @dog.healthtest.update(
       pra: healthtest[:pra], fn: healthtest[:fn],
@@ -333,7 +339,8 @@ class DogsController < ApplicationController
                                 :dlist, :generations, :retired,
                                 :description, :colour, :chipnumber,
                                 :healthtest, :display,
-                                :main_image, :gallery_images => [])
+                                :main_image, :gallery_images => [],
+                                healthtest_attributes: [:pra, :fn, :ams, :bss, :aon])
   end
 end
 
