@@ -65,4 +65,4 @@ I'm so sad that I've installed Capybara. Last time I tried to use it I spent a w
 * dogs#show returns a pedigree object with value null
 * Cannot unassign or reassign a puppy once assigned
 * Applications once assigned to a litter can only be returned to the waitlist with status rejected
-* 
+* A dog can become its own ancestor since pedigree is not used for enforcement logic

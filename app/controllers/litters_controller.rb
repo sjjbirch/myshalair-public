@@ -48,6 +48,7 @@ class LittersController < ApplicationController
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
                                  dob: @litter.adate, sex: params[:sex] )
     if @doggo.save
+      @doggo.main_image.attach(params[:main_image]) if params[:main_image].present?
       render json: { success: "Success", message: "#{params[:callname]} created", dog: @doggo }, status: 201
     else
       render json: { success: "Failure", message: "#{params[:callname]} not created", errors: @litter.errors }, status: :unprocessable_entity
