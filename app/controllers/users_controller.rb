@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-    before_action :set_user, only: %i[show]
-    before_action :ownership_check, only: %i[show]
+    before_action :set_user, only: %i[show update]
+    before_action :ownership_check, only: %i[show update ]
 
     def show
         @litter_apps = []
@@ -23,6 +23,16 @@ class UsersController < ApplicationController
         @bredlitters = nil if @bredlitters.count.zero?
 
         render json: { user: @user.as_json(:except => [:jti]), main_image: @user.main_image.url, applications: @litter_apps, dogs: @dogs, bred_litters: @bredlitters }
+    end
+
+    def update
+    
+    if @user.update(user_params)
+        render json: @user
+        else
+        render json: @user.errors, status: :unprocessable_entity
+        end
+
     end
 
     private

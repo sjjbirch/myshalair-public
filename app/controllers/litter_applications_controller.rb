@@ -238,11 +238,18 @@ class LitterApplicationsController < ApplicationController
 
   # PATCH/PUT /litter_applications/1
   def update
-    if @litter_application.update(litter_application_params)
-      render json: @litter_application
+    if params[:fulfillstate] != @litter_application.fulfillstate
+      process_application
     else
-      render json: @litter_application.errors, status: :unprocessable_entity
+
+      if @litter_application.update(litter_application_params)
+        render json: @litter_application
+      else
+        render json: @litter_application.errors, status: :unprocessable_entity
+      end
+
     end
+
   end
 
   # DELETE /litter_applications/1
