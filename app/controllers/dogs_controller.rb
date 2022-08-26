@@ -174,9 +174,9 @@ class DogsController < ApplicationController
     end
 
     if @dog.sex == 1
-      litters = @dog.sired_litters
+      litters = @dog.sired_litters.map { |litter| litter.main_image_adder }
     else
-      litters = @dog.bitched_litters
+      litters = @dog.bitched_litters.map { |litter| litter.main_image_adder }
     end
     litters = nil if litters.length.zero?
 

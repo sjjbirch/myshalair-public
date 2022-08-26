@@ -46,6 +46,17 @@ class LitterApplicationsController < ApplicationController
         @litter_application.move_to_bottom
         render json: {success: "Success", message: "Approved application at lowest priority."}
       end
+
+    elsif params[:fulfillstate] == 2 && @litter_application.litter.id != 1
+
+      @litter_application.fulfillstate = params[:fulfillstate]
+      if @litter_application.save!
+        @litter_application.remove_from_list
+        render json: {success: "Success", message: "Rejected application"}
+      else
+        render json: {success: "Failure", message: "Update failed", errors: @litter_application.errors}, status: :unprocessable_entity
+      end
+
     elsif params[:fulfillstate] == 2
 
       @litter_application.fulfillstate = params[:fulfillstate]
