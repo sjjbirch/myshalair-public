@@ -15,7 +15,7 @@ The project was managed using an Agile methodology, with some some metamanagemen
 
 Task delegation was conducted by Solomon because he likes to bully people. The frontend was mostly delegated to Will because he's better with JS and design. The backend was mostly done by Solomon because he's better with Ruby and DB. Deployment tasks were mostly done by Solomon because the customer knows him and she's going to try to rope him into doing permanent devops.
 
-Tasks are tracked on the kanban, and are each tracked by importance and priority. Every US is extensively referenced in git commits. Each sprint collected synergistic user stories and had its own feature branch on git with many commits by each person. The total blame history is roughly 100 commits from Solomon and Will each across about 20 feature branches on the two public repos and 4 repos in total.
+Tasks are tracked on the kanban, and are each tracked by importance and priority. Every US is extensively referenced in git commits. Each sprint collected synergistic user stories and had its own feature branch on git with many commits by each person. The total blame history is roughly 150 commits from Solomon and Will each across about 20 feature branches, and an additional two private staging repos with unreplicated commits.
 
 ### Source control (PRG1006-2.1 Employ and utilise proper source control methodology):
 #### HD
@@ -43,23 +43,23 @@ The website uses MUI and extensive asynch calls to ensure an intuitive, clean an
 
 ## Functions, ranges, classes (PRG1006-4.3 Utilises functions, ranges and classes)
 #### HD
-Just look at the absolute chaddery in something as simple as seeds.rb, for example the use of classes, functions and ranges at ``phonenumber: "04#{rand(10000000..30000000)}"`` to generate random valid Australian mobile phone numbers is sophisticated and demonstrates exceptional understanding, or the entirity of the frontend litter update helper called ``updateItemInArray()`` found at ``src/Components/utils/helpers/generalTools.js`` which is used by ``src/Components/Pages/LitterRoute/LitterUpdate/LitterUpdate.js``, which is simply marvelous.
-
-## Libraries (CMP1043-1.3 Appropriate use of libraries used in the app)
-#### HD
-See descriptions below.
-
-## Flow control (PRG1006-1.1 Demonstrate code flow control)
-#### HD
-It's flawless.
-
-## Functionality ( PRG1006-6.1 App functionality):
-#### HD
-This website is so much more than my next door neighbour deserves. This should well and truly exceed her expectations.
+Just look at the absolute chaddery in something as simple as seeds.rb, for example the use of classes, functions and ranges at ``phonenumber: "04#{rand(10000000..30000000)}"`` to generate random valid Australian mobile phone numbers is sophisticated and demonstrates exceptional understanding, or the entirity of the frontend litter update helper called ``updateItemInArray()`` found at ``src/Components/utils/helpers/generalTools.js`` which is used by ``src/Components/Pages/LitterRoute/LitterUpdate/LitterUpdate.js``, which is simply marvelous. A final one is the ``pedigree()`` function in the dogs controller, which is a variable recursive function that builds dog family trees with cool use of ranges and classes.
 
 ## Functions (PRG1006-1.2 Demonstrate use of functions)
 #### HD
-The commenting is gold standard with some super advanced stuff going on.
+Commenting is gold standard readability and maintainability stuff in the format ``inputs: {inputs}, outputs: {outputs}, called by: {functions that call it}, dependencies: {inverse of called by}, known issues: {known issues}, feature supported: {the features that rely on the function``} applied to every function that isn't default.
+
+## Libraries (CMP1043-1.3 Appropriate use of libraries used in the app)
+#### HD
+Libraries are enumerated and described in the front-end and back end sections below, at length.
+
+## Flow control (PRG1006-1.1 Demonstrate code flow control)
+#### HD
+Flawless flow control is demonstrated all over the place. Nary an error to be seen!
+
+## Functionality ( PRG1006-6.1 App functionality):
+#### HD
+This website is so much more than my next door neighbour deserves, sorry, I meant expects. I meant to say it exceeds user expectations.
 
 ## Other marking criteria
 #### ?
