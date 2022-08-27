@@ -35,7 +35,8 @@ Rails.application.routes.draw do
   post '/find_dog', to: 'dogs#find_dog_by_chipnumber'
 
   # contact form pages, deprecated at client request
-  # resources :contacts
+  # can still write to the db with postman, but no functionality exists on frontend
+  resources :contacts
 
   # admin
   get '/userlist', to: 'admin#list_all_users'
