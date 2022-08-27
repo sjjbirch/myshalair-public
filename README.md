@@ -1,65 +1,69 @@
 # README
 
 ## General:
-Myshalair is a website for a champion cocker spaniel breeder to manager her customers and litters.
+Myshalair is a website for a champion cocker spaniel breeder to manage her customers and litters. 
+[Here](https://github.com/sjjbirch/myshalair-public) is the page you're reading this on.
+See more info about the business requirement at the bottom in the T3A2-A submission.
 
-## Project management (PRG1006-2.3 Employ and utilise task delegation methodology):
-The project kanban is at: https://trello.com/b/YpeL2Tbq/full-stack-app
-Here's a picture of it ![I used to do this for money](/Resources/Workflow/projectmanagement.png). On the live board, everything to the left of "Current Sprint" is backlog, and everything to the right of "User User Stories" is dropped features.
+### Project management (PRG1006-2.3 Employ and utilise task delegation methodology):
+#### HD
+The project kanban, containing all current user stories and evidence of prod testing and UAT, is at: https://trello.com/b/YpeL2Tbq/full-stack-app
+Here's a picture of it. ![I used to do this for money](/Resources/Workflow/projectmanagement.png)
+On the live board, everything to the left of "Current Sprint" is backlog, and everything to the right of "User User Stories" is dropped features.
 
 The project was managed using an Agile methodology, with some some metamanagement done using PRINCE2.
 
-Task delegation was conducted by Solomon. The frontend was mostly delegated to Will because he's better with JS and design. The backend was mostly done by Solomon because he's better with Ruby and DB. Deployment tasks were mostly done by Solomon because the customer knows him and she's going to try to rope him into doing permanent devops.
+Task delegation was conducted by Solomon because he likes to bully people. The frontend was mostly delegated to Will because he's better with JS and design. The backend was mostly done by Solomon because he's better with Ruby and DB. Deployment tasks were mostly done by Solomon because the customer knows him and she's going to try to rope him into doing permanent devops.
 
 Tasks are tracked on the kanban, and are each tracked by importance and priority. Every US is extensively referenced in git commits. Each sprint collected synergistic user stories and had its own feature branch on git with many commits by each person. The total blame history is roughly 100 commits from Solomon and Will each across about 20 feature branches on the two public repos and 4 repos in total.
 
-## Source control (PRG1006-2.1 Employ and utilise proper source control methodology):
-### HD
+### Source control (PRG1006-2.1 Employ and utilise proper source control methodology):
+#### HD
 The website has a git repo (P), a README and gitignore with appropriate content (C), more than 10 feature branches (D) with nearly 100 commits and half a dozen merge PRs from each team member (HD). And that doesn't even include the staging repos with the sexy upstream pulls and crazy merges.
 
-## User and developer testing (PRG1006-7.1 Development testing && PRG1006-7.2 Production testing)
-### Both HD
+### User and developer testing (PRG1006-7.1 Development testing && PRG1006-7.2 Production testing)
+#### Both HD
 The site was staged two weeks in advance to permit developer and user testing. [Developer testing tracker](https://docs.google.com/spreadsheets/d/1OBxgfKiWAeLJSm13J-WUgnu3WHjyvQff2FXFoQ1FZZY/edit#gid=0) - see UAT linked user stories on Kanban for the extensive list of new features the client bestowed on us and features she asked for and that we'd already made that were dropped once she tried them and actually thought about what she wanted.
 
-## Deployment (PRG1006-6.2 Deployment):
-### HD
+### Deployment (PRG1006-6.2 Deployment):
+#### HD
 The frontend is deployed to Netlify and the backend and database to Heroku. The website can be accessed using the custom domain [Myshalair.com](https://www.myshalair.com/) however this is set up using a 302 temporary redirect because the client has not committed to a hosting solution. This means that the underlying frontend URL will be shown in the navbar after the page resolves. The website uses Cloudinary as a CDN for images. The back and front are both deployed from separate staging repos which are downstream of the main repos. This is so that we could share repos with educators without jeopordising the business operations of our customer.
 
 The frontend is running on Ubuntu 20.04.3, Node 16.13.2, NPM and React 8.6.0, and the production build uses the standard React buildpack.
 The backend is running on Ubuntu 20.04.4 LTS, Ruby 3.0.2p107 2021-07-07 rev 0db68f0233 and Rails 7.0.3.1.
 The DB is running Ubuntu 20.04.4 LTS, PostgreSQL 14.0 build 1914.
 
-## Testing (PRG1006-7.3 Utilises a formal testing framework):
-### D
+### Testing (PRG1006-7.3 Utilises a formal testing framework):
+#### D
 The backend has 20 unit tests and 2 feature integration tests using RSpec and Capybara driven by Selenium. The frontend uses Jest and has a half dozen unit tests. Testing instructions are below. It's actually unclear what the real code coverage is since we haven't taken the time to ignore the sections of the code base that are not relevant, but we're at least at D average.
 
 ## User interface (PRG1006-6.3 User interface):
-### HD/D
+#### HD/D
 The website uses MUI and extensive asynch calls to ensure an intuitive, clean and functional user interface. Of special note is the ability for the administrator to sort the display of dogs across all pages using a [special admin page](http://myshalair.com/dogs/re_order) where she can drag and drop dogs to set their priority for display. This was a challenging feature to implement but was necessary to ensure that there were no impediments to the workflow of the administrative user in carrying out complex operations.
 
+## Functions, ranges, classes (PRG1006-4.3 Utilises functions, ranges and classes)
+#### HD
+Just look at the absolute chaddery in something as simple as seeds.rb, for example the use of classes, functions and ranges at ``phonenumber: "04#{rand(10000000..30000000)}"`` to generate random valid Australian mobile phone numbers is sophisticated and demonstrates exceptional understanding, or the entirity of the frontend litter update helper called ``updateItemInArray()`` found at ``src/Components/utils/helpers/generalTools.js`` which is used by ``src/Components/Pages/LitterRoute/LitterUpdate/LitterUpdate.js``, which is simply marvelous.
+
+## Libraries (CMP1043-1.3 Appropriate use of libraries used in the app)
+#### HD
+See descriptions below.
+
+## Flow control (PRG1006-1.1 Demonstrate code flow control)
+#### HD
+It's flawless.
+
 ## Functionality ( PRG1006-6.1 App functionality):
-### HD
+#### HD
 This website is so much more than my next door neighbour deserves. This should well and truly exceed her expectations.
 
 ## Functions (PRG1006-1.2 Demonstrate use of functions)
-### HD
+#### HD
 The commenting is gold standard with some super advanced stuff going on.
 
-## Functions, ranges, classes (PRG1006-4.3 Utilises functions, ranges and classes)
-### HD
-Just look at the absolute chaddery in something as simple as seeds.rb, for example the use of classes, functions and ranges at ``phonenumber: "04#{rand(10000000..30000000)}"`` to generate random valid Australian mobile phone numbers is sophisticated and demonstrates exceptional understanding, or the entirity of the frontend litter update helper called ``updateItemInArray()`` found at ``src/Components/utils/helpers/generalTools.js`` which is used by ``src/Components/Pages/LitterRoute/LitterUpdate/LitterUpdate.js``, which is simply marvelous.
-
-## Flow control (PRG1006-1.1 Demonstrate code flow control)
-### HD
-It's flawless.
-
-## Libraries (CMP1043-1.3 Appropriate use of libraries used in the app)
-### HD
-See descriptions below.
-
 ## Other marking criteria
-### ?
-Yeah. About that.
+#### ?
+Yeah. About that. An exercise for the marker.
 
 # Backend
 ## Usage
@@ -81,7 +85,7 @@ The backend uses Rspec and Capybara driven by Selenium for testing. It has two f
 ### Dependencies
 #### Environment:
 * ubuntu 20.04.4 LTS
-* imagemagick (-v?) (os level, not gem)
+* imagemagick 6.9.10-23 Q16 x86_64 2019010
 * ruby 3.0.2p107 2021-07-07 rev 0db68f0233
 * foreman -0.87.2 (environment, NOT Rails, for testing only; ie gem install foreman NOT in the gemfile)
 
@@ -119,15 +123,196 @@ A robust and feature rich gem for running tests in Rails. Automatically generate
 *  gem 'simplecov'
 A coverage reporting gem that integrates with Rspec (among other options) to generate test reports. The report, once generated automatically by running the test suite, can be found at ``/coverage/index.html``
 
-## Known issues
+# Front end
+
+## Running tests
+``npm test`` or ``npm run test`` starts app in test mode where all tests are run automatically, pressing ``w`` will return several options, including rerunning all tests, rerunning only failed tests or exiting test mode.
+
+## Dependencies
+### Environment
+* Ubuntu 20.04.3
+* Node 16.13.2
+* NPM and React 8.6.0
+* The production build uses the standard React buildpack.
+
+### Production
+
+* @date-io/moment:
+Version of date-io that has been built around the momentjs date framework, is used to manage date creation and formatting on the front end
+*@dnd-kit/core:
+Core logic for dnd-kit that provides drag and drop functionality via the use of useDroppable and useDraggable hooks to mark components as either a droppable container or a draggable elemnt
+* @dnd-kit/sortable:
+An addon to dnd-kit/core that allows for a less detailed combined hook that also supports second dimentionall drag and drop making it possible to drag and drop grid items to any other location within the grid
+* @dnd-kit/utilities:
+Provides a variety of interesting tools that expand on smaller areas of dnd-kit, only used for dynamic styling changes inorder to improve the aesthetic of dragging and dropping components
+* @emotion/styled:
+Styling framework used by material ui to allow detailed inline styling of its components
+* @emotion/react:
+An expantion on the emotion styling framework to expand its functionality to JSX components
+* @fontsource/roboto:
+Default font framwork for material ui's typography component
+* @mui/icons-material:
+Material ui's icon library, grants access to wide range of unique and stylish icons that are used through the application
+* @mui/material:
+Material ui's core component, provides access to material ui's wide and useful variety of components to make styling easy and symple
+* @mui/x-date-pickers:
+Date-picker component from material ui, allows for a fancy calander element to be used for any date input, uses moment as a date framework.
+* axios:
+Acts as the middleware between the front end and back, provides extremely useful functionality for customising requests and responses while keeping it extremely simple and easy to understand
+* bootstrap & react-bootstrap:
+An additional styling framework that much like material ui provides a wide variety of components to smooth the styling process. Its navbar components is the core for user navigation through the app.
+* form-data & form-data-extended:
+form-data and its framework where essencial in being able to iron out image uploading, its added form-data-extended, particaly made it extremely simple and easy to construct objects and convert them to FormData just before making a request.
+* moment:
+Date framework used by material ui's Date-picker via @date-io
+* react-router & react-router-dom:
+React-router was used as the front end routing framework inorder to make maintaining local and global state simple and easy inorder to minimise the amount of requests that get made inorder to keep the variety of data updated.
+
+### Development
+
+* @testing-library:
+This is the core testing framework that was used to write tests for the front end. Specifically /dom and /react allows for easy mimicing of a normal react evironment inorder to ensure tests are running as close to the real app as possible. /jest-dom and /user-event are also used for testing, making a variety of jest based functionality available and directly intigrated into the main @testing-library bundle, and user-event allows for a more detailed and accurate 'how a user would interect with a component' testing behaviour.
+* jsdom & global-jsdom:
+jsdom is a pure javascript testing environment seeking to emulate as much of a web browser environment inorder to maximise the validity of tests. global-jsdom specifically seperates jsdom from requiring a testing framework such as jest allowing it to run more freely no matter the environment
+* jest:
+Jest is an extremely useful framework for testing to keep on hand, allowing for advance system mocking or spying ability it was mostly used to delay a test untill the right opertune time inorder to prevent false failures
+* msw:
+MSW is a simple and easy way to mock network traffic, able to watch on a route, and mock a response in a far simpler and easy to impliment format than any other more general testing framework like jest
+* react-test-renderer:
+react-test-rendered is the core to react testing allowing for easy renderering of any react component no matter its possition in a DOM tree, it allows for a variety of tests to be performed directly on a react component or even simply mimic reacts render technoloy inorder to minimise test specific errors that can occured with a different in environment
+
+
+# Known issues
 * Devise inconsistently raises an error or exception if it is given unpermitted user params; it will not fail the operation and it will not use the unpermitted params, but it will sometimes not report that it got them either.
 * db:seed contains calls against an API that will occasionally return invalid uris; when this occurs a crappy placeholder image is used
 * dogs#show returns a pedigree object with value null as well as the real pedigree object as part of the dog
 * Cannot unassign or reassign a puppy once assigned
 * A dog can become its own ancestor since pedigree is not used for enforcement logic
 * Manually setting the priority of a litter application to a value much higher than the number of applications on the waitlist will cause it to stop appearing in the UI
-* The backend is hosted on a free dyno, so it may be asleep when the frontend queries it, which occasionally causes images to not load.
-* Additionally the frontend sometimes gets sick of waiting for the backend to do something and decides it must have failed.
+* The backend is hosted on a free dyno, so it may be asleep when the frontend queries it, which occasionally causes images to not load due to the URL being provided too slowly.
+* Additionally the frontend sometimes gets sick of waiting for the backend to do something and decides it must have failed; for example sometimes during user signup.
 * The custom domain is set up with a temporary redirect, so when it resolves the underlying netlify url will show.
-* The three preceding issues are caused by the client not wanting to pay for hosting. The domain was even purchased at student expense.
+* The three preceding issues are caused by the client failing to decide on and pay for hosting by the agreed date. The domain was even purchased at student expense because we get marked on that.
 
+# T3A2 Readme:
+# Myshalair - a dog breeder's website
+
+## Purpose
+
+The purpose of this website is to have an online presence for a small business that breeds dogs. The owner of the business would like to have a website that allows her to maintain communication with other breeders and with owners of her stock so that she is better able to build a dog-based community.
+
+## Functionality
+
+The primary function of the website is to allow information about breeding dogs to be displayed. Litters produced by breeding dogs will automatically generate information for the puppies. Ownership of a puppy entitles an owner to maintain an account on the website and participate in forum discussions which function to permit the creation of a community. Future litters are also displayed on the website and have the function of allowing the expression of interest in their puppies by prospective customers, which in turn enables litter and customer allocation functionality.
+
+Client rendering will occur for the display pages for dogs and litters, enabling richly animated and responsive user experiences. Server rendering will be used by exception.
+
+## Target audience
+
+People that like cocker spaniels and want to buy prize winning examples in the Brisbane area. One imagines mostly wealthy middle aged women, but one is only imagining.
+
+## Tech stack
+
+The website has a React front end, a Rails back end and a Postgres DB. Images are stored on Cloudinary and their implementation on the website is handled by the activestorage module of Rails. Payment will be handled by Stripe. The website will be hosted on a Heroku free instance during UAT, with the decision of whether to move it to a more robust instance and the provider of the instance to be made by the customer after UAT.
+
+## Dataflow Diagram
+
+![Data, flowing](/Resources/Dataflow/D2_DataFlow_Diagram.png)
+
+## Application Architecture Diagram
+
+![Application Architecture](/Resources/Architecture/D2_Architecture.svg)
+
+## User Stories
+
+### As the business owner I want to:
+  List my breeding dogs and their details so that I communicate my pedigrees.
+  Move breeding dogs to an inactive category when they are no longer breeding to ensure that only relevant information is shown.
+  Create new breeding dog entries so that the website reflects the breeding opportunities I can offer.
+  Show pictures of my past litters to help remember them.
+  Show pictures of my past litters to help remember them and increase interest in my puppies.
+  Show show results for dogs and litters so that people can be shown how successful my pedigrees are.
+  
+  Keep in touch with people who buy my dogs so that I can retain awareness of where my dogs end up.
+  Build a user driver community so that I can increase dog breeding clout.
+  Build a user driven community of people who own my dogs so that I can build brand reputation.
+  Delete peoples’ posts to maintain decorum.
+  Schedule future litters so that people know when they are coming.
+  Schedule future litters so that prospective buyers know when they are coming.
+  Allocate buyers to litters so that litters don’t become overbooked.
+  Communicate with allocated buyers automatically so they know when scheduled litters are coming.
+  Receive payment for puppies so that less cash is handled.
+  Receive payment for puppies so that purchasing friction is reduced.
+  Have a website that looks cooler than other breeders’ so that I can flex.
+  Have a website with a good looking UI so that perceptions of my professionalism are enhanced.
+  
+  Screen potential buyers for suitability so that I can streamline my customer onboarding process.
+  Retain the information of prospective and approved buyers so that I can contact them about future opportunities.
+
+
+### As a prospective buyer I want to:
+  Have a landing page with multiple pictures so that my attention is captured.
+  Navigate the site from a single element so that I can find pages with information that interests me.
+  See different breeding pairs and their previous litters so that I can assess the desirability of future litters.
+  See the pedigrees of breeding dogs so that I can assess the desirability of future litters.
+  See the show results of various pedigrees so that I can be assured that the stock is of good quality.
+  Express my interest in buying a dog from a litter.
+  See when litters are coming so that I can plan for the pickup of my puppy.
+
+
+### As an owner I want to:
+  Maintain communications with the breeder so I can access post-sale care and advice.
+  Have the ability to send on-website direct messages to the breeder so that I can access post sale care and advice.
+  See the read status of DMs so that I can see if there’s a communication problem.
+  See a list of posts by other users organised by topic so that I can find threads I’m interested in.
+  Make posts to start conversations about topics that interest me.
+  Edit my posts so that I can fix errors.
+  See when others have edited posts so I know they’re not being sneaky.
+  Show off my dog’s show results to other owners so that I can feel pride.
+
+## Wireframes
+
+![Application Architecture](/Resources/Wireframes/AboutUs.png)
+
+![Application Architecture](/Resources/Wireframes/BreedingSchedule.png)
+
+![Application Architecture](/Resources/Wireframes/ContactForm.png)
+
+![Application Architecture](/Resources/Wireframes/CreateDog.png)
+
+![Application Architecture](/Resources/Wireframes/CreateLitter.png)
+
+![Application Architecture](/Resources/Wireframes/CreateShow.png)
+
+![Application Architecture](/Resources/Wireframes/Home.png)
+
+![Application Architecture](/Resources/Wireframes/ListDogs_Litters.png)
+
+![Application Architecture](/Resources/Wireframes/LitterInfo.png)
+
+![Application Architecture](/Resources/Wireframes/LitterSignup.png)
+
+![Application Architecture](/Resources/Wireframes/Login.png)
+
+![Application Architecture](/Resources/Wireframes/ManageDogs.png)
+
+![Application Architecture](/Resources/Wireframes/ManageLitters.png)
+
+![Application Architecture](/Resources/Wireframes/ManageShows.png)
+
+![Application Architecture](/Resources/Wireframes/PoliciesandSourcing.png)
+
+![Application Architecture](/Resources/Wireframes/ShowResults.png)
+
+![Application Architecture](/Resources/Wireframes/Signup.png)
+
+
+## Workflow
+
+![Application Architecture](/Resources/Workflow/220706Trello.jpg)
+
+![Application Architecture](/Resources/Workflow/220711Trello.jpg)
+
+![Application Architecture](/Resources/Workflow/220711TrelloP2.jpg)
+
+![Application Architecture](/Resources/Workflow/220717Trello.png)

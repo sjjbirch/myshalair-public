@@ -4,7 +4,7 @@
 
 The purpose of this website is to have an online presence for a small business that breeds dogs. The owner of the business would like to have a website that allows her to maintain communication with other breeders and with owners of her stock so that she is better able to build a dog-based community.
 
-It impliments material ui and react bootstrap for its styling framework, this is done to emphasize a standard styling criteria while being able to quickly and easily design pages and alter how they render based off a veriety of factors.
+It implements material ui and react bootstrap for its styling framework, this is done to emphasize a standard styling criteria while being able to quickly and easily design pages and alter how they render based off a veriety of factors.
 Myshalair also impliments a variety of tools specific to react functionality, react-router allows for easy and smart routing and rendering of unique components while material ui's date picker addon makes it easy to select and save dates, using Moment as the main date handling framework due to its ease of use and easily implimented support for a veriety of date formats.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) using the basic template.
@@ -48,7 +48,7 @@ The Rails back end uses a Postgres DB. Images are stored on Cloudinary and their
 
 The website will be hosted on a Heroku free instance during UAT, with the decision of whether to move it to a more robust instance and the provider of the instance to be made by the customer after UAT.
 
-## Depenencie breakdown
+## Dependencies breakdown
 
 ### Production
 
