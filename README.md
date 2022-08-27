@@ -73,6 +73,8 @@ Yeah. About that. An exercise for the marker.
 
 # Backend
 ## Usage
+### Courtesy note
+I don't want to give you the keys to the external accounts (for eg google app passwords for email accounts, cloudinary). If for some reason I end up giving you the Cloudinary key for marking, please have the courtesy to use the custom task `rake attpurge` before you drop any database so that the container doesn't fill up with random dog images.
 ### Running tests:
 The backend uses Rspec and Capybara driven by Selenium for testing. It has two feature integration tests and about 20 unit tests. To run the tests:
 * Install environment, dependencies and bundle install.
