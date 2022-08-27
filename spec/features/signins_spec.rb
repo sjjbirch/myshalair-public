@@ -2,6 +2,9 @@ require 'rails_helper'
 
 RSpec.feature "Signins", type: :feature, js: true do
     user = User.find_by( email: "1@qwerty.com" )
+    50.times do
+        puts user.username
+    end
 
     unless !user.nil?
         user = User.new(username: "User1", password: "qwerty", postcode:"2000", email: "1@qwerty.com")
@@ -9,7 +12,15 @@ RSpec.feature "Signins", type: :feature, js: true do
         user.save!
     end
 
+    50.times do
+        puts user.username
+    end
+
     user = User.find_by( email: "1@qwerty.com" )
+
+    50.times do
+        puts user.username
+    end
 
     scenario "Wrong password" do
 
