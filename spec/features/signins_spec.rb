@@ -2,9 +2,6 @@ require 'rails_helper'
 
 RSpec.feature "Signins", type: :feature, js: true do
     user = User.find_by( email: "1@qwerty.com" )
-    50.times do
-        puts user.username
-    end
 
     unless !user.nil?
         user = User.new(username: "User1", password: "qwerty", postcode:"2000", email: "1@qwerty.com")
@@ -12,19 +9,10 @@ RSpec.feature "Signins", type: :feature, js: true do
         user.save!
     end
 
-    50.times do
-        puts user.username
-    end
-
-    user = User.find_by( email: "1@qwerty.com" )
-
-    50.times do
-        puts user.username
-    end
-
     scenario "Wrong password" do
 
         visit("/")
+        wait_for_page_load
         click_link "Sign In"
     
         fill_in "email_id", with: user.email
@@ -45,7 +33,9 @@ RSpec.feature "Signins", type: :feature, js: true do
     scenario "Wrong username" do
 
         visit("/")
+        wait_for_page_load
         click_link "Sign In"
+        wait_for_page_load
     
         fill_in "email_id", with: "12@qwerty.com"
         fill_in "password_id", with: "qwerty"
@@ -63,7 +53,9 @@ RSpec.feature "Signins", type: :feature, js: true do
     scenario "Correct credentials" do
 
         visit("/")
+        wait_for_page_load
         click_link "Sign In"
+        wait_for_page_load
     
         fill_in "email_id", with: "1@qwerty.com"
         fill_in "password_id", with: "qwerty"
@@ -77,7 +69,9 @@ RSpec.feature "Signins", type: :feature, js: true do
     scenario "sign out" do
 
         visit("/")
-        click_link "User1"
+        wait_for_page_load
+        click_link user.username
+        wait_for_page_load
         click_link "Sign Out"
     
         wait_for_page_load

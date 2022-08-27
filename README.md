@@ -3,12 +3,12 @@
 ## Usage
 ### To test:
 * Install environment, dependencies and bundle install.
-* If you are feeling extremely risky then add ``api: RAILS_ENV=test bundle exec rails s -p 3001`` to ``procfile-react-test``, and then run ``foreman start -f procfile-react-test``, but be aware that that foreman seems not to consistently kill Puma servers and you may need to manually troubleshoot if this occurs.
-* If you aren't feeling risky then just run ``foreman start -f procfile-react-test`` and in another terminal run ``RAILS_ENV=test bundle exec rails s -p 3001``.
-* Either way, run ``bundle exec rspec spec`` to run the integration and unit tests.
-
-* If you're feeling ultra risky then add ``batch_test: sleep 4 && bundle exec rspec spec`` after ``api: `` and then start foreman. This seems to run once and once only without manual troubleshooting.
+* If you are feeling extremely risky then add ``api: bundle exec rails s -p 3001`` to ``procfile-react-test``, and then run ``foreman start -f procfile-react-test``, but be aware that that foreman seems not to consistently kill Puma servers and you may need to manually troubleshoot if this occurs.
+* If you aren't feeling risky then just run ``foreman start -f procfile-react-test`` and in another terminal run ``bundle exec rails s -p 3001``.
+* Either way, run ``RAILS_ENV=development bundle exec rspec spec`` to run the integration and unit tests.
+* If you're feeling ultra risky then add ``batch_test: sleep 4 && RAILS_ENV=development bundle exec rspec spec`` after ``api: `` and then start foreman. This seems to run once and once only without manual troubleshooting.
 * If you'd like this issue to be addressed, please go and comment on the [pull request to fix it that's been open for a year even though it has no conflicts](https://github.com/ddollar/foreman/pull/780).
+* Note: Tests are to be run against the dev environment. This is a deliberate decision made to reduce API overhead due to the use of free plans for the production and development site. The front end is _not_ integrated with the Rails test environment.
 
 ## Config notes
 * Dev DB username:postgres pw:postgres port:5432 on localhost

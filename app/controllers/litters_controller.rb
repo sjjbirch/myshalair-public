@@ -46,7 +46,7 @@ class LittersController < ApplicationController
 
   def add_puppy
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
-                                 dob: @litter.adate, sex: params[:sex] )
+                                 dob: @litter.adate, sex: params[:sex], colour: params[:colour] )
     if @doggo.save
       @doggo.main_image.attach(params[:main_image]) if params[:main_image].present?
       render json: { success: "Success", message: "#{params[:callname]} created", dog: @doggo }, status: 201
@@ -68,7 +68,7 @@ class LittersController < ApplicationController
 
     @dogs.each do |dog|
       @dog = @litter.dogs.build( callname: dog[:callname], realname: dog[:realname], 
-      dob: @litter.adate, sex: dog[:sex] )
+      dob: @litter.adate, sex: dog[:sex], colour: params[:colour] )
       if @dog.save
         createddogs << @dog
       else
