@@ -31,26 +31,26 @@
 
 #env
 .env
-/Frontend/node_modules
-/Frontend/.pnp
-/Frontend/.pnp.js
+/frontend/node_modules
+/frontend/.pnp
+/frontend/.pnp.js
 
 # testing
-/Frontend/coverage
+/frontend/coverage
 
 # production
-/Frontend/build
+/frontend/build
 
 # misc
-/Frontend.DS_Store
-/Frontend.env.local
-/Frontend.env.development.local
-/Frontend.env.test.local
-/Frontend.env.production.local
+/frontend.DS_Store
+/frontend.env.local
+/frontend.env.development.local
+/frontend.env.test.local
+/frontend.env.production.local
 
-/Frontend/npm-debug.log*
-/Frontend/yarn-debug.log*
-/Frontend/yarn-error.log*
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
 
 # development
 /Frontend/src/Components/utils/StyledComponents.js
