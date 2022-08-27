@@ -3,6 +3,9 @@
 ## General:
 Myshalair is a website for a champion cocker spaniel breeder to manage her customers and litters. 
 [Here](https://github.com/sjjbirch/myshalair-public) is the page you're reading this on.
+
+If you're reading this from the submission, please note that the reason there's a `Resources` folder as well as a `docs` folders is that I didn't want to change the file paths in this folder.
+
 See more info about the business requirement at the bottom in the T3A2-A submission.
 
 ### Project management (PRG1006-2.3 Employ and utilise task delegation methodology):
@@ -198,7 +201,7 @@ react-test-rendered is the core to react testing allowing for easy renderering o
 * The three preceding issues are caused by the client failing to decide on and pay for hosting by the agreed date. The domain was even purchased at student expense because we get marked on that.
 
 ### Have an ERD that we did but never submitted
-![An ERD that you're having since I made it](/Resources/newthings/erdv1.png)
+![An ERD that you're having since I made it](/Resources//newthings/erdv1.png)
 
 # T3A2 Readme:
 # Myshalair - a dog breeder's website
