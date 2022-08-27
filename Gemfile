@@ -46,7 +46,6 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0"
   gem 'selenium-webdriver' #this should do the thing
   gem 'simplecov', require: false
-  gem 'capybara-click_at'
 end
 
 group :development do
@@ -63,6 +62,5 @@ gem "mini_magick"
 gem 'acts_as_list'
 gem 'cloudinary' 
 gem 'faker'
-#these should really be test
 gem 'webrick'
 gem 'webdrivers', '~> 5.0'
