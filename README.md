@@ -26,7 +26,7 @@ The website has a git repo (P), a README and gitignore with appropriate content 
 The site was staged two weeks in advance to permit developer and user testing. [Developer testing tracker](https://docs.google.com/spreadsheets/d/1OBxgfKiWAeLJSm13J-WUgnu3WHjyvQff2FXFoQ1FZZY/edit#gid=0) - see UAT linked user stories on Kanban for the extensive list of new features the client bestowed on us and features she asked for and that we'd already made that were dropped once she tried them and actually thought about what she wanted.
 
 Also, here's a screenshot taken of the website while a user's GPU was dying during UAT. We swear it wasn't awful javascript that fried it.
-![gotta love those rendering artifacts when the memory junction is on the way out](/newthings/uat.png)
+![gotta love those rendering artifacts when the memory junction is on the way out](/Resources/newthings/uat.png)
 
 ### Deployment (PRG1006-6.2 Deployment):
 #### HD
@@ -198,7 +198,7 @@ react-test-rendered is the core to react testing allowing for easy renderering o
 * The three preceding issues are caused by the client failing to decide on and pay for hosting by the agreed date. The domain was even purchased at student expense because we get marked on that.
 
 ### Have an ERD that we did but never submitted
-![An ERD that you're having since I made it](/newthings/erdv1.png)
+![An ERD that you're having since I made it](/Resources/newthings/erdv1.png)
 
 # T3A2 Readme:
 # Myshalair - a dog breeder's website
