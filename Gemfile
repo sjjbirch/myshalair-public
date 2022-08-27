@@ -46,6 +46,7 @@ group :development, :test do
   gem "database_cleaner", "~> 2.0"
   gem 'selenium-webdriver' #this should do the thing
   gem 'simplecov', require: false
+  gem 'capybara-click_at'
 end
 
 group :development do

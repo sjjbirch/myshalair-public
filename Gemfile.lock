@@ -81,6 +81,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-click_at (0.1.0)
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
@@ -293,6 +294,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap
   capybara (~> 2.4.4)
+  capybara-click_at
   capybara-screenshot (~> 1.0.11)
   cloudinary
   database_cleaner (~> 2.0)

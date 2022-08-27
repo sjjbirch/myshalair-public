@@ -15,8 +15,9 @@ Rails.application.routes.draw do
 
   resources :litter_applications
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'
-  get '/applications_from_me', to: 'litter_applications#applications_for_user'
+  # get '/applications_from_me', to: 'litter_applications#applications_for_user'
   get '/applications_to_me', to: 'litter_applications#applications_for_breeder'
+  get '/waitlisted', to: 'litter_applications#waitlisted'
   post '/lazy_litter_application_create', to: 'litter_applications#lazy_create'
   post '/add_pet', to: 'litter_applications#add_pet'
   post '/add_child', to: 'litter_applications#add_child'
@@ -34,7 +35,8 @@ Rails.application.routes.draw do
   post '/find_dog', to: 'dogs#find_dog_by_chipnumber'
 
   # contact form pages, deprecated at client request
-  # resources :contacts
+  # can still write to the db with postman, but no functionality exists on frontend
+  resources :contacts
 
   # admin
   get '/userlist', to: 'admin#list_all_users'

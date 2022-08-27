@@ -6,10 +6,20 @@ class DogsController < ApplicationController
 
 
  # custom routes
-
   def reorder_position
-    # receives list of dogs as dog_ids and new position, updates the DB with them
-    # requires refactor: n+1 query problem
+    # Inputs:
+    #   list of dogs as dog_ids and new position
+    # Outputs:
+    #   Updates the DB with new positions, returns new positions or failure as json.
+    # called by:
+    #   nil
+    # Dependencies:
+    #   gem acts_as_list
+    # Known issues:
+    #   The gem is really inefficient with db calls
+    #   requires refactor: n+1 query problem
+    # Feature supported:
+    #   Admin customising ordering of dogs
 
     dogs = params[:dogs]
     numbertomove = dogs.count
@@ -33,6 +43,20 @@ class DogsController < ApplicationController
   end
 
   def lazy_dog_create
+
+    # Inputs:
+    #   dog with nested lists of dependents in params
+    # Outputs:
+    #   Creates dog and all dependents in one swoop
+    #   Returns JSON of dog and messages depending on what happened with the dependents
+    # called by:
+    #   routes
+    # Dependencies:
+    #   activerecord, uri_adder, lazy_litter_adder, lazy_healthtest_add, main_image_updater
+    # Feature supported:
+    #   Admin addition of new dogs
+
+
     littermess = 'asdsadsad'
     healthtestmess = 'asdsa'
     mainimagemess = 'astring'
@@ -53,19 +77,64 @@ class DogsController < ApplicationController
   end
 
   def lazy_litter_adder
+    # Inputs:
+    #   dog with nested litter object in params
+    # Outputs:
+    #   db write join between a dog and litter
+    #   dog's dob updated to the date of the litter if it exists
+    #   Returns to calling function
+    # called by:
+    #   lazy_dog_create
+    # Dependencies:
+    #   nil
+    # Feature supported:
+    #   Admin addition of new dogs
     puppylist = params[:dog][:litter]
     PuppyList.create(litter_id: puppylist[:litter_id], dog_id: @dog.id)
     @dog.update(dob: Litter.find(puppylist[:litter_id]).adate) if Litter.find(puppylist[:litter_id]).adate.present?
   end
 
   def lazy_litter_updater
+    # context aware version of lazy_litter_adder
+    # Inputs:
+    #   dog with nested litter object in params
+    # Outputs:
+    #   updated db write join between a dog and litter if one already existed
+    #   created etc if one didn't exist
+    #   dog's dob updated to the date of the litter if it exists
+    #   Returns to calling function
+    # called by:
+    #   update
+    # Dependencies:
+    #   nil
+    # Feature supported:
+    #   Admin editing of dogs
     litter = params[:dog][:litter]
     @puppylist = PuppyList.where(dog_id: params[:id])
-    @puppylist.update(litter_id: litter[:litter_id], dog_id: @dog.id)
+    if @puppylist.empty?
+      PuppyList.create(litter_id: litter[:litter_id], dog_id: @dog.id)
+    else
+      @puppylist.update(litter_id: litter[:litter_id], dog_id: @dog.id)
+    end
     @dog.update(dob: Litter.find(litter[:litter_id]).adate) if Litter.find(litter[:litter_id]).adate.present?
   end
 
   def lazy_healthtest_add
+    # 
+    # Inputs:
+    #   dog with nested healthtest object in params
+    # Outputs:
+    #   updated db write join between a dog and litter
+    #   Returns to true or false to calling function to signal if it succeeded (but unused)
+    # called by:
+    #   update lazy_dog_create
+    # Dependencies:
+    #   nil
+    # Feature supported:
+    #   Admin add and edit of dogs
+    # known issues:
+    #   known silent fail: else can't be triggered even if you give strings etc
+    #   problem for healthtest_editor, not for lazy dog creator
     healthtest = params[:dog][:healthtest]
     if @dog.healthtest.update(
       pra: healthtest[:pra], fn: healthtest[:fn],
@@ -76,22 +145,20 @@ class DogsController < ApplicationController
     else
       false
     end
-    # known silent fail: else can't be triggered even if you give strings etc
-    # problem for healthtest_editor, not for lazy dog creator
+
   end
 
-  def healthtest_editor
-    if lazy_healthtest_add
-      render json: { success: 'Success', message: "Updated dog's healthtest", healthtest: @dog.healthtest }, status: 201
-    else
-      render json: { success: 'Failure', message: "Updated dog's healthtest", healthtest: @dog.errors },
-             status: :unprocessable_entity
-    end
-  end
+  # def healthtest_editor
+  #   #  Deprecated function. Left here just in case I'm wrong and it's not deprecated.
+  #   if lazy_healthtest_add
+  #     render json: { success: 'Success', message: "Updated dog's healthtest", healthtest: @dog.healthtest }, status: 201
+  #   else
+  #     render json: { success: 'Failure', message: "Updated dog's healthtest", healthtest: @dog.errors },
+  #            status: :unprocessable_entity
+  #   end
+  # end
 
   # prescoped endpoints
-  # currently allow bypass of auth
-  # once diplay field is added, chain displayed scope to method to fix
   def boys
     @dogs = Dog.males.displayed.map { |dog| dog.plebifier }
   end
@@ -108,16 +175,40 @@ class DogsController < ApplicationController
 
   # special adders
   def main_image_updater
+    # 
+    # Inputs:
+    #   a dog object called @dog with a main_image provided
+    # Outputs:
+    #   a main image in activestorage
+    #   will delete the old one if it existed first
+    # called by:
+    #   create update lazy_dog_create
+    # Dependencies:
+    #   activestorage
+    # Feature supported:
+    #   Admin add and edit of dogs, showing of dogs
+
     @dog.main_image.purge if @dog.main_image.attached?
     @dog.main_image.attach(params[:main_image])
   end
 
   def gallery_image_updater
+    # Inputs:
+    #   a dog object called @dog with an array of gallery_images provided
+    # Outputs:
+    #   gallery_images in active storage
+    # called by:
+    #   update
+    # Dependencies:
+    #   activestorage
+    # Feature supported:
+    #   Admin edit of dogs, showing of dogs
     @dog.gallery_images.attach(params[:gallery_images])
   end
 
   # GET /dogs
   def index
+    # An index function with its own authentication
     if current_user.nil? or !current_user.admin?
       plebdex
     else
@@ -126,18 +217,31 @@ class DogsController < ApplicationController
   end
 
   def admindex
+    # index function that provides the whole dogs
     @dogs = Dog.all.map { |dog| dog.uri_adder }
     render json: @dogs
   end
 
   def plebdex
+    # index function that censors information from dogs
     @dogs = Dog.all.map { |dog| dog.plebifier }
     render json: @dogs
   end
 
   # front mutable endpoints
   def find_dog_by_chipnumber
-    # refactor to avoid loading the dog twice from db
+    # Inputs:
+    #   wants a chipnumber in params
+    # Outputs:
+    #   the dog if the dog exists, else errors all as json render
+    # called by:
+    #   routes
+    # Dependencies:
+    #   nil
+    # Feature supported:
+    #   Admin search for dogs by chipnumber
+    # known issue:
+    #    refactor to avoid loading the dog twice from db
     if params[:chipnumber].present? && params[:chipnumber].length == 15
       @dog = Dog.where(chipnumber: params[:chipnumber]).first
       if @dog
@@ -153,17 +257,26 @@ class DogsController < ApplicationController
 
    # GET /dogs/1
   def show
-    #called by dogs#show, dogs#find_dog_by_chipnumber
 
-
-    # renders dogs and the kitchen sink associated with them:
-    # the dog object itself
-    # all of the pictures and the mainpicture attached to the dog
-    # a healthtest
-    # a pedigree that links to the parents and links to own litter
-    # links to each of the sired/bitched litters
-    # links to show results -- down the track
-    # the breedername if present else dog.litter.breeder.username else "Unrecorded"
+    # Inputs:
+    #   a dog object @dog
+    # Outputs:
+    #   as JSON:
+    #   the dog object itself
+    #   all of the pictures and the mainpicture attached to the dog
+    #   a healthtest
+    #   a pedigree that links to the parents and links to own litter
+    #   links to each of the sired/bitched litters
+    #   links to show results -- down the track
+    # called by:
+    #   routes find_dog_by_chipnumber
+    # Dependencies:
+    #   nil
+    # Feature supported:
+    #   Admin search for dogs by chipnumber
+    # known issue:
+    #    inefficient, should mostly be model methods
+    #    should render: the breedername if present else dog.litter.breeder.username else "Unrecorded"
 
     dog_images = []
     if @dog.gallery_images.present?
@@ -174,9 +287,9 @@ class DogsController < ApplicationController
     end
 
     if @dog.sex == 1
-      litters = @dog.sired_litters
+      litters = @dog.sired_litters.map { |litter| litter.main_image_adder }
     else
-      litters = @dog.bitched_litters
+      litters = @dog.bitched_litters.map { |litter| litter.main_image_adder }
     end
     litters = nil if litters.length.zero?
 
@@ -187,8 +300,8 @@ class DogsController < ApplicationController
       @dog = @dog.plebifier
       @owner = "Not authorised."
     else
-      @dog = @dog.uri_adder
       @owner = User.find(@dog.owner_id)
+      @dog = @dog.uri_adder
     end
     # add function here to modify the breedername depending on presence or absence
     # to dog.litter.breeder.username if absent
@@ -207,6 +320,7 @@ class DogsController < ApplicationController
 
   # POST /dogs
   def create
+    # yo it creates a dog and uploads an image if you attached one
     @dog = Dog.new(dog_params)
 
     if @dog.save
@@ -221,6 +335,7 @@ class DogsController < ApplicationController
 
   # PATCH/PUT /dogs/1
   def update
+    # default rails update with conditional stuff to add dependents too
 
     if @dog.update(dog_params)
       lazy_healthtest_add if params[:dog][:healthtest].present?
@@ -237,6 +352,7 @@ class DogsController < ApplicationController
 
   # DELETE /dogs/1
   def destroy
+    # not called anywhere
     @dog.destroy
   end
 

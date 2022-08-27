@@ -30,6 +30,16 @@ class Dog < ApplicationRecord
     scope :displayed, -> {where(display: true)}
 
     def append_healthtest
+    # Inputs:
+    #   nil
+    # Outputs:
+    #   a new healthtest in the db associated with a just-created dog
+    # called by:
+    #   callbackfunction: after_create
+    # Dependencies:
+    #   nil
+    # Supports feature:
+    #   managing healthtest data
         @healthtest = self.build_healthtest(
             pra: 0, fn: 0,
             aon: 0, ams: 0,
@@ -41,16 +51,26 @@ class Dog < ApplicationRecord
 
     # helper methods
     def plebifier
-        # to do: 
-        # all of these model methods end up returning arrays not activerecord associations
-        # this is a problem since it means they can't chain which disallows dry code
-        # for eg main_image_adder is basically replicated in stripper because I can't call it
-        # without a nomethoderror since stripper returns an array
+    # Inputs:
+    #   a dog class object
+    # Outputs:
+    #   returns the dog with only the fields a user should be allowed to see
+    # called by:
+    #   dog# boys girls retired displayed show puppies plebdex show
+    # Dependencies:
+    #   activerecord
+    # Supports feature:
+    #   showing dogs
+    # Known issues:
+    #   all of these model methods end up returning arrays not activerecord associations
+    #   this is a problem since it means they can't chain which disallows dry code
+    #   for eg main_image_adder is basically replicated in stripper because I can't call it
+    #   without a nomethoderror since stripper returns an array
         self.stripper
     end
 
     def uri_adder
-        # called on a dog, returns the dog with the url for its profile picture as json
+        # as above, but without restrictions so an admin can have everything
         self.main_image_adder
     end
 
@@ -64,18 +84,17 @@ class Dog < ApplicationRecord
 
     def gallery_image_adder
         # I'm just not object oriented enough
+        # returning arrays just crushed me here
     end
 
     def stripper
         if self.main_image.present?
-            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id", "colour")
+            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id", "colour", "description", "retired", "display" )
                 .as_json.merge({ main_image: self.main_image.url } )
           else
-            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id", "colour")
+            self.slice("id", "callname", "realname", "dob", "sex", "ownername", "position", "owner_id", "colour", "description", "retired", "display" )
                 .as_json.merge({ main_image: nil })
         end
     end
-
-    # Rails.application.routes.url_helpers.product_url(self, :only_path => false, :host => "www.foo.com")
 
 end

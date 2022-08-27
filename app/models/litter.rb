@@ -15,4 +15,14 @@ class Litter < ApplicationRecord
   has_many_attached :gallery_images, dependent: :purge
 
   scope :pleb, -> { where("status < 3")}
+
+  def main_image_adder
+    # deprecated and unused
+    if self.main_image.present?
+        self.as_json.merge({ main_image: self.main_image.url } )
+      else
+        self.as_json.merge({ main_image: nil })
+    end
+  end
+
 end
