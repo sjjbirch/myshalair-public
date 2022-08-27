@@ -4,6 +4,8 @@
 Myshalair is a website for a champion cocker spaniel breeder to manage her customers and litters. 
 [Here](https://github.com/sjjbirch/myshalair-public) is the page you're reading this on.
 
+A key thing we forgot to put in the submitted readme is that the reason there's still placeholder pictures and text on the home and about pages is that the business owner hasn't told us what should be there. She's... Indecisive...
+
 If you're reading this from the submission, please note that the reason there's a `Resources` folder as well as a `docs` folders is that I didn't want to change the file paths in this folder.
 
 See more info about the business requirement at the bottom in the T3A2-A submission.
