@@ -68,22 +68,6 @@ const SignInForm = () => {
     });
   };
 
-  const handleAdminLogin = () => {
-    setFormData({
-      ...formData,
-      email: "1@qwerty.com",
-      password: "qwerty"
-    });
-  };
-
-  const handleUserLogin = () => {
-    setFormData({
-      ...formData,
-      email: "2@qwerty.com",
-      password: "qwerty"
-    });
-  };
-
   return (
     <>
       <Box component="form" data-testid="form" onSubmit={(e) => handleSubmit(e)} sx={{
@@ -150,8 +134,6 @@ const SignInForm = () => {
             </Grid>
           </Grid>
         </Paper>
-        <Button variant="contained" onClick={handleAdminLogin} type="submit">Log In Admin</Button>
-        <Button variant="contained" onClick={handleUserLogin} type="submit">Log In User</Button>
       </Box>
 
     </>
