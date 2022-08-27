@@ -2,7 +2,7 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara-screenshot/rspec'
 
-Capybara.app_host = "http://localhost:5000"
+Capybara.app_host = "http://localhost:3000"
 Capybara.default_wait_time = 5
 
 Capybara::Screenshot.webkit_options = {

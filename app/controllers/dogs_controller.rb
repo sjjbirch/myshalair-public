@@ -135,7 +135,7 @@ class DogsController < ApplicationController
   end
 
   def plebdex
-    @dogs = Dog.all.map { |dog| dog.plebifier }
+    @dogs = Dog.map { |dog| dog.plebifier }
     render json: @dogs
   end
 
