@@ -47,7 +47,7 @@ The commenting is gold standard with some super advanced stuff going on.
 
 ## Functions, ranges, classes (PRG1006-4.3 Utilises functions, ranges and classes)
 ### HD
-Just look at the absolute chaddery in something as simple as seeds.rb, for example the use of classes, functions and ranges at ``phonenumber: "04#{rand(10000000..30000000)}"`` to generate random valid Australian mobile phone numbers is sophisticated and demonstrates exceptional understanding, or the entirity of the litter update helper in the frontend at ``src/Components/Pages/LitterRoute/LitterUpdate/LitterUpdate.js``, which is simply marvelous.
+Just look at the absolute chaddery in something as simple as seeds.rb, for example the use of classes, functions and ranges at ``phonenumber: "04#{rand(10000000..30000000)}"`` to generate random valid Australian mobile phone numbers is sophisticated and demonstrates exceptional understanding, or the entirity of the frontend litter update helper called ``updateItemInArray()`` found at ``src/Components/utils/helpers/generalTools.js`` which is used by ``src/Components/Pages/LitterRoute/LitterUpdate/LitterUpdate.js``, which is simply marvelous.
 
 ## Flow control (PRG1006-1.1 Demonstrate code flow control)
 ### HD
