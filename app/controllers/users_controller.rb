@@ -1,8 +1,18 @@
 class UsersController < ApplicationController
     before_action :set_user, only: %i[show update]
-    before_action :ownership_check, only: %i[show update ]
+    before_action :ownership_check, only: %i[ show update ]
 
     def show
+    # Inputs:
+    #   a user object called @user
+    # Outputs:
+    #   as json a user with everything that belongs to them
+    # called by:
+    #  routes
+    # Dependencies:
+    #   Dog.main_image_adder
+    # Supports feature:
+    #   user profiles
         @litter_apps = []
         @dogs = []
         @bredlitters = []
@@ -26,12 +36,13 @@ class UsersController < ApplicationController
     end
 
     def update
+        # standard rails update
     
-    if @user.update(user_params)
-        render json: @user
-    else
-        render json: @user.errors, status: :unprocessable_entity
-    end
+        if @user.update(user_params)
+            render json: @user
+        else
+            render json: @user.errors, status: :unprocessable_entity
+        end
 
     end
 

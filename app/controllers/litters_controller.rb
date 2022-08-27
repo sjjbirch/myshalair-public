@@ -6,6 +6,16 @@ class LittersController < ApplicationController
   # custom route actions
 
   def best
+    # Inputs:
+    #   none
+    # Outputs:
+    #   the main image for every litter in the db
+    # called by:
+    #   routes
+    # Dependencies:
+    #   activerecord
+    # Supports feature:
+    #   litter gallery
     @litters = Litter.all
     images = []
     @litters.each do |litter|
@@ -18,6 +28,17 @@ class LittersController < ApplicationController
   end
 
   def showcase_litter
+    # Inputs:
+    #   none
+    # Outputs:
+    #   all of the pictures and puppies with their main image for a litter 
+    #   and the sire and bitch of a litter with their pictures
+    # called by:
+    #   routes Dog.uri_adder
+    # Dependencies:
+    #   activerecord
+    # Supports feature:
+    #   user view litter show
     if @litter.dogs.present?
       @puppies = @litter.dogs.map { |dog| dog.uri_adder }
     else
@@ -45,6 +66,16 @@ class LittersController < ApplicationController
   end
 
   def add_puppy
+    # Inputs:
+    #   litter object called @litter and dog params
+    # Outputs:
+    #   saves dog to db and creates join table for it to the litter
+    # called by:
+    #   routes
+    # Dependencies:
+    #   activerecord
+    # Supports feature:
+    #   admin add puppies to litters
     @doggo = @litter.dogs.build( callname: params[:callname], realname: params[:realname], 
                                  dob: @litter.adate, sex: params[:sex], colour: params[:colour] )
     if @doggo.save
@@ -56,6 +87,8 @@ class LittersController < ApplicationController
   end
 
   def add_puppies
+    # as above but a bulk add of many puppies at once
+    # doesn't support image upload
     if params[:dogs].count != 0
       @dogs = params[:dogs]
       errinos = []
@@ -85,6 +118,16 @@ class LittersController < ApplicationController
 
   # GET /litters
   def index
+    # Inputs:
+    #   none
+    # Outputs:
+    #   all litters, with return fields censored by user auth level
+    # called by:
+    #   routes
+    # Dependencies:
+    #   activerecord Litter.pleb
+    # Supports feature:
+    #   dog index
     if current_user.nil? or !current_user.admin?
       @litters = Litter.pleb
     else
@@ -95,6 +138,16 @@ class LittersController < ApplicationController
 
   # GET /litters/1
   def show
+    # Inputs:
+    #   a litter called @litter
+    # Outputs:
+    #   none
+    # called by:
+    #   routes
+    # Dependencies:
+    #   plebshow adminshow
+    # Supports feature:
+    #   showing litter without all dependents for updating state
     if current_user.nil? or !current_user.admin?
       plebshow
     else
@@ -103,12 +156,32 @@ class LittersController < ApplicationController
   end
 
   def plebshow
+    # Inputs:
+    #   litter called @litter
+    # Outputs:
+    #   a litter with its puppies but not other dependents (for eg apps) as json
+    # called by:
+    #   show
+    # Dependencies:
+    #   puppy_getter
+    # Supports feature:
+    #   showing litter without all dependents for updating state
     @output = @litter
     @output = puppy_getter(@litter, @output)
     render json: @output
   end
 
   def adminshow
+    # Inputs:
+    #   litter called @litter
+    # Outputs:
+    #   a litter with its puppies and apps as json
+    # called by:
+    #   show
+    # Dependencies:
+    #   puppy_getter litter_applications_getter
+    # Supports feature:
+    #   showing litter with some dependents for updating state
     @output = @litter
     @output = puppy_getter(@litter, @output)
     @output = litter_applications_getter(@litter, @output)
@@ -117,6 +190,7 @@ class LittersController < ApplicationController
 
   # POST /litters
   def create
+    # bog standard rails create
     @litter = Litter.new(litter_params)
 
     if @litter.save
@@ -127,13 +201,35 @@ class LittersController < ApplicationController
   end
 
   def teapot
+    # Inputs:
+    #   Nil
+    # Outputs:
+    #   a 403 error and a message
+    # called by:
+    #   everything
+    # Dependencies:
+    #   nil
+    # Supports feature:
+    #   The user requested a change to functionality late in development which necessitated creating a special litter.
+    #   The special litter is a waitlist. If the user ever managed to change it, it would break the whole website.
+    #   This function guards that litter and dissaudes the owner from making further attempts to edit it.
     render json: { message: "So help me god Hilare, if you ever manage to change the waitlist I will not fix your website."}, status: 418 and return if @litter.id == 1
   end
 
   # PATCH/PUT /litters/1
   def update
-    # if puppies are attached, then update their dob if adate is changed or added
-    # should break out into own action, low prio
+    # Inputs:
+    #   litter called @litter
+    # Outputs:
+    #   updates db with new litter params
+    #   updates the dob of any puppies in the litter if the litter's date was changed
+    #   returns stuff as json
+    # called by:
+    #   routes
+    # Dependencies:
+    #   gallery_image_updater main_image_updater
+    # Supports feature:
+    #   updating litters
 
     changeddogs = []
 
@@ -159,22 +255,55 @@ class LittersController < ApplicationController
 
   # DELETE /litters/1
   def destroy
+    # uncalled
+    # bog standard destroy
     @litter.destroy
   end
 
   # controller actions that should be helper or model methods
 
   def gallery_image_updater
+    # Unused
+    # Inputs:
+    #   params including a an array of one or more gallery_images
+    # Outputs:
+    #   attaches gallery images to activestorage and returns to calling function
+    # called by:
+    #   update
+    # Dependencies:
+    #   activestorage
+    # Supports feature:
+    #   update the gallery_images of a litter
     @litter.gallery_images.attach(params[:gallery_images])
   end
 
   def main_image_updater
+    # Inputs:
+    #   params including a main_image
+    # Outputs:
+    #   attaches main image to litter, deletes old one if it existed, returns to calling function
+    # called by:
+    #   update
+    # Dependencies:
+    #   activestorage
+    # Supports feature:
+    #   uploading and updating images of litters
     @litter.main_image.purge if @litter.main_image.attached?
     @litter.main_image.attach(params[:main_image])
   end
 
   def puppy_getter(litter,output)
-    # to do provide dogs assigned and dogs unassigned
+    # Inputs:
+    #   litter object called litter
+    # Outputs:
+    #   a litter with all of its puppies as well as a separate list of the ids of puppies that are not assigned to customers
+    #   unassigned list is only returned to admins else nil
+    # called by:
+    #   plebshow adminshow
+    # Dependencies:
+    #   nil
+    # Supports feature:
+    #   managing litter applications
     if litter.dogs.exists?
       puppies = []
       unassigned = []
@@ -196,7 +325,17 @@ class LittersController < ApplicationController
     end
   end
 
-  def litter_applications_getter(litter,output)
+  def litter_applications_getter(litter, output)
+    # Inputs:
+    #   litter object called litter
+    # Outputs:
+    #   the litters with its applications merged onto it as json
+    # called by:
+    #   adminshow
+    # Dependencies:
+    #   nil
+    # Supports feature:
+    #   managing litter applications
     if litter.litter_applications.exists?
       litter_applications = []
       litter.litter_applications.each do |app|

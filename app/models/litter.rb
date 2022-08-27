@@ -17,6 +17,7 @@ class Litter < ApplicationRecord
   scope :pleb, -> { where("status < 3")}
 
   def main_image_adder
+    # deprecated and unused
     if self.main_image.present?
         self.as_json.merge({ main_image: self.main_image.url } )
       else

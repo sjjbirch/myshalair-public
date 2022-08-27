@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   resources :litter_applications
   # get '/litter_breeder_check', to: 'litter_applications#match_breeder_and_litter'
-  get '/applications_from_me', to: 'litter_applications#applications_for_user'
+  # get '/applications_from_me', to: 'litter_applications#applications_for_user'
   get '/applications_to_me', to: 'litter_applications#applications_for_breeder'
   get '/waitlisted', to: 'litter_applications#waitlisted'
   post '/lazy_litter_application_create', to: 'litter_applications#lazy_create'
